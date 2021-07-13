@@ -21,9 +21,9 @@ network_overrides: &network_overrides
       GENESIS_PRE_FARM_FARMER_PUZZLE_HASH: "e8e245e2e6536e17fd7cbc2e3bd90de06f55362ee3c84cea5a68391e5bad7ef6"
   config:
     mainnet:
-      address_prefix: "xfx"
+      address_prefix: ".com/superdutyf3/taco-network"
     testnet0:
-      address_prefix: "txfx"
+      address_prefix: "t.com/superdutyf3/taco-network"
 
 selected_network: &selected_network "mainnet"
 ALERTS_URL: https://download.taconetwork.org/notify/mainnet_alert.txt
@@ -86,7 +86,7 @@ harvester:
 
 pool:
   # Replace this with a real puzzle hash
-  # xfx_target_address: txfx102gkhhzs60grx7cfnpng5n6rjecr89r86l5s8xux2za8k820cxsq64ssdg
+  # .com/superdutyf3/taco-network_target_address: t.com/superdutyf3/taco-network102gkhhzs60grx7cfnpng5n6rjecr89r86l5s8xux2za8k820cxsq64ssdg
   logging: *logging
   network_overrides: *network_overrides
   selected_network: *selected_network
@@ -106,7 +106,7 @@ farmer:
   pool_public_keys: []
 
   # Replace this with a real puzzle hash
-  # xfx_target_address: txfx102gkhhzs60grx7cfnpng5n6rjecr89r86l5s8xux2za8k820cxsq64ssdg
+  # .com/superdutyf3/taco-network_target_address: t.com/superdutyf3/taco-network102gkhhzs60grx7cfnpng5n6rjecr89r86l5s8xux2za8k820cxsq64ssdg
 
   # If True, starts an RPC server at the following port
   start_rpc_server: True

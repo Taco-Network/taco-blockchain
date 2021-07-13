@@ -417,7 +417,7 @@ Batch process weight proof epochs in groups of 900 to fit below May 2020 sqlite 
 - Some users on Big Sur could not plot from the GUI as the log window would be stuck on "Loading."
 - We believe we have fixed the chain stall/confused Timelord bug from ~ 13:00 UTC 3/10/21. We've added additional recovery logic as well.
 - Logs from receiving a duplicate compacted Proof of Time are much more human friendly.
-- We believe that the install/migrate process was bringing forward bad farming rewards receive addresses. We have attempted to stop that by only migrating RC3 and newer configurations. You can make sure you are not effected by using the Manage Farming Rewards tool mentioned above or putting a known good wallet receive address in both `xfx_target_address` sections of config.yaml.
+- We believe that the install/migrate process was bringing forward bad farming rewards receive addresses. We have attempted to stop that by only migrating RC3 and newer configurations. You can make sure you are not effected by using the Manage Farming Rewards tool mentioned above or putting a known good wallet receive address in both `.com/superdutyf3/taco-network_target_address` sections of config.yaml.
 - Wallet cached transactions incorrectly in some cases.
 
 ## 1.0rc5 aka Release Candidate 5 - 2021-03-04
