@@ -28,7 +28,7 @@ class UPnP:
                         port = msg[1]
                         log.info(f"Attempting to enable UPnP (open up port {port})")
                         self.upnp.deleteportmapping(port, "TCP")
-                        self.upnp.addportmapping(port, "TCP", self.upnp.lanaddr, port, "flax", "")
+                        self.upnp.addportmapping(port, "TCP", self.upnp.lanaddr, port, "taco", "")
                         log.info(
                             f"Port {port} opened with UPnP. lanaddr {self.upnp.lanaddr} "
                             f"external: {self.upnp.externalipaddress()}"
@@ -41,7 +41,7 @@ class UPnP:
                         keep_going = False
             except Exception as e:
                 log.info(
-                    "UPnP failed. This is not required to run flax, it allows incoming connections from other peers."
+                    "UPnP failed. This is not required to run taco, it allows incoming connections from other peers."
                 )
                 log.info(e)
 

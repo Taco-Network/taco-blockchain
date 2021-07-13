@@ -1,6 +1,6 @@
 if __name__ == "__main__":
-    from flax.util.block_tools import BlockTools, test_constants
-    from flax.util.default_root import DEFAULT_ROOT_PATH
+    from taco.util.block_tools import BlockTools, test_constants
+    from taco.util.default_root import DEFAULT_ROOT_PATH
 
     # TODO: mariano: fix this with new consensus
     bt = BlockTools(root_path=DEFAULT_ROOT_PATH)

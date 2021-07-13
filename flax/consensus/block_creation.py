@@ -7,30 +7,30 @@ import blspy
 from blspy import G1Element, G2Element
 from chiabip158 import PyBIP158
 
-from flax.consensus.block_record import BlockRecord
-from flax.consensus.block_rewards import calculate_base_farmer_reward, calculate_pool_reward
-from flax.consensus.blockchain_interface import BlockchainInterface
-from flax.consensus.coinbase import create_farmer_coin, create_pool_coin
-from flax.consensus.constants import ConsensusConstants
-from flax.consensus.cost_calculator import NPCResult, calculate_cost_of_program
-from flax.full_node.mempool_check_conditions import get_name_puzzle_conditions
-from flax.full_node.signage_point import SignagePoint
-from flax.types.blockchain_format.coin import Coin, hash_coin_list
-from flax.types.blockchain_format.foliage import Foliage, FoliageBlockData, FoliageTransactionBlock, TransactionsInfo
-from flax.types.blockchain_format.pool_target import PoolTarget
-from flax.types.blockchain_format.proof_of_space import ProofOfSpace
-from flax.types.blockchain_format.reward_chain_block import RewardChainBlock, RewardChainBlockUnfinished
-from flax.types.blockchain_format.sized_bytes import bytes32
-from flax.types.blockchain_format.vdf import VDFInfo, VDFProof
-from flax.types.end_of_slot_bundle import EndOfSubSlotBundle
-from flax.types.full_block import FullBlock
-from flax.types.generator_types import BlockGenerator
-from flax.types.unfinished_block import UnfinishedBlock
-from flax.util.hash import std_hash
-from flax.util.ints import uint8, uint32, uint64, uint128
-from flax.util.merkle_set import MerkleSet
-from flax.util.prev_transaction_block import get_prev_transaction_block
-from flax.util.recursive_replace import recursive_replace
+from taco.consensus.block_record import BlockRecord
+from taco.consensus.block_rewards import calculate_base_farmer_reward, calculate_pool_reward
+from taco.consensus.blockchain_interface import BlockchainInterface
+from taco.consensus.coinbase import create_farmer_coin, create_pool_coin
+from taco.consensus.constants import ConsensusConstants
+from taco.consensus.cost_calculator import NPCResult, calculate_cost_of_program
+from taco.full_node.mempool_check_conditions import get_name_puzzle_conditions
+from taco.full_node.signage_point import SignagePoint
+from taco.types.blockchain_format.coin import Coin, hash_coin_list
+from taco.types.blockchain_format.foliage import Foliage, FoliageBlockData, FoliageTransactionBlock, TransactionsInfo
+from taco.types.blockchain_format.pool_target import PoolTarget
+from taco.types.blockchain_format.proof_of_space import ProofOfSpace
+from taco.types.blockchain_format.reward_chain_block import RewardChainBlock, RewardChainBlockUnfinished
+from taco.types.blockchain_format.sized_bytes import bytes32
+from taco.types.blockchain_format.vdf import VDFInfo, VDFProof
+from taco.types.end_of_slot_bundle import EndOfSubSlotBundle
+from taco.types.full_block import FullBlock
+from taco.types.generator_types import BlockGenerator
+from taco.types.unfinished_block import UnfinishedBlock
+from taco.util.hash import std_hash
+from taco.util.ints import uint8, uint32, uint64, uint128
+from taco.util.merkle_set import MerkleSet
+from taco.util.prev_transaction_block import get_prev_transaction_block
+from taco.util.recursive_replace import recursive_replace
 
 log = logging.getLogger(__name__)
 

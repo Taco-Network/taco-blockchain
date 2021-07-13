@@ -6,15 +6,15 @@ import sys
 from pathlib import Path
 from typing import Optional
 
-from flax.daemon.client import DaemonProxy, connect_to_daemon_and_validate
-from flax.util.service_groups import services_for_groups
+from taco.daemon.client import DaemonProxy, connect_to_daemon_and_validate
+from taco.util.service_groups import services_for_groups
 
 
 def launch_start_daemon(root_path: Path) -> subprocess.Popen:
-    os.environ["FLAX_ROOT"] = str(root_path)
+    os.environ["TACO_ROOT"] = str(root_path)
     # TODO: use startupinfo=subprocess.DETACHED_PROCESS on windows
-    flax = sys.argv[0]
-    process = subprocess.Popen(f"{flax} run_daemon".split(), stdout=subprocess.PIPE)
+    taco = sys.argv[0]
+    process = subprocess.Popen(f"{taco} run_daemon".split(), stdout=subprocess.PIPE)
     return process
 
 
@@ -38,7 +38,7 @@ async def create_start_daemon_connection(root_path: Path) -> Optional[DaemonProx
 async def async_start(root_path: Path, group: str, restart: bool) -> None:
     daemon = await create_start_daemon_connection(root_path)
     if daemon is None:
-        print("Failed to create the flax daemon")
+        print("Failed to create the taco daemon")
         return None
 
     for service in services_for_groups(group):

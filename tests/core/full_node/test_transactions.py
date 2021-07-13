@@ -4,13 +4,13 @@ from typing import Optional
 
 import pytest
 
-from flax.consensus.block_record import BlockRecord
-from flax.consensus.block_rewards import calculate_base_farmer_reward, calculate_pool_reward
-from flax.full_node.full_node_api import FullNodeAPI
-from flax.protocols import full_node_protocol
-from flax.simulator.simulator_protocol import FarmNewBlockProtocol
-from flax.types.peer_info import PeerInfo
-from flax.util.ints import uint16, uint32
+from taco.consensus.block_record import BlockRecord
+from taco.consensus.block_rewards import calculate_base_farmer_reward, calculate_pool_reward
+from taco.full_node.full_node_api import FullNodeAPI
+from taco.protocols import full_node_protocol
+from taco.simulator.simulator_protocol import FarmNewBlockProtocol
+from taco.types.peer_info import PeerInfo
+from taco.util.ints import uint16, uint32
 from tests.setup_nodes import self_hostname, setup_simulators_and_wallets
 from tests.time_out_assert import time_out_assert
 

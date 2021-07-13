@@ -1,17 +1,17 @@
 import pathlib
 from typing import Dict
 
-from flax.consensus.constants import ConsensusConstants
-from flax.consensus.default_constants import DEFAULT_CONSTANTS
-from flax.farmer.farmer import Farmer
-from flax.farmer.farmer_api import FarmerAPI
-from flax.rpc.farmer_rpc_api import FarmerRpcApi
-from flax.server.outbound_message import NodeType
-from flax.server.start_service import run_service
-from flax.types.peer_info import PeerInfo
-from flax.util.config import load_config_cli
-from flax.util.default_root import DEFAULT_ROOT_PATH
-from flax.util.keychain import Keychain
+from taco.consensus.constants import ConsensusConstants
+from taco.consensus.default_constants import DEFAULT_CONSTANTS
+from taco.farmer.farmer import Farmer
+from taco.farmer.farmer_api import FarmerAPI
+from taco.rpc.farmer_rpc_api import FarmerRpcApi
+from taco.server.outbound_message import NodeType
+from taco.server.start_service import run_service
+from taco.types.peer_info import PeerInfo
+from taco.util.config import load_config_cli
+from taco.util.default_root import DEFAULT_ROOT_PATH
+from taco.util.keychain import Keychain
 
 # See: https://bugs.python.org/issue29288
 "".encode("idna")

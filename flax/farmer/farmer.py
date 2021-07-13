@@ -6,20 +6,20 @@ from typing import Any, Callable, Dict, List, Optional, Tuple
 
 from blspy import G1Element
 
-import flax.server.ws_connection as ws  # lgtm [py/import-and-import-from]
-from flax.consensus.coinbase import create_puzzlehash_for_pk
-from flax.consensus.constants import ConsensusConstants
-from flax.protocols import farmer_protocol, harvester_protocol
-from flax.protocols.protocol_message_types import ProtocolMessageTypes
-from flax.server.outbound_message import NodeType, make_msg
-from flax.server.ws_connection import WSFlaxConnection
-from flax.types.blockchain_format.proof_of_space import ProofOfSpace
-from flax.types.blockchain_format.sized_bytes import bytes32
-from flax.util.bech32m import decode_puzzle_hash
-from flax.util.config import load_config, save_config
-from flax.util.ints import uint32, uint64
-from flax.util.keychain import Keychain
-from flax.wallet.derive_keys import master_sk_to_farmer_sk, master_sk_to_pool_sk, master_sk_to_wallet_sk
+import taco.server.ws_connection as ws  # lgtm [py/import-and-import-from]
+from taco.consensus.coinbase import create_puzzlehash_for_pk
+from taco.consensus.constants import ConsensusConstants
+from taco.protocols import farmer_protocol, harvester_protocol
+from taco.protocols.protocol_message_types import ProtocolMessageTypes
+from taco.server.outbound_message import NodeType, make_msg
+from taco.server.ws_connection import WSTacoConnection
+from taco.types.blockchain_format.proof_of_space import ProofOfSpace
+from taco.types.blockchain_format.sized_bytes import bytes32
+from taco.util.bech32m import decode_puzzle_hash
+from taco.util.config import load_config, save_config
+from taco.util.ints import uint32, uint64
+from taco.util.keychain import Keychain
+from taco.wallet.derive_keys import master_sk_to_farmer_sk, master_sk_to_pool_sk, master_sk_to_wallet_sk
 
 log = logging.getLogger(__name__)
 
@@ -69,7 +69,7 @@ class Farmer:
         ]
 
         if len(self.get_public_keys()) == 0:
-            error_str = "No keys exist. Please run 'flax keys generate' or open the UI."
+            error_str = "No keys exist. Please run 'taco keys generate' or open the UI."
             raise RuntimeError(error_str)
 
         # This is the farmer configuration
@@ -88,7 +88,7 @@ class Farmer:
         assert len(self.farmer_target) == 32
         assert len(self.pool_target) == 32
         if len(self.pool_sks_map) == 0:
-            error_str = "No keys exist. Please run 'flax keys generate' or open the UI."
+            error_str = "No keys exist. Please run 'taco keys generate' or open the UI."
             raise RuntimeError(error_str)
 
     async def _start(self):
@@ -103,7 +103,7 @@ class Farmer:
     def _set_state_changed_callback(self, callback: Callable):
         self.state_changed_callback = callback
 
-    async def on_connect(self, peer: WSFlaxConnection):
+    async def on_connect(self, peer: WSTacoConnection):
         # Sends a handshake to the harvester
         handshake = harvester_protocol.HarvesterHandshake(
             self.get_public_keys(),
@@ -120,7 +120,7 @@ class Farmer:
         if self.state_changed_callback is not None:
             self.state_changed_callback(change, data)
 
-    def on_disconnect(self, connection: ws.WSFlaxConnection):
+    def on_disconnect(self, connection: ws.WSTacoConnection):
         self.log.info(f"peer disconnected {connection.get_peer_info()}")
         self.state_changed("close_connection", {})
 

@@ -2,9 +2,9 @@ from typing import Any
 
 import aiosqlite
 
-from flax.util.byte_types import hexstr_to_bytes
-from flax.util.db_wrapper import DBWrapper
-from flax.util.streamable import Streamable
+from taco.util.byte_types import hexstr_to_bytes
+from taco.util.db_wrapper import DBWrapper
+from taco.util.streamable import Streamable
 
 
 class KeyValStore:

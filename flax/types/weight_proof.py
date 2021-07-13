@@ -1,14 +1,14 @@
 from dataclasses import dataclass
 from typing import List, Optional
 
-from flax.types.blockchain_format.proof_of_space import ProofOfSpace
-from flax.types.blockchain_format.reward_chain_block import RewardChainBlock
-from flax.types.blockchain_format.sized_bytes import bytes32
-from flax.types.blockchain_format.vdf import VDFInfo, VDFProof
-from flax.types.end_of_slot_bundle import EndOfSubSlotBundle
-from flax.types.header_block import HeaderBlock
-from flax.util.ints import uint8, uint32, uint64, uint128
-from flax.util.streamable import Streamable, streamable
+from taco.types.blockchain_format.proof_of_space import ProofOfSpace
+from taco.types.blockchain_format.reward_chain_block import RewardChainBlock
+from taco.types.blockchain_format.sized_bytes import bytes32
+from taco.types.blockchain_format.vdf import VDFInfo, VDFProof
+from taco.types.end_of_slot_bundle import EndOfSubSlotBundle
+from taco.types.header_block import HeaderBlock
+from taco.util.ints import uint8, uint32, uint64, uint128
+from taco.util.streamable import Streamable, streamable
 
 
 @dataclass(frozen=True)

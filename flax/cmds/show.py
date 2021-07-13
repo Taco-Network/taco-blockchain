@@ -19,15 +19,15 @@ async def show_async(
 
     from time import localtime, struct_time
     from typing import List, Optional
-    from flax.consensus.block_record import BlockRecord
-    from flax.rpc.full_node_rpc_client import FullNodeRpcClient
-    from flax.server.outbound_message import NodeType
-    from flax.types.full_block import FullBlock
-    from flax.util.bech32m import encode_puzzle_hash
-    from flax.util.byte_types import hexstr_to_bytes
-    from flax.util.config import load_config
-    from flax.util.default_root import DEFAULT_ROOT_PATH
-    from flax.util.ints import uint16
+    from taco.consensus.block_record import BlockRecord
+    from taco.rpc.full_node_rpc_client import FullNodeRpcClient
+    from taco.server.outbound_message import NodeType
+    from taco.types.full_block import FullBlock
+    from taco.util.bech32m import encode_puzzle_hash
+    from taco.util.byte_types import hexstr_to_bytes
+    from taco.util.config import load_config
+    from taco.util.default_root import DEFAULT_ROOT_PATH
+    from taco.util.ints import uint16
 
     try:
         config = load_config(DEFAULT_ROOT_PATH, "config.yaml")
@@ -65,7 +65,7 @@ async def show_async(
                 print(f"Current Blockchain Status: Not Synced. Peak height: {peak.height}")
             else:
                 print("\nSearching for an initial chain\n")
-                print("You may be able to expedite with 'flax show -a host:port' using a known node.\n")
+                print("You may be able to expedite with 'taco show -a host:port' using a known node.\n")
 
             if peak is not None:
                 if peak.is_transaction_block:

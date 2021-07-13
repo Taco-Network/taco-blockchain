@@ -3,10 +3,10 @@ from typing import List, Tuple
 
 from blspy import G1Element, G2Element
 
-from flax.types.blockchain_format.proof_of_space import ProofOfSpace
-from flax.types.blockchain_format.sized_bytes import bytes32
-from flax.util.ints import uint8, uint64
-from flax.util.streamable import Streamable, streamable
+from taco.types.blockchain_format.proof_of_space import ProofOfSpace
+from taco.types.blockchain_format.sized_bytes import bytes32
+from taco.util.ints import uint8, uint64
+from taco.util.streamable import Streamable, streamable
 
 """
 Protocol between harvester and farmer.

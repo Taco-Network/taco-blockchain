@@ -1,6 +1,6 @@
 import unittest
 
-from flax.util.significant_bits import count_significant_bits, truncate_to_significant_bits
+from taco.util.significant_bits import count_significant_bits, truncate_to_significant_bits
 
 
 class TestSignificantBits(unittest.TestCase):

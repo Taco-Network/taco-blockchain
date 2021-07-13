@@ -1,19 +1,19 @@
 from typing import KeysView, Generator
 
 SERVICES_FOR_GROUP = {
-    "all": "flax_harvester flax_timelord_launcher flax_timelord flax_farmer flax_full_node flax_wallet".split(),
-    "node": "flax_full_node".split(),
-    "harvester": "flax_harvester".split(),
-    "farmer": "flax_harvester flax_farmer flax_full_node flax_wallet".split(),
-    "farmer-no-wallet": "flax_harvester flax_farmer flax_full_node".split(),
-    "farmer-only": "flax_farmer".split(),
-    "timelord": "flax_timelord_launcher flax_timelord flax_full_node".split(),
-    "timelord-only": "flax_timelord".split(),
-    "timelord-launcher-only": "flax_timelord_launcher".split(),
-    "wallet": "flax_wallet flax_full_node".split(),
-    "wallet-only": "flax_wallet".split(),
-    "introducer": "flax_introducer".split(),
-    "simulator": "flax_full_node_simulator".split(),
+    "all": "taco_harvester taco_timelord_launcher taco_timelord taco_farmer taco_full_node taco_wallet".split(),
+    "node": "taco_full_node".split(),
+    "harvester": "taco_harvester".split(),
+    "farmer": "taco_harvester taco_farmer taco_full_node taco_wallet".split(),
+    "farmer-no-wallet": "taco_harvester taco_farmer taco_full_node".split(),
+    "farmer-only": "taco_farmer".split(),
+    "timelord": "taco_timelord_launcher taco_timelord taco_full_node".split(),
+    "timelord-only": "taco_timelord".split(),
+    "timelord-launcher-only": "taco_timelord_launcher".split(),
+    "wallet": "taco_wallet taco_full_node".split(),
+    "wallet-only": "taco_wallet".split(),
+    "introducer": "taco_introducer".split(),
+    "simulator": "taco_full_node_simulator".split(),
 }
 
 

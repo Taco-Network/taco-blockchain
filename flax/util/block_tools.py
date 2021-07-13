@@ -13,60 +13,60 @@ from typing import Callable, Dict, List, Optional, Tuple
 
 from blspy import AugSchemeMPL, G1Element, G2Element, PrivateKey
 
-from flax.cmds.init_funcs import create_all_ssl, create_default_flax_config
-from flax.full_node.bundle_tools import (
+from taco.cmds.init_funcs import create_all_ssl, create_default_taco_config
+from taco.full_node.bundle_tools import (
     best_solution_generator_from_template,
     detect_potential_template_generator,
     simple_solution_generator,
 )
-from flax.plotting.create_plots import create_plots
-from flax.consensus.block_creation import create_unfinished_block, unfinished_block_to_full_block
-from flax.consensus.block_record import BlockRecord
-from flax.consensus.blockchain_interface import BlockchainInterface
-from flax.consensus.coinbase import create_puzzlehash_for_pk
-from flax.consensus.constants import ConsensusConstants
-from flax.consensus.default_constants import DEFAULT_CONSTANTS
-from flax.consensus.deficit import calculate_deficit
-from flax.consensus.full_block_to_block_record import block_to_block_record
-from flax.consensus.make_sub_epoch_summary import next_sub_epoch_summary
-from flax.consensus.pot_iterations import (
+from taco.plotting.create_plots import create_plots
+from taco.consensus.block_creation import create_unfinished_block, unfinished_block_to_full_block
+from taco.consensus.block_record import BlockRecord
+from taco.consensus.blockchain_interface import BlockchainInterface
+from taco.consensus.coinbase import create_puzzlehash_for_pk
+from taco.consensus.constants import ConsensusConstants
+from taco.consensus.default_constants import DEFAULT_CONSTANTS
+from taco.consensus.deficit import calculate_deficit
+from taco.consensus.full_block_to_block_record import block_to_block_record
+from taco.consensus.make_sub_epoch_summary import next_sub_epoch_summary
+from taco.consensus.pot_iterations import (
     calculate_ip_iters,
     calculate_iterations_quality,
     calculate_sp_interval_iters,
     calculate_sp_iters,
     is_overflow_block,
 )
-from flax.consensus.vdf_info_computation import get_signage_point_vdf_info
-from flax.full_node.signage_point import SignagePoint
-from flax.plotting.plot_tools import PlotInfo, load_plots, parse_plot_info
-from flax.types.blockchain_format.classgroup import ClassgroupElement
-from flax.types.blockchain_format.coin import Coin
-from flax.types.blockchain_format.pool_target import PoolTarget
-from flax.types.blockchain_format.proof_of_space import ProofOfSpace
-from flax.types.blockchain_format.sized_bytes import bytes32
-from flax.types.blockchain_format.slots import (
+from taco.consensus.vdf_info_computation import get_signage_point_vdf_info
+from taco.full_node.signage_point import SignagePoint
+from taco.plotting.plot_tools import PlotInfo, load_plots, parse_plot_info
+from taco.types.blockchain_format.classgroup import ClassgroupElement
+from taco.types.blockchain_format.coin import Coin
+from taco.types.blockchain_format.pool_target import PoolTarget
+from taco.types.blockchain_format.proof_of_space import ProofOfSpace
+from taco.types.blockchain_format.sized_bytes import bytes32
+from taco.types.blockchain_format.slots import (
     ChallengeChainSubSlot,
     InfusedChallengeChainSubSlot,
     RewardChainSubSlot,
     SubSlotProofs,
 )
-from flax.types.blockchain_format.sub_epoch_summary import SubEpochSummary
-from flax.types.blockchain_format.vdf import VDFInfo, VDFProof
-from flax.types.end_of_slot_bundle import EndOfSubSlotBundle
-from flax.types.full_block import FullBlock
-from flax.types.generator_types import BlockGenerator, CompressorArg
-from flax.types.spend_bundle import SpendBundle
-from flax.types.unfinished_block import UnfinishedBlock
-from flax.util.bech32m import encode_puzzle_hash
-from flax.util.block_cache import BlockCache
-from flax.util.config import load_config, save_config
-from flax.util.hash import std_hash
-from flax.util.ints import uint8, uint32, uint64, uint128
-from flax.util.keychain import Keychain, bytes_to_mnemonic
-from flax.util.path import mkdir
-from flax.util.vdf_prover import get_vdf_info_and_proof
-from flax.util.wallet_tools import WalletTool
-from flax.wallet.derive_keys import (
+from taco.types.blockchain_format.sub_epoch_summary import SubEpochSummary
+from taco.types.blockchain_format.vdf import VDFInfo, VDFProof
+from taco.types.end_of_slot_bundle import EndOfSubSlotBundle
+from taco.types.full_block import FullBlock
+from taco.types.generator_types import BlockGenerator, CompressorArg
+from taco.types.spend_bundle import SpendBundle
+from taco.types.unfinished_block import UnfinishedBlock
+from taco.util.bech32m import encode_puzzle_hash
+from taco.util.block_cache import BlockCache
+from taco.util.config import load_config, save_config
+from taco.util.hash import std_hash
+from taco.util.ints import uint8, uint32, uint64, uint128
+from taco.util.keychain import Keychain, bytes_to_mnemonic
+from taco.util.path import mkdir
+from taco.util.vdf_prover import get_vdf_info_and_proof
+from taco.util.wallet_tools import WalletTool
+from taco.wallet.derive_keys import (
     master_sk_to_farmer_sk,
     master_sk_to_local_sk,
     master_sk_to_pool_sk,
@@ -118,7 +118,7 @@ class BlockTools:
             root_path = Path(self._tempdir.name)
 
         self.root_path = root_path
-        create_default_flax_config(root_path)
+        create_default_taco_config(root_path)
         self.keychain = Keychain("testing-1.8.0", True)
         self.keychain.delete_all_keys()
         self.farmer_master_sk_entropy = std_hash(b"block_tools farmer key")
@@ -142,7 +142,7 @@ class BlockTools:
 
         farmer_pubkeys: List[G1Element] = [master_sk_to_farmer_sk(sk).get_g1() for sk in self.all_sks]
         if len(self.pool_pubkeys) == 0 or len(farmer_pubkeys) == 0:
-            raise RuntimeError("Keys not generated. Run `flax generate keys`")
+            raise RuntimeError("Keys not generated. Run `taco generate keys`")
 
         _, loaded_plots, _, _ = load_plots({}, {}, farmer_pubkeys, self.pool_pubkeys, None, False, root_path)
         self.plots: Dict[Path, PlotInfo] = loaded_plots
@@ -1180,7 +1180,7 @@ def get_challenges(
 
 
 def get_plot_dir() -> Path:
-    cache_path = Path(os.path.expanduser(os.getenv("FLAX_ROOT", "~/.flax/"))) / "test-plots"
+    cache_path = Path(os.path.expanduser(os.getenv("TACO_ROOT", "~/.taco/"))) / "test-plots"
     mkdir(cache_path)
     return cache_path
 

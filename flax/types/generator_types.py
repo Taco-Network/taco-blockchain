@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 from typing import List
-from flax.types.blockchain_format.program import SerializedProgram
-from flax.util.ints import uint32
-from flax.util.streamable import Streamable, streamable
+from taco.types.blockchain_format.program import SerializedProgram
+from taco.util.ints import uint32
+from taco.util.streamable import Streamable, streamable
 
 
 class GeneratorBlockCacheInterface:

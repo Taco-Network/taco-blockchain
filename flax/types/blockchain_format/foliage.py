@@ -3,11 +3,11 @@ from typing import List, Optional
 
 from blspy import G2Element
 
-from flax.types.blockchain_format.coin import Coin
-from flax.types.blockchain_format.pool_target import PoolTarget
-from flax.types.blockchain_format.sized_bytes import bytes32
-from flax.util.ints import uint64
-from flax.util.streamable import Streamable, streamable
+from taco.types.blockchain_format.coin import Coin
+from taco.types.blockchain_format.pool_target import PoolTarget
+from taco.types.blockchain_format.sized_bytes import bytes32
+from taco.util.ints import uint64
+from taco.util.streamable import Streamable, streamable
 
 
 @dataclass(frozen=True)

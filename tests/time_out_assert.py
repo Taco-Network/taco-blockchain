@@ -3,7 +3,7 @@ import logging
 import time
 from typing import Callable
 
-from flax.protocols.protocol_message_types import ProtocolMessageTypes
+from taco.protocols.protocol_message_types import ProtocolMessageTypes
 
 log = logging.getLogger(__name__)
 

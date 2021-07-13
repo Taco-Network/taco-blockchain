@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 
-from flax.consensus.constants import ConsensusConstants
-from flax.types.blockchain_format.sized_bytes import bytes100
-from flax.util.streamable import Streamable, streamable
+from taco.consensus.constants import ConsensusConstants
+from taco.types.blockchain_format.sized_bytes import bytes100
+from taco.util.streamable import Streamable, streamable
 
 
 @dataclass(frozen=True)

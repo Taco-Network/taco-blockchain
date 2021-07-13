@@ -1,16 +1,16 @@
 import asyncio
 import pytest
 import time
-from flax.consensus.block_rewards import calculate_base_farmer_reward, calculate_pool_reward
-from flax.protocols.full_node_protocol import RespondBlock
-from flax.server.server import FlaxServer
-from flax.simulator.simulator_protocol import FarmNewBlockProtocol, ReorgProtocol
-from flax.types.peer_info import PeerInfo
-from flax.util.ints import uint16, uint32, uint64
-from flax.wallet.util.transaction_type import TransactionType
-from flax.wallet.transaction_record import TransactionRecord
-from flax.wallet.wallet_node import WalletNode
-from flax.wallet.wallet_state_manager import WalletStateManager
+from taco.consensus.block_rewards import calculate_base_farmer_reward, calculate_pool_reward
+from taco.protocols.full_node_protocol import RespondBlock
+from taco.server.server import TacoServer
+from taco.simulator.simulator_protocol import FarmNewBlockProtocol, ReorgProtocol
+from taco.types.peer_info import PeerInfo
+from taco.util.ints import uint16, uint32, uint64
+from taco.wallet.util.transaction_type import TransactionType
+from taco.wallet.transaction_record import TransactionRecord
+from taco.wallet.wallet_node import WalletNode
+from taco.wallet.wallet_state_manager import WalletStateManager
 from tests.setup_nodes import self_hostname, setup_simulators_and_wallets
 from tests.time_out_assert import time_out_assert, time_out_assert_not_none
 from tests.wallet.cc_wallet.test_cc_wallet import tx_in_pool
@@ -48,7 +48,7 @@ class TestWalletSimulator:
         num_blocks = 10
         full_nodes, wallets = wallet_node
         full_node_api = full_nodes[0]
-        server_1: FlaxServer = full_node_api.full_node.server
+        server_1: TacoServer = full_node_api.full_node.server
         wallet_node, server_2 = wallets[0]
 
         wallet = wallet_node.wallet_state_manager.main_wallet
@@ -318,7 +318,7 @@ class TestWalletSimulator:
     #     introducer, introducer_server = await node_iters[2].__anext__()
     #
     #     async def has_full_node():
-    #         outbound: List[WSFlaxConnection] = wallet.server.get_outgoing_connections()
+    #         outbound: List[WSTacoConnection] = wallet.server.get_outgoing_connections()
     #         for connection in outbound:
     #             if connection.connection_type is NodeType.FULL_NODE:
     #                 return True

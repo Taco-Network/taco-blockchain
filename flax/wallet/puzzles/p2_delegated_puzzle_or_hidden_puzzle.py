@@ -19,8 +19,8 @@ from typing import Union
 from blspy import G1Element, PrivateKey
 from clvm.casts import int_from_bytes
 
-from flax.types.blockchain_format.program import Program
-from flax.types.blockchain_format.sized_bytes import bytes32
+from taco.types.blockchain_format.program import Program
+from taco.types.blockchain_format.sized_bytes import bytes32
 
 from .load_clvm import load_clvm
 from .p2_conditions import puzzle_for_conditions

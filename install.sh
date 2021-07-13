@@ -18,9 +18,9 @@ fi
 if [ "$(uname -m)" = "armv7l" ]; then
   echo ""
 	echo "WARNING:"
-	echo "The Flax Blockchain requires a 64 bit OS and this is 32 bit armv7l"
+	echo "The Taco Blockchain requires a 64 bit OS and this is 32 bit armv7l"
 	echo "For more information, see"
-	echo "https://github.com/Flax-Network/flax-blockchain/wiki/Raspberry-Pi"
+	echo "https://github.com/Taco-Network/taco-blockchain/wiki/Raspberry-Pi"
 	echo "Exiting."
 	exit 1
 fi
@@ -120,13 +120,13 @@ python -m pip install --extra-index-url https://pypi.chia.net/simple/ miniupnpc=
 python -m pip install -e . --extra-index-url https://pypi.chia.net/simple/
 
 echo ""
-echo "Flax blockchain install.sh complete."
+echo "Taco blockchain install.sh complete."
 echo "For assistance join us on Discord in the #testnet chat channel:"
 echo "https://discord.gg/TgJyxsEFFc"
 echo ""
-echo "Try the Quick Start Guide to running flax-blockchain:"
-echo "https://github.com/Flax-Network/flax-blockchain/wiki/Quick-Start-Guide"
+echo "Try the Quick Start Guide to running taco-blockchain:"
+echo "https://github.com/Taco-Network/taco-blockchain/wiki/Quick-Start-Guide"
 echo ""
 echo "To install the GUI type 'sh install-gui.sh' after '. ./activate'."
 echo ""
-echo "Type '. ./activate' and then 'flax init' to begin."
+echo "Type '. ./activate' and then 'taco init' to begin."

@@ -1,12 +1,12 @@
 from typing import List, Tuple
 from chiabip158 import PyBIP158
 
-from flax.types.blockchain_format.coin import Coin
-from flax.types.blockchain_format.sized_bytes import bytes32
-from flax.types.full_block import FullBlock
-from flax.types.header_block import HeaderBlock
-from flax.types.name_puzzle_condition import NPC
-from flax.util.condition_tools import created_outputs_for_conditions_dict
+from taco.types.blockchain_format.coin import Coin
+from taco.types.blockchain_format.sized_bytes import bytes32
+from taco.types.full_block import FullBlock
+from taco.types.header_block import HeaderBlock
+from taco.types.name_puzzle_condition import NPC
+from taco.util.condition_tools import created_outputs_for_conditions_dict
 
 
 def get_block_header(block: FullBlock, tx_addition_coins: List[Coin], removals_names: List[bytes32]) -> HeaderBlock:

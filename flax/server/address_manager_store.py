@@ -3,7 +3,7 @@ from typing import Dict, List, Tuple
 
 import aiosqlite
 
-from flax.server.address_manager import (
+from taco.server.address_manager import (
     BUCKET_SIZE,
     NEW_BUCKET_COUNT,
     NEW_BUCKETS_PER_ADDRESS,

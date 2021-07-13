@@ -6,7 +6,7 @@ is returned literally.
 """
 
 
-from flax.types.blockchain_format.program import Program
+from taco.types.blockchain_format.program import Program
 
 from .load_clvm import load_clvm
 

@@ -2,14 +2,14 @@ from multiprocessing import freeze_support
 from pathlib import Path
 from typing import Dict
 
-from flax.full_node.full_node import FullNode
-from flax.rpc.full_node_rpc_api import FullNodeRpcApi
-from flax.server.outbound_message import NodeType
-from flax.server.start_service import run_service
-from flax.util.block_tools import BlockTools, test_constants
-from flax.util.config import load_config_cli
-from flax.util.default_root import DEFAULT_ROOT_PATH
-from flax.util.path import mkdir, path_from_root
+from taco.full_node.full_node import FullNode
+from taco.rpc.full_node_rpc_api import FullNodeRpcApi
+from taco.server.outbound_message import NodeType
+from taco.server.start_service import run_service
+from taco.util.block_tools import BlockTools, test_constants
+from taco.util.config import load_config_cli
+from taco.util.default_root import DEFAULT_ROOT_PATH
+from taco.util.path import mkdir, path_from_root
 
 from .full_node_simulator import FullNodeSimulator
 

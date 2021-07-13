@@ -5,22 +5,22 @@ from typing import Dict, List, Optional, Tuple
 
 from blspy import G2Element
 
-from flax.types.blockchain_format.coin import Coin
-from flax.types.blockchain_format.program import Program
-from flax.types.blockchain_format.sized_bytes import bytes32
-from flax.types.condition_opcodes import ConditionOpcode
-from flax.types.spend_bundle import CoinSolution, SpendBundle
-from flax.util.ints import uint64
-from flax.wallet.cc_wallet.cc_utils import (
+from taco.types.blockchain_format.coin import Coin
+from taco.types.blockchain_format.program import Program
+from taco.types.blockchain_format.sized_bytes import bytes32
+from taco.types.condition_opcodes import ConditionOpcode
+from taco.types.spend_bundle import CoinSolution, SpendBundle
+from taco.util.ints import uint64
+from taco.wallet.cc_wallet.cc_utils import (
     CC_MOD,
     cc_puzzle_for_inner_puzzle,
     cc_puzzle_hash_for_inner_puzzle_hash,
     spend_bundle_for_spendable_ccs,
     spendable_cc_list_from_coin_solution,
 )
-from flax.wallet.cc_wallet.debug_spend_bundle import debug_spend_bundle
-from flax.wallet.puzzles.genesis_by_coin_id_with_0 import create_genesis_or_zero_coin_checker
-from flax.wallet.puzzles.genesis_by_puzzle_hash_with_0 import create_genesis_puzzle_or_zero_coin_checker
+from taco.wallet.cc_wallet.debug_spend_bundle import debug_spend_bundle
+from taco.wallet.puzzles.genesis_by_coin_id_with_0 import create_genesis_or_zero_coin_checker
+from taco.wallet.puzzles.genesis_by_puzzle_hash_with_0 import create_genesis_puzzle_or_zero_coin_checker
 
 CONDITIONS = dict((k, bytes(v)[0]) for k, v in ConditionOpcode.__members__.items())  # pylint: disable=E1101
 
@@ -199,7 +199,7 @@ def test_spend_zero_coin(mod_code: Program, coin_checker_for_farmed_coin):
     assert len(eve_cc_list) == 1
     eve_cc_spendable = eve_cc_list[0]
 
-    # farm regular flax
+    # farm regular taco
 
     farmed_coin = generate_farmed_coin(2, eve_inner_puzzle_hash, amount=500)
 

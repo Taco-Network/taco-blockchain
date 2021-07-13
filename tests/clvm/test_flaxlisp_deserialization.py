@@ -1,10 +1,10 @@
 from unittest import TestCase
 
-from flax.types.blockchain_format.program import Program, INFINITE_COST
-from flax.util.byte_types import hexstr_to_bytes
-from flax.wallet.puzzles.load_clvm import load_clvm
+from taco.types.blockchain_format.program import Program, INFINITE_COST
+from taco.util.byte_types import hexstr_to_bytes
+from taco.wallet.puzzles.load_clvm import load_clvm
 
-DESERIALIZE_MOD = load_clvm("flaxlisp_deserialisation.clvm", package_or_requirement="flax.wallet.puzzles")
+DESERIALIZE_MOD = load_clvm("tacolisp_deserialisation.clvm", package_or_requirement="taco.wallet.puzzles")
 
 
 def serialized_atom_overflow(size):

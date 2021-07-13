@@ -7,34 +7,34 @@ from typing import Any, Dict, List, Optional, Tuple
 
 from blspy import AugSchemeMPL
 
-from flax.types.blockchain_format.coin import Coin
-from flax.types.blockchain_format.program import Program
-from flax.types.blockchain_format.sized_bytes import bytes32
-from flax.types.spend_bundle import SpendBundle
-from flax.types.coin_solution import CoinSolution
-from flax.util.byte_types import hexstr_to_bytes
-from flax.util.db_wrapper import DBWrapper
-from flax.util.hash import std_hash
-from flax.util.ints import uint32, uint64
-from flax.wallet.cc_wallet import cc_utils
-from flax.wallet.cc_wallet.cc_utils import CC_MOD, SpendableCC, spend_bundle_for_spendable_ccs, uncurry_cc
-from flax.wallet.cc_wallet.cc_wallet import CCWallet
-from flax.wallet.puzzles.genesis_by_coin_id_with_0 import genesis_coin_id_for_genesis_coin_checker
-from flax.wallet.trade_record import TradeRecord
-from flax.wallet.trading.trade_status import TradeStatus
-from flax.wallet.trading.trade_store import TradeStore
-from flax.wallet.transaction_record import TransactionRecord
-from flax.wallet.util.trade_utils import (
+from taco.types.blockchain_format.coin import Coin
+from taco.types.blockchain_format.program import Program
+from taco.types.blockchain_format.sized_bytes import bytes32
+from taco.types.spend_bundle import SpendBundle
+from taco.types.coin_solution import CoinSolution
+from taco.util.byte_types import hexstr_to_bytes
+from taco.util.db_wrapper import DBWrapper
+from taco.util.hash import std_hash
+from taco.util.ints import uint32, uint64
+from taco.wallet.cc_wallet import cc_utils
+from taco.wallet.cc_wallet.cc_utils import CC_MOD, SpendableCC, spend_bundle_for_spendable_ccs, uncurry_cc
+from taco.wallet.cc_wallet.cc_wallet import CCWallet
+from taco.wallet.puzzles.genesis_by_coin_id_with_0 import genesis_coin_id_for_genesis_coin_checker
+from taco.wallet.trade_record import TradeRecord
+from taco.wallet.trading.trade_status import TradeStatus
+from taco.wallet.trading.trade_store import TradeStore
+from taco.wallet.transaction_record import TransactionRecord
+from taco.wallet.util.trade_utils import (
     get_discrepancies_for_spend_bundle,
     get_output_amount_for_puzzle_and_solution,
     get_output_discrepancy_for_puzzle_and_solution,
 )
-from flax.wallet.util.transaction_type import TransactionType
-from flax.wallet.util.wallet_types import WalletType
-from flax.wallet.wallet import Wallet
-from flax.wallet.wallet_coin_record import WalletCoinRecord
+from taco.wallet.util.transaction_type import TransactionType
+from taco.wallet.util.wallet_types import WalletType
+from taco.wallet.wallet import Wallet
+from taco.wallet.wallet_coin_record import WalletCoinRecord
 
-# from flax.wallet.cc_wallet.debug_spend_bundle import debug_spend_bundle
+# from taco.wallet.cc_wallet.debug_spend_bundle import debug_spend_bundle
 
 
 class TradeManager:
@@ -280,7 +280,7 @@ class TradeManager:
                         to_exclude = []
                     else:
                         to_exclude = spend_bundle.removals()
-                    new_spend_bundle = await wallet.create_spend_bundle_relative_flax(amount, to_exclude)
+                    new_spend_bundle = await wallet.create_spend_bundle_relative_taco(amount, to_exclude)
                 else:
                     return False, None, "unsupported wallet type"
                 if new_spend_bundle is None or new_spend_bundle.removals() == []:
@@ -338,7 +338,7 @@ class TradeManager:
         for key, value in result.items():
             wsm = self.wallet_state_manager
             wallet: Wallet = wsm.main_wallet
-            if key == "flax":
+            if key == "taco":
                 continue
             self.log.info(f"value is {key}")
             exists = await wsm.get_wallet_for_colour(key)
@@ -366,7 +366,7 @@ class TradeManager:
         cc_coinsol_outamounts: Dict[bytes32, List[Tuple[CoinSolution, int]]] = dict()
         aggsig = offer_spend_bundle.aggregated_signature
         cc_discrepancies: Dict[bytes32, int] = dict()
-        flax_discrepancy = None
+        taco_discrepancy = None
         wallets: Dict[bytes32, Any] = dict()  # colour to wallet dict
 
         for coinsol in offer_spend_bundle.coin_solutions:
@@ -399,24 +399,24 @@ class TradeManager:
                     cc_coinsol_outamounts[colour] = [(coinsol, total)]
 
             else:
-                # standard flax coin
+                # standard taco coin
                 unspent = await self.wallet_state_manager.get_spendable_coins_for_wallet(1)
                 if coinsol.coin in [record.coin for record in unspent]:
                     return False, None, "can't respond to own offer"
-                if flax_discrepancy is None:
-                    flax_discrepancy = get_output_discrepancy_for_puzzle_and_solution(coinsol.coin, puzzle, solution)
+                if taco_discrepancy is None:
+                    taco_discrepancy = get_output_discrepancy_for_puzzle_and_solution(coinsol.coin, puzzle, solution)
                 else:
-                    flax_discrepancy += get_output_discrepancy_for_puzzle_and_solution(coinsol.coin, puzzle, solution)
+                    taco_discrepancy += get_output_discrepancy_for_puzzle_and_solution(coinsol.coin, puzzle, solution)
                 coinsols.append(coinsol)
 
-        flax_spend_bundle: Optional[SpendBundle] = None
-        if flax_discrepancy is not None:
-            flax_spend_bundle = await self.wallet_state_manager.main_wallet.create_spend_bundle_relative_flax(
-                flax_discrepancy, []
+        taco_spend_bundle: Optional[SpendBundle] = None
+        if taco_discrepancy is not None:
+            taco_spend_bundle = await self.wallet_state_manager.main_wallet.create_spend_bundle_relative_taco(
+                taco_discrepancy, []
             )
-            if flax_spend_bundle is not None:
+            if taco_spend_bundle is not None:
                 for coinsol in coinsols:
-                    flax_spend_bundle.coin_solutions.append(coinsol)
+                    taco_spend_bundle.coin_solutions.append(coinsol)
 
         zero_spend_list: List[SpendBundle] = []
         spend_bundle = None
@@ -426,10 +426,10 @@ class TradeManager:
             if cc_discrepancies[colour] < 0:
                 my_cc_spends = await wallets[colour].select_coins(abs(cc_discrepancies[colour]))
             else:
-                if flax_spend_bundle is None:
+                if taco_spend_bundle is None:
                     to_exclude: List = []
                 else:
-                    to_exclude = flax_spend_bundle.removals()
+                    to_exclude = taco_spend_bundle.removals()
                 my_cc_spends = await wallets[colour].select_coins(0)
                 if my_cc_spends is None or my_cc_spends == set():
                     zero_spend_bundle: SpendBundle = await wallets[colour].generate_zero_val_coin(False, to_exclude)
@@ -437,7 +437,7 @@ class TradeManager:
                         return (
                             False,
                             None,
-                            "Unable to generate zero value coin. Confirm that you have flax available",
+                            "Unable to generate zero value coin. Confirm that you have taco available",
                         )
                     zero_spend_list.append(zero_spend_bundle)
 
@@ -531,50 +531,50 @@ class TradeManager:
 
         # Add transaction history for this trade
         now = uint64(int(time.time()))
-        if flax_spend_bundle is not None:
-            spend_bundle = SpendBundle.aggregate([spend_bundle, flax_spend_bundle])
+        if taco_spend_bundle is not None:
+            spend_bundle = SpendBundle.aggregate([spend_bundle, taco_spend_bundle])
             # debug_spend_bundle(spend_bundle)
-            if flax_discrepancy < 0:
+            if taco_discrepancy < 0:
                 tx_record = TransactionRecord(
                     confirmed_at_height=uint32(0),
                     created_at_time=now,
                     to_puzzle_hash=token_bytes(),
-                    amount=uint64(abs(flax_discrepancy)),
+                    amount=uint64(abs(taco_discrepancy)),
                     fee_amount=uint64(0),
                     confirmed=False,
                     sent=uint32(10),
-                    spend_bundle=flax_spend_bundle,
-                    additions=flax_spend_bundle.additions(),
-                    removals=flax_spend_bundle.removals(),
+                    spend_bundle=taco_spend_bundle,
+                    additions=taco_spend_bundle.additions(),
+                    removals=taco_spend_bundle.removals(),
                     wallet_id=uint32(1),
                     sent_to=[],
                     trade_id=std_hash(spend_bundle.name() + bytes(now)),
                     type=uint32(TransactionType.OUTGOING_TRADE.value),
-                    name=flax_spend_bundle.name(),
+                    name=taco_spend_bundle.name(),
                 )
             else:
                 tx_record = TransactionRecord(
                     confirmed_at_height=uint32(0),
                     created_at_time=uint64(int(time.time())),
                     to_puzzle_hash=token_bytes(),
-                    amount=uint64(abs(flax_discrepancy)),
+                    amount=uint64(abs(taco_discrepancy)),
                     fee_amount=uint64(0),
                     confirmed=False,
                     sent=uint32(10),
-                    spend_bundle=flax_spend_bundle,
-                    additions=flax_spend_bundle.additions(),
-                    removals=flax_spend_bundle.removals(),
+                    spend_bundle=taco_spend_bundle,
+                    additions=taco_spend_bundle.additions(),
+                    removals=taco_spend_bundle.removals(),
                     wallet_id=uint32(1),
                     sent_to=[],
                     trade_id=std_hash(spend_bundle.name() + bytes(now)),
                     type=uint32(TransactionType.INCOMING_TRADE.value),
-                    name=flax_spend_bundle.name(),
+                    name=taco_spend_bundle.name(),
                 )
             my_tx_records.append(tx_record)
 
         for colour, amount in cc_discrepancies.items():
             wallet = wallets[colour]
-            if flax_discrepancy > 0:
+            if taco_discrepancy > 0:
                 tx_record = TransactionRecord(
                     confirmed_at_height=uint32(0),
                     created_at_time=uint64(int(time.time())),

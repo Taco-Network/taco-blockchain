@@ -1,23 +1,23 @@
 from typing import Any, Callable, Dict, List, Optional
 
-from flax.consensus.block_record import BlockRecord
-from flax.consensus.pos_quality import UI_ACTUAL_SPACE_CONSTANT_FACTOR
-from flax.full_node.full_node import FullNode
-from flax.types.blockchain_format.sized_bytes import bytes32
-from flax.types.coin_record import CoinRecord
-from flax.types.full_block import FullBlock
-from flax.types.mempool_inclusion_status import MempoolInclusionStatus
-from flax.types.spend_bundle import SpendBundle
-from flax.types.unfinished_header_block import UnfinishedHeaderBlock
-from flax.util.byte_types import hexstr_to_bytes
-from flax.util.ints import uint32, uint64, uint128
-from flax.util.ws_message import WsRpcMessage, create_payload_dict
+from taco.consensus.block_record import BlockRecord
+from taco.consensus.pos_quality import UI_ACTUAL_SPACE_CONSTANT_FACTOR
+from taco.full_node.full_node import FullNode
+from taco.types.blockchain_format.sized_bytes import bytes32
+from taco.types.coin_record import CoinRecord
+from taco.types.full_block import FullBlock
+from taco.types.mempool_inclusion_status import MempoolInclusionStatus
+from taco.types.spend_bundle import SpendBundle
+from taco.types.unfinished_header_block import UnfinishedHeaderBlock
+from taco.util.byte_types import hexstr_to_bytes
+from taco.util.ints import uint32, uint64, uint128
+from taco.util.ws_message import WsRpcMessage, create_payload_dict
 
 
 class FullNodeRpcApi:
     def __init__(self, service: FullNode):
         self.service = service
-        self.service_name = "flax_full_node"
+        self.service_name = "taco_full_node"
         self.cached_blockchain_state: Optional[Dict] = None
 
     def get_routes(self) -> Dict[str, Callable]:

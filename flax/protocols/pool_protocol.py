@@ -1,9 +1,9 @@
 from dataclasses import dataclass
 from typing import List, Optional
 
-from flax.types.blockchain_format.proof_of_space import ProofOfSpace
-from flax.util.ints import uint32, uint64
-from flax.util.streamable import Streamable, streamable
+from taco.types.blockchain_format.proof_of_space import ProofOfSpace
+from taco.util.ints import uint32, uint64
+from taco.util.streamable import Streamable, streamable
 
 """
 Protocol between farmer and pool.

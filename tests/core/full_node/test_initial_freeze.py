@@ -3,18 +3,18 @@ import time
 
 import pytest
 
-from flax.consensus.block_rewards import calculate_base_farmer_reward, calculate_pool_reward
-from flax.consensus.blockchain import ReceiveBlockResult
-from flax.protocols import full_node_protocol, wallet_protocol
-from flax.protocols.protocol_message_types import ProtocolMessageTypes
-from flax.server.outbound_message import Message
-from flax.simulator.full_node_simulator import FullNodeSimulator
-from flax.simulator.simulator_protocol import FarmNewBlockProtocol
-from flax.types.mempool_inclusion_status import MempoolInclusionStatus
-from flax.types.peer_info import PeerInfo
-from flax.util.errors import Err
-from flax.util.ints import uint16, uint32
-from flax.wallet.transaction_record import TransactionRecord
+from taco.consensus.block_rewards import calculate_base_farmer_reward, calculate_pool_reward
+from taco.consensus.blockchain import ReceiveBlockResult
+from taco.protocols import full_node_protocol, wallet_protocol
+from taco.protocols.protocol_message_types import ProtocolMessageTypes
+from taco.server.outbound_message import Message
+from taco.simulator.full_node_simulator import FullNodeSimulator
+from taco.simulator.simulator_protocol import FarmNewBlockProtocol
+from taco.types.mempool_inclusion_status import MempoolInclusionStatus
+from taco.types.peer_info import PeerInfo
+from taco.util.errors import Err
+from taco.util.ints import uint16, uint32
+from taco.wallet.transaction_record import TransactionRecord
 from tests.core.full_node.test_full_node import add_dummy_connection
 from tests.setup_nodes import bt, self_hostname, setup_simulators_and_wallets
 from tests.time_out_assert import time_out_assert

@@ -1,6 +1,6 @@
 import click
 
-from flax.util.service_groups import all_groups
+from taco.util.service_groups import all_groups
 
 
 @click.command("start", short_help="Start service groups")

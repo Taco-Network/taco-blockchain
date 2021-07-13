@@ -2,9 +2,9 @@ from typing import Dict, List
 
 from sortedcontainers import SortedDict
 
-from flax.types.blockchain_format.coin import Coin
-from flax.types.blockchain_format.sized_bytes import bytes32
-from flax.types.mempool_item import MempoolItem
+from taco.types.blockchain_format.coin import Coin
+from taco.types.blockchain_format.sized_bytes import bytes32
+from taco.types.mempool_item import MempoolItem
 
 
 class Mempool:

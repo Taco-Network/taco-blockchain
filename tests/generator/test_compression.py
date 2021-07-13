@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from typing import List, Any
 from unittest import TestCase
 
-from flax.full_node.bundle_tools import (
+from taco.full_node.bundle_tools import (
     bundle_suitable_for_compression,
     compressed_coin_solution_entry_list,
     compressed_spend_bundle_solution,
@@ -11,13 +11,13 @@ from flax.full_node.bundle_tools import (
     simple_solution_generator,
     spend_bundle_to_serialized_coin_solution_entry_list,
 )
-from flax.full_node.generator import run_generator, create_generator_args
-from flax.types.blockchain_format.program import Program, SerializedProgram, INFINITE_COST
-from flax.types.generator_types import BlockGenerator, CompressorArg, GeneratorArg
-from flax.types.spend_bundle import SpendBundle
-from flax.util.byte_types import hexstr_to_bytes
-from flax.util.ints import uint32
-from flax.wallet.puzzles.load_clvm import load_clvm
+from taco.full_node.generator import run_generator, create_generator_args
+from taco.types.blockchain_format.program import Program, SerializedProgram, INFINITE_COST
+from taco.types.generator_types import BlockGenerator, CompressorArg, GeneratorArg
+from taco.types.spend_bundle import SpendBundle
+from taco.util.byte_types import hexstr_to_bytes
+from taco.util.ints import uint32
+from taco.wallet.puzzles.load_clvm import load_clvm
 
 from tests.core.make_block_generator import make_spend_bundle
 
@@ -27,17 +27,17 @@ from clvm.serialize import sexp_from_stream
 
 from clvm_tools import binutils
 
-TEST_GEN_DESERIALIZE = load_clvm("test_generator_deserialize.clvm", package_or_requirement="flax.wallet.puzzles")
-DESERIALIZE_MOD = load_clvm("flaxlisp_deserialisation.clvm", package_or_requirement="flax.wallet.puzzles")
+TEST_GEN_DESERIALIZE = load_clvm("test_generator_deserialize.clvm", package_or_requirement="taco.wallet.puzzles")
+DESERIALIZE_MOD = load_clvm("tacolisp_deserialisation.clvm", package_or_requirement="taco.wallet.puzzles")
 
-DECOMPRESS_PUZZLE = load_clvm("decompress_puzzle.clvm", package_or_requirement="flax.wallet.puzzles")
-DECOMPRESS_CSE = load_clvm("decompress_coin_solution_entry.clvm", package_or_requirement="flax.wallet.puzzles")
+DECOMPRESS_PUZZLE = load_clvm("decompress_puzzle.clvm", package_or_requirement="taco.wallet.puzzles")
+DECOMPRESS_CSE = load_clvm("decompress_coin_solution_entry.clvm", package_or_requirement="taco.wallet.puzzles")
 
 DECOMPRESS_CSE_WITH_PREFIX = load_clvm(
-    "decompress_coin_solution_entry_with_prefix.clvm", package_or_requirement="flax.wallet.puzzles"
+    "decompress_coin_solution_entry_with_prefix.clvm", package_or_requirement="taco.wallet.puzzles"
 )
-DECOMPRESS_BLOCK = load_clvm("block_program_zero.clvm", package_or_requirement="flax.wallet.puzzles")
-TEST_MULTIPLE = load_clvm("test_multiple_generator_input_arguments.clvm", package_or_requirement="flax.wallet.puzzles")
+DECOMPRESS_BLOCK = load_clvm("block_program_zero.clvm", package_or_requirement="taco.wallet.puzzles")
+TEST_MULTIPLE = load_clvm("test_multiple_generator_input_arguments.clvm", package_or_requirement="taco.wallet.puzzles")
 
 Nil = Program.from_bytes(b"\x80")
 

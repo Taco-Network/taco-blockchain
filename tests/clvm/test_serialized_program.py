@@ -1,7 +1,7 @@
 from unittest import TestCase
 
-from flax.types.blockchain_format.program import Program, SerializedProgram, INFINITE_COST
-from flax.wallet.puzzles.load_clvm import load_clvm
+from taco.types.blockchain_format.program import Program, SerializedProgram, INFINITE_COST
+from taco.wallet.puzzles.load_clvm import load_clvm
 
 SHA256TREE_MOD = load_clvm("sha256tree_module.clvm")
 

@@ -8,17 +8,17 @@ from typing import Any, List, Optional, Tuple
 
 from blspy import AugSchemeMPL, G1Element, PrivateKey
 
-from flax.types.blockchain_format.coin import Coin
-from flax.types.blockchain_format.program import Program
-from flax.types.blockchain_format.sized_bytes import bytes32
-from flax.types.coin_solution import CoinSolution
-from flax.types.spend_bundle import SpendBundle
-from flax.util.byte_types import hexstr_to_bytes
-from flax.util.ints import uint8, uint32, uint64, uint128
-from flax.util.streamable import Streamable, streamable
-from flax.wallet.derivation_record import DerivationRecord
-from flax.wallet.derive_keys import master_sk_to_wallet_sk
-from flax.wallet.rl_wallet.rl_wallet_puzzles import (
+from taco.types.blockchain_format.coin import Coin
+from taco.types.blockchain_format.program import Program
+from taco.types.blockchain_format.sized_bytes import bytes32
+from taco.types.coin_solution import CoinSolution
+from taco.types.spend_bundle import SpendBundle
+from taco.util.byte_types import hexstr_to_bytes
+from taco.util.ints import uint8, uint32, uint64, uint128
+from taco.util.streamable import Streamable, streamable
+from taco.wallet.derivation_record import DerivationRecord
+from taco.wallet.derive_keys import master_sk_to_wallet_sk
+from taco.wallet.rl_wallet.rl_wallet_puzzles import (
     make_clawback_solution,
     rl_make_aggregation_puzzle,
     rl_make_aggregation_solution,
@@ -26,12 +26,12 @@ from flax.wallet.rl_wallet.rl_wallet_puzzles import (
     rl_puzzle_for_pk,
     solution_for_rl,
 )
-from flax.wallet.transaction_record import TransactionRecord
-from flax.wallet.util.transaction_type import TransactionType
-from flax.wallet.util.wallet_types import WalletType
-from flax.wallet.wallet import Wallet
-from flax.wallet.wallet_coin_record import WalletCoinRecord
-from flax.wallet.wallet_info import WalletInfo
+from taco.wallet.transaction_record import TransactionRecord
+from taco.wallet.util.transaction_type import TransactionType
+from taco.wallet.util.wallet_types import WalletType
+from taco.wallet.wallet import Wallet
+from taco.wallet.wallet_coin_record import WalletCoinRecord
+from taco.wallet.wallet_info import WalletInfo
 
 
 @dataclass(frozen=True)

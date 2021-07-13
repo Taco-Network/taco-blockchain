@@ -2,16 +2,16 @@ from typing import Any, Dict, List, Optional
 
 import aiohttp
 
-from flax.cmds.units import units
-from flax.consensus.block_record import BlockRecord
-from flax.rpc.farmer_rpc_client import FarmerRpcClient
-from flax.rpc.full_node_rpc_client import FullNodeRpcClient
-from flax.rpc.harvester_rpc_client import HarvesterRpcClient
-from flax.rpc.wallet_rpc_client import WalletRpcClient
-from flax.util.config import load_config
-from flax.util.default_root import DEFAULT_ROOT_PATH
-from flax.util.ints import uint16
-from flax.util.misc import format_minutes
+from taco.cmds.units import units
+from taco.consensus.block_record import BlockRecord
+from taco.rpc.farmer_rpc_client import FarmerRpcClient
+from taco.rpc.full_node_rpc_client import FullNodeRpcClient
+from taco.rpc.harvester_rpc_client import HarvesterRpcClient
+from taco.rpc.wallet_rpc_client import WalletRpcClient
+from taco.util.config import load_config
+from taco.util.default_root import DEFAULT_ROOT_PATH
+from taco.util.ints import uint16
+from taco.util.misc import format_minutes
 
 SECONDS_PER_BLOCK = (24 * 3600) / 4608
 
@@ -200,12 +200,12 @@ async def summary(rpc_port: int, wallet_rpc_port: int, harvester_rpc_port: int, 
         print("Farming")
 
     if amounts is not None:
-        print(f"Total flax farmed: {amounts['farmed_amount'] / units['flax']}")
-        print(f"User transaction fees: {amounts['fee_amount'] / units['flax']}")
-        print(f"Block rewards: {(amounts['farmer_reward_amount'] + amounts['pool_reward_amount']) / units['flax']}")
+        print(f"Total taco farmed: {amounts['farmed_amount'] / units['taco']}")
+        print(f"User transaction fees: {amounts['fee_amount'] / units['taco']}")
+        print(f"Block rewards: {(amounts['farmer_reward_amount'] + amounts['pool_reward_amount']) / units['taco']}")
         print(f"Last height farmed: {amounts['last_height_farmed']}")
     else:
-        print("Total flax farmed: Unknown")
+        print("Total taco farmed: Unknown")
         print("User transaction fees: Unknown")
         print("Block rewards: Unknown")
         print("Last height farmed: Unknown")
@@ -246,4 +246,4 @@ async def summary(rpc_port: int, wallet_rpc_port: int, harvester_rpc_port: int, 
         proportion = total_plot_size / blockchain_state["space"] if blockchain_state["space"] else -1
         minutes = int((await get_average_block_time(rpc_port) / 60) / proportion) if proportion else -1
     print("Expected time to win: " + format_minutes(minutes))
-    print("Note: log into your key using 'flax wallet show' to see rewards for each key")
+    print("Note: log into your key using 'taco wallet show' to see rewards for each key")

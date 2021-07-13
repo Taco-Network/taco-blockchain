@@ -1,13 +1,13 @@
 from clvm_tools import binutils
-from flax.types.blockchain_format.sized_bytes import bytes32
-from flax.types.blockchain_format.program import Program
+from taco.types.blockchain_format.sized_bytes import bytes32
+from taco.types.blockchain_format.program import Program
 from typing import List, Optional, Tuple
 from blspy import G1Element
-from flax.types.blockchain_format.coin import Coin
-from flax.types.coin_solution import CoinSolution
-from flax.util.ints import uint64
-from flax.wallet.puzzles.load_clvm import load_clvm
-from flax.types.condition_opcodes import ConditionOpcode
+from taco.types.blockchain_format.coin import Coin
+from taco.types.coin_solution import CoinSolution
+from taco.util.ints import uint64
+from taco.wallet.puzzles.load_clvm import load_clvm
+from taco.types.condition_opcodes import ConditionOpcode
 
 DID_CORE_MOD = load_clvm("singleton_top_layer.clvm")
 DID_INNERPUZ_MOD = load_clvm("did_innerpuz.clvm")

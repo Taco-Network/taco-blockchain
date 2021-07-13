@@ -9,28 +9,28 @@ from typing import Callable, Dict, List, Optional, Tuple, Set
 
 from chiavdf import create_discriminant
 
-from flax.consensus.constants import ConsensusConstants
-from flax.consensus.pot_iterations import calculate_sp_iters, is_overflow_block
-from flax.protocols import timelord_protocol
-from flax.protocols.protocol_message_types import ProtocolMessageTypes
-from flax.server.outbound_message import NodeType, make_msg
-from flax.server.server import FlaxServer
-from flax.timelord.iters_from_block import iters_from_block
-from flax.timelord.timelord_state import LastState
-from flax.timelord.types import Chain, IterationType, StateType
-from flax.types.blockchain_format.classgroup import ClassgroupElement
-from flax.types.blockchain_format.reward_chain_block import RewardChainBlock
-from flax.types.blockchain_format.sized_bytes import bytes32
-from flax.types.blockchain_format.slots import (
+from taco.consensus.constants import ConsensusConstants
+from taco.consensus.pot_iterations import calculate_sp_iters, is_overflow_block
+from taco.protocols import timelord_protocol
+from taco.protocols.protocol_message_types import ProtocolMessageTypes
+from taco.server.outbound_message import NodeType, make_msg
+from taco.server.server import TacoServer
+from taco.timelord.iters_from_block import iters_from_block
+from taco.timelord.timelord_state import LastState
+from taco.timelord.types import Chain, IterationType, StateType
+from taco.types.blockchain_format.classgroup import ClassgroupElement
+from taco.types.blockchain_format.reward_chain_block import RewardChainBlock
+from taco.types.blockchain_format.sized_bytes import bytes32
+from taco.types.blockchain_format.slots import (
     ChallengeChainSubSlot,
     InfusedChallengeChainSubSlot,
     RewardChainSubSlot,
     SubSlotProofs,
 )
-from flax.types.blockchain_format.sub_epoch_summary import SubEpochSummary
-from flax.types.blockchain_format.vdf import VDFInfo, VDFProof
-from flax.types.end_of_slot_bundle import EndOfSubSlotBundle
-from flax.util.ints import uint8, uint32, uint64, uint128
+from taco.types.blockchain_format.sub_epoch_summary import SubEpochSummary
+from taco.types.blockchain_format.vdf import VDFInfo, VDFProof
+from taco.types.end_of_slot_bundle import EndOfSubSlotBundle
+from taco.util.ints import uint8, uint32, uint64, uint128
 
 log = logging.getLogger(__name__)
 
@@ -44,7 +44,7 @@ class Timelord:
         self.free_clients: List[Tuple[str, asyncio.StreamReader, asyncio.StreamWriter]] = []
         self.potential_free_clients: List = []
         self.ip_whitelist = self.config["vdf_clients"]["ip"]
-        self.server: Optional[FlaxServer] = None
+        self.server: Optional[TacoServer] = None
         self.chain_type_to_stream: Dict[Chain, Tuple[str, asyncio.StreamReader, asyncio.StreamWriter]] = {}
         self.chain_start_time: Dict = {}
         # Chains that currently don't have a vdf_client.
@@ -116,7 +116,7 @@ class Timelord:
     async def _await_closed(self):
         pass
 
-    def set_server(self, server: FlaxServer):
+    def set_server(self, server: TacoServer):
         self.server = server
 
     async def _handle_client(self, reader: asyncio.StreamReader, writer: asyncio.StreamWriter):

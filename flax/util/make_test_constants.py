@@ -1,6 +1,6 @@
 from typing import Dict
 
-from flax.consensus.default_constants import DEFAULT_CONSTANTS, ConsensusConstants
+from taco.consensus.default_constants import DEFAULT_CONSTANTS, ConsensusConstants
 
 
 def make_test_constants(test_constants_overrides: Dict) -> ConsensusConstants:

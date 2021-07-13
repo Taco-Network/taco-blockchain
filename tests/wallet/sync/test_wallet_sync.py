@@ -3,12 +3,12 @@ import asyncio
 
 import pytest
 
-from flax.consensus.block_rewards import calculate_base_farmer_reward, calculate_pool_reward
-from flax.protocols import full_node_protocol
-from flax.simulator.simulator_protocol import FarmNewBlockProtocol
-from flax.types.peer_info import PeerInfo
-from flax.util.ints import uint16, uint32
-from flax.wallet.wallet_state_manager import WalletStateManager
+from taco.consensus.block_rewards import calculate_base_farmer_reward, calculate_pool_reward
+from taco.protocols import full_node_protocol
+from taco.simulator.simulator_protocol import FarmNewBlockProtocol
+from taco.types.peer_info import PeerInfo
+from taco.util.ints import uint16, uint32
+from taco.wallet.wallet_state_manager import WalletStateManager
 from tests.connection_utils import disconnect_all_and_reconnect
 from tests.core.fixtures import default_400_blocks, default_1000_blocks
 from tests.setup_nodes import bt, self_hostname, setup_node_and_wallet, setup_simulators_and_wallets, test_constants

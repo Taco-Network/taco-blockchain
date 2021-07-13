@@ -8,32 +8,32 @@ from typing import Dict, List, Optional, Set, Tuple
 from blspy import AugSchemeMPL, G1Element
 from chiabip158 import PyBIP158
 
-from flax.consensus.block_record import BlockRecord
-from flax.consensus.constants import ConsensusConstants
-from flax.consensus.cost_calculator import NPCResult, calculate_cost_of_program
-from flax.full_node.bundle_tools import simple_solution_generator
-from flax.full_node.coin_store import CoinStore
-from flax.full_node.mempool import Mempool
-from flax.full_node.mempool_check_conditions import mempool_check_conditions_dict, get_name_puzzle_conditions
-from flax.types.blockchain_format.coin import Coin
-from flax.types.blockchain_format.program import SerializedProgram
-from flax.types.blockchain_format.sized_bytes import bytes32
-from flax.types.coin_record import CoinRecord
-from flax.types.condition_opcodes import ConditionOpcode
-from flax.types.condition_with_args import ConditionWithArgs
-from flax.types.mempool_inclusion_status import MempoolInclusionStatus
-from flax.types.mempool_item import MempoolItem
-from flax.types.spend_bundle import SpendBundle
-from flax.util.clvm import int_from_bytes
-from flax.util.condition_tools import (
+from taco.consensus.block_record import BlockRecord
+from taco.consensus.constants import ConsensusConstants
+from taco.consensus.cost_calculator import NPCResult, calculate_cost_of_program
+from taco.full_node.bundle_tools import simple_solution_generator
+from taco.full_node.coin_store import CoinStore
+from taco.full_node.mempool import Mempool
+from taco.full_node.mempool_check_conditions import mempool_check_conditions_dict, get_name_puzzle_conditions
+from taco.types.blockchain_format.coin import Coin
+from taco.types.blockchain_format.program import SerializedProgram
+from taco.types.blockchain_format.sized_bytes import bytes32
+from taco.types.coin_record import CoinRecord
+from taco.types.condition_opcodes import ConditionOpcode
+from taco.types.condition_with_args import ConditionWithArgs
+from taco.types.mempool_inclusion_status import MempoolInclusionStatus
+from taco.types.mempool_item import MempoolItem
+from taco.types.spend_bundle import SpendBundle
+from taco.util.clvm import int_from_bytes
+from taco.util.condition_tools import (
     pkm_pairs_for_conditions_dict,
     coin_announcements_names_for_npc,
     puzzle_announcements_names_for_npc,
 )
-from flax.util.errors import Err
-from flax.util.generator_tools import additions_for_npc
-from flax.util.ints import uint32, uint64
-from flax.util.streamable import recurse_jsonify
+from taco.util.errors import Err
+from taco.util.generator_tools import additions_for_npc
+from taco.util.ints import uint32, uint64
+from taco.util.streamable import recurse_jsonify
 
 log = logging.getLogger(__name__)
 
@@ -388,7 +388,7 @@ class MempoolManager:
                 log.warning(f"{npc.puzzle_hash} != {coin_record.coin.puzzle_hash}")
                 return None, MempoolInclusionStatus.FAILED, Err.WRONG_PUZZLE_HASH
 
-            flaxlisp_height = (
+            tacolisp_height = (
                 self.peak.prev_transaction_block_height if not self.peak.is_transaction_block else self.peak.height
             )
             assert self.peak.timestamp is not None
@@ -397,7 +397,7 @@ class MempoolManager:
                 coin_announcements_in_spend,
                 puzzle_announcements_in_spend,
                 npc.condition_dict,
-                uint32(flaxlisp_height),
+                uint32(tacolisp_height),
                 self.peak.timestamp,
             )
 

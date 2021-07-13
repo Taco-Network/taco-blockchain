@@ -10,7 +10,7 @@ require a delegated puzzle program, so in those cases, this is just what
 the doctor ordered.
 """
 
-from flax.types.blockchain_format.program import Program
+from taco.types.blockchain_format.program import Program
 
 from .load_clvm import load_clvm
 

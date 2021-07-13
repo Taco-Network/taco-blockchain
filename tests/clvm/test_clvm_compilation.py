@@ -3,43 +3,43 @@ from unittest import TestCase
 
 from clvm_tools.clvmc import compile_clvm
 
-from flax.types.blockchain_format.program import Program, SerializedProgram
+from taco.types.blockchain_format.program import Program, SerializedProgram
 
 wallet_program_files = set(
     [
-        "flax/wallet/puzzles/calculate_synthetic_public_key.clvm",
-        "flax/wallet/puzzles/cc.clvm",
-        "flax/wallet/puzzles/flaxlisp_deserialisation.clvm",
-        "flax/wallet/puzzles/rom_bootstrap_generator.clvm",
-        "flax/wallet/puzzles/generator_for_single_coin.clvm",
-        "flax/wallet/puzzles/genesis-by-coin-id-with-0.clvm",
-        "flax/wallet/puzzles/genesis-by-puzzle-hash-with-0.clvm",
-        "flax/wallet/puzzles/lock.inner.puzzle.clvm",
-        "flax/wallet/puzzles/p2_conditions.clvm",
-        "flax/wallet/puzzles/p2_delegated_conditions.clvm",
-        "flax/wallet/puzzles/p2_delegated_puzzle.clvm",
-        "flax/wallet/puzzles/p2_delegated_puzzle_or_hidden_puzzle.clvm",
-        "flax/wallet/puzzles/p2_m_of_n_delegate_direct.clvm",
-        "flax/wallet/puzzles/p2_puzzle_hash.clvm",
-        "flax/wallet/puzzles/rl_aggregation.clvm",
-        "flax/wallet/puzzles/rl.clvm",
-        "flax/wallet/puzzles/sha256tree_module.clvm",
-        "flax/wallet/puzzles/singleton_top_layer.clvm",
-        "flax/wallet/puzzles/did_innerpuz.clvm",
-        "flax/wallet/puzzles/decompress_puzzle.clvm",
-        "flax/wallet/puzzles/decompress_coin_solution_entry_with_prefix.clvm",
-        "flax/wallet/puzzles/decompress_coin_solution_entry.clvm",
-        "flax/wallet/puzzles/block_program_zero.clvm",
-        "flax/wallet/puzzles/test_generator_deserialize.clvm",
-        "flax/wallet/puzzles/test_multiple_generator_input_arguments.clvm",
+        "taco/wallet/puzzles/calculate_synthetic_public_key.clvm",
+        "taco/wallet/puzzles/cc.clvm",
+        "taco/wallet/puzzles/tacolisp_deserialisation.clvm",
+        "taco/wallet/puzzles/rom_bootstrap_generator.clvm",
+        "taco/wallet/puzzles/generator_for_single_coin.clvm",
+        "taco/wallet/puzzles/genesis-by-coin-id-with-0.clvm",
+        "taco/wallet/puzzles/genesis-by-puzzle-hash-with-0.clvm",
+        "taco/wallet/puzzles/lock.inner.puzzle.clvm",
+        "taco/wallet/puzzles/p2_conditions.clvm",
+        "taco/wallet/puzzles/p2_delegated_conditions.clvm",
+        "taco/wallet/puzzles/p2_delegated_puzzle.clvm",
+        "taco/wallet/puzzles/p2_delegated_puzzle_or_hidden_puzzle.clvm",
+        "taco/wallet/puzzles/p2_m_of_n_delegate_direct.clvm",
+        "taco/wallet/puzzles/p2_puzzle_hash.clvm",
+        "taco/wallet/puzzles/rl_aggregation.clvm",
+        "taco/wallet/puzzles/rl.clvm",
+        "taco/wallet/puzzles/sha256tree_module.clvm",
+        "taco/wallet/puzzles/singleton_top_layer.clvm",
+        "taco/wallet/puzzles/did_innerpuz.clvm",
+        "taco/wallet/puzzles/decompress_puzzle.clvm",
+        "taco/wallet/puzzles/decompress_coin_solution_entry_with_prefix.clvm",
+        "taco/wallet/puzzles/decompress_coin_solution_entry.clvm",
+        "taco/wallet/puzzles/block_program_zero.clvm",
+        "taco/wallet/puzzles/test_generator_deserialize.clvm",
+        "taco/wallet/puzzles/test_multiple_generator_input_arguments.clvm",
     ]
 )
 
 clvm_include_files = set(
-    ["flax/wallet/puzzles/create-lock-puzzlehash.clvm", "flax/wallet/puzzles/condition_codes.clvm"]
+    ["taco/wallet/puzzles/create-lock-puzzlehash.clvm", "taco/wallet/puzzles/condition_codes.clvm"]
 )
 
-CLVM_PROGRAM_ROOT = "flax/wallet/puzzles"
+CLVM_PROGRAM_ROOT = "taco/wallet/puzzles"
 
 
 def list_files(dir, glob):
@@ -66,7 +66,7 @@ class TestClvmCompilation(TestCase):
 
     def test_all_programs_listed(self):
         """
-        Checks to see if a new .clvm file was added to flax/wallet/puzzles, but not added to `wallet_program_files`
+        Checks to see if a new .clvm file was added to taco/wallet/puzzles, but not added to `wallet_program_files`
         """
         existing_files = list_files(CLVM_PROGRAM_ROOT, "*.clvm")
         existing_file_paths = set([Path(x).relative_to(CLVM_PROGRAM_ROOT) for x in existing_files])

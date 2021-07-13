@@ -3,20 +3,20 @@ import cProfile
 import logging
 import pathlib
 
-from flax.util.path import mkdir, path_from_root
+from taco.util.path import mkdir, path_from_root
 
 # to use the profiler, enable it config file, "enable_profiler"
-# the output will be printed to your flax root path, e.g. ~/.flax/mainnet/profile/
+# the output will be printed to your taco root path, e.g. ~/.taco/mainnet/profile/
 # to analyze the profile, run:
 
-#   python flax/utils/profiler.py ~/.flax/mainnet/profile | less -r
+#   python taco/utils/profiler.py ~/.taco/mainnet/profile | less -r
 
-# this will print CPU usage of the flax full node main thread at 1 second increments.
+# this will print CPU usage of the taco full node main thread at 1 second increments.
 # find a time window of interest and analyze the profile file (which are in pstats format).
 
 # for example:
 
-#   python flax/utils/profiler.py ~/.flax/mainnet/profile 10 20
+#   python taco/utils/profiler.py ~/.taco/mainnet/profile 10 20
 
 
 async def profile_task(root_path: pathlib.Path, log: logging.Logger) -> None:
@@ -118,7 +118,7 @@ if __name__ == "__main__":
         for i in range(first, last + 1):
             files.append(str(profile_dir / ("slot-%05d.profile" % i)))
 
-        output_file = "flax-hotspot-%d" % first
+        output_file = "taco-hotspot-%d" % first
         if first < last:
             output_file += "-%d" % last
 

@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 from typing import List
 
-from flax.types.peer_info import TimestampedPeerInfo
-from flax.util.streamable import Streamable, streamable
+from taco.types.peer_info import TimestampedPeerInfo
+from taco.util.streamable import Streamable, streamable
 
 """
 Protocol to introducer

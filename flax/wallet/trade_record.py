@@ -1,11 +1,11 @@
 from dataclasses import dataclass
 from typing import List, Optional, Tuple
 
-from flax.types.blockchain_format.coin import Coin
-from flax.types.blockchain_format.sized_bytes import bytes32
-from flax.types.spend_bundle import SpendBundle
-from flax.util.ints import uint8, uint32, uint64
-from flax.util.streamable import Streamable, streamable
+from taco.types.blockchain_format.coin import Coin
+from taco.types.blockchain_format.sized_bytes import bytes32
+from taco.types.spend_bundle import SpendBundle
+from taco.util.ints import uint8, uint32, uint64
+from taco.util.streamable import Streamable, streamable
 
 
 @dataclass(frozen=True)

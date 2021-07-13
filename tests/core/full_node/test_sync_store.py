@@ -2,8 +2,8 @@ import asyncio
 
 import pytest
 
-from flax.full_node.sync_store import SyncStore
-from flax.util.hash import std_hash
+from taco.full_node.sync_store import SyncStore
+from taco.util.hash import std_hash
 
 
 @pytest.fixture(scope="module")

@@ -2,8 +2,8 @@ import asyncio
 import logging
 from typing import Dict, List, Optional, Set, Tuple
 
-from flax.types.blockchain_format.sized_bytes import bytes32
-from flax.util.ints import uint32, uint128
+from taco.types.blockchain_format.sized_bytes import bytes32
+from taco.util.ints import uint32, uint128
 
 log = logging.getLogger(__name__)
 

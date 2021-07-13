@@ -2,17 +2,17 @@
 set -e
 
 if [ -z "$VIRTUAL_ENV" ]; then
-  echo "This requires the flax python virtual environment."
+  echo "This requires the taco python virtual environment."
   echo "Execute '. ./activate' before running."
 	exit 1
 fi
 
 if [ "$(id -u)" = 0 ]; then
-  echo "The Flax Blockchain GUI can not be installed or run by the root user."
+  echo "The Taco Blockchain GUI can not be installed or run by the root user."
 	exit 1
 fi
 
-# Allows overriding the branch or commit to build in flax-blockchain-gui
+# Allows overriding the branch or commit to build in taco-blockchain-gui
 SUBMODULE_BRANCH=$1
 
 UBUNTU=false
@@ -78,7 +78,7 @@ if [ ! "$CI" ]; then
 	echo "Running git submodule update."
 	echo ""
 	git submodule update
-	cd flax-blockchain-gui
+	cd taco-blockchain-gui
 
 	if [ "$SUBMODULE_BRANCH" ];
 	then
@@ -98,6 +98,6 @@ else
 fi
 
 echo ""
-echo "Flax blockchain install-gui.sh completed."
+echo "Taco blockchain install-gui.sh completed."
 echo ""
-echo "Type 'cd flax-blockchain-gui' and then 'npm run electron &' to start the GUI."
+echo "Type 'cd taco-blockchain-gui' and then 'npm run electron &' to start the GUI."

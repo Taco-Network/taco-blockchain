@@ -7,30 +7,30 @@ from typing import Callable, Dict, List, Optional, Tuple
 
 from blspy import PrivateKey, G1Element
 
-from flax.cmds.init_funcs import check_keys
-from flax.consensus.block_rewards import calculate_base_farmer_reward
-from flax.protocols.protocol_message_types import ProtocolMessageTypes
-from flax.server.outbound_message import NodeType, make_msg
-from flax.simulator.simulator_protocol import FarmNewBlockProtocol
-from flax.types.blockchain_format.coin import Coin
-from flax.types.blockchain_format.sized_bytes import bytes32
-from flax.util.bech32m import decode_puzzle_hash, encode_puzzle_hash
-from flax.util.byte_types import hexstr_to_bytes
-from flax.util.ints import uint32, uint64
-from flax.util.keychain import bytes_to_mnemonic, generate_mnemonic
-from flax.util.path import path_from_root
-from flax.util.ws_message import WsRpcMessage, create_payload_dict
-from flax.wallet.cc_wallet.cc_wallet import CCWallet
-from flax.wallet.rl_wallet.rl_wallet import RLWallet
-from flax.wallet.did_wallet.did_wallet import DIDWallet
-from flax.wallet.trade_record import TradeRecord
-from flax.wallet.transaction_record import TransactionRecord
-from flax.wallet.util.backup_utils import download_backup, get_backup_info, upload_backup
-from flax.wallet.util.trade_utils import trade_record_to_dict
-from flax.wallet.util.transaction_type import TransactionType
-from flax.wallet.util.wallet_types import WalletType
-from flax.wallet.wallet_info import WalletInfo
-from flax.wallet.wallet_node import WalletNode
+from taco.cmds.init_funcs import check_keys
+from taco.consensus.block_rewards import calculate_base_farmer_reward
+from taco.protocols.protocol_message_types import ProtocolMessageTypes
+from taco.server.outbound_message import NodeType, make_msg
+from taco.simulator.simulator_protocol import FarmNewBlockProtocol
+from taco.types.blockchain_format.coin import Coin
+from taco.types.blockchain_format.sized_bytes import bytes32
+from taco.util.bech32m import decode_puzzle_hash, encode_puzzle_hash
+from taco.util.byte_types import hexstr_to_bytes
+from taco.util.ints import uint32, uint64
+from taco.util.keychain import bytes_to_mnemonic, generate_mnemonic
+from taco.util.path import path_from_root
+from taco.util.ws_message import WsRpcMessage, create_payload_dict
+from taco.wallet.cc_wallet.cc_wallet import CCWallet
+from taco.wallet.rl_wallet.rl_wallet import RLWallet
+from taco.wallet.did_wallet.did_wallet import DIDWallet
+from taco.wallet.trade_record import TradeRecord
+from taco.wallet.transaction_record import TransactionRecord
+from taco.wallet.util.backup_utils import download_backup, get_backup_info, upload_backup
+from taco.wallet.util.trade_utils import trade_record_to_dict
+from taco.wallet.util.transaction_type import TransactionType
+from taco.wallet.util.wallet_types import WalletType
+from taco.wallet.wallet_info import WalletInfo
+from taco.wallet.wallet_node import WalletNode
 
 # Timeout for response from wallet/full node for sending a transaction
 TIMEOUT = 30
@@ -42,7 +42,7 @@ class WalletRpcApi:
     def __init__(self, wallet_node: WalletNode):
         assert wallet_node is not None
         self.service = wallet_node
-        self.service_name = "flax_wallet"
+        self.service_name = "taco_wallet"
 
     def get_routes(self) -> Dict[str, Callable]:
         return {
@@ -115,7 +115,7 @@ class WalletRpcApi:
             data["wallet_id"] = args[1]
         if args[2] is not None:
             data["additional_data"] = args[2]
-        return [create_payload_dict("state_changed", data, "flax_wallet", "wallet_ui")]
+        return [create_payload_dict("state_changed", data, "taco_wallet", "wallet_ui")]
 
     async def _stop_wallet(self):
         """

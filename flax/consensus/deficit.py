@@ -1,8 +1,8 @@
 from typing import Optional
 
-from flax.consensus.block_record import BlockRecord
-from flax.consensus.constants import ConsensusConstants
-from flax.util.ints import uint8, uint32
+from taco.consensus.block_record import BlockRecord
+from taco.consensus.constants import ConsensusConstants
+from taco.util.ints import uint8, uint32
 
 
 def calculate_deficit(

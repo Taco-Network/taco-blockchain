@@ -3,9 +3,9 @@ from typing import List
 
 from blspy import AugSchemeMPL, G2Element
 
-from flax.types.blockchain_format.coin import Coin
-from flax.types.blockchain_format.sized_bytes import bytes32
-from flax.util.streamable import Streamable, streamable
+from taco.types.blockchain_format.coin import Coin
+from taco.types.blockchain_format.sized_bytes import bytes32
+from taco.util.streamable import Streamable, streamable
 
 from .coin_solution import CoinSolution
 

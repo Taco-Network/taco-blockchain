@@ -1,5 +1,5 @@
-from flax.wallet.puzzles.load_clvm import load_clvm
-from flax.types.blockchain_format.program import Program, INFINITE_COST
+from taco.wallet.puzzles.load_clvm import load_clvm
+from taco.types.blockchain_format.program import Program, INFINITE_COST
 
 DID_CORE_MOD = load_clvm("singleton_top_layer.clvm")
 

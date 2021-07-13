@@ -8,10 +8,10 @@ from typing import Dict, List
 
 import pkg_resources
 
-from flax.util.flax_logging import initialize_logging
-from flax.util.config import load_config
-from flax.util.default_root import DEFAULT_ROOT_PATH
-from flax.util.setproctitle import setproctitle
+from taco.util.taco_logging import initialize_logging
+from taco.util.config import load_config
+from taco.util.default_root import DEFAULT_ROOT_PATH
+from taco.util.setproctitle import setproctitle
 
 active_processes: List = []
 stopped = False
@@ -87,7 +87,7 @@ async def spawn_all_processes(config: Dict, net_config: Dict):
 
 def main():
     root_path = DEFAULT_ROOT_PATH
-    setproctitle("flax_timelord_launcher")
+    setproctitle("taco_timelord_launcher")
     net_config = load_config(root_path, "config.yaml")
     config = net_config["timelord_launcher"]
     initialize_logging("TLauncher", config["logging"], root_path)

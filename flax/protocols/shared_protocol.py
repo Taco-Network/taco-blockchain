@@ -2,8 +2,8 @@ from dataclasses import dataclass
 from enum import IntEnum
 from typing import List, Tuple
 
-from flax.util.ints import uint8, uint16
-from flax.util.streamable import Streamable, streamable
+from taco.util.ints import uint8, uint16
+from taco.util.streamable import Streamable, streamable
 
 protocol_version = "0.0.32"
 
@@ -16,7 +16,7 @@ Note: When changing this file, also change protocol_message_types.py
 # Capabilities can be added here when new features are added to the protocol
 # These are passed in as uint16 into the Handshake
 class Capability(IntEnum):
-    BASE = 1  # Base capability just means it supports the flax protocol at mainnet
+    BASE = 1  # Base capability just means it supports the taco protocol at mainnet
 
 
 @dataclass(frozen=True)

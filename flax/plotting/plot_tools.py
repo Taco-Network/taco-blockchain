@@ -11,11 +11,11 @@ from concurrent.futures.thread import ThreadPoolExecutor
 from blspy import G1Element, PrivateKey
 from chiapos import DiskProver
 
-from flax.consensus.pos_quality import UI_ACTUAL_SPACE_CONSTANT_FACTOR, _expected_plot_size
-from flax.types.blockchain_format.proof_of_space import ProofOfSpace
-from flax.types.blockchain_format.sized_bytes import bytes32
-from flax.util.config import load_config, save_config
-from flax.wallet.derive_keys import master_sk_to_local_sk
+from taco.consensus.pos_quality import UI_ACTUAL_SPACE_CONSTANT_FACTOR, _expected_plot_size
+from taco.types.blockchain_format.proof_of_space import ProofOfSpace
+from taco.types.blockchain_format.sized_bytes import bytes32
+from taco.util.config import load_config, save_config
+from taco.wallet.derive_keys import master_sk_to_local_sk
 
 log = logging.getLogger(__name__)
 

@@ -2,15 +2,15 @@ import asyncio
 import random
 from typing import Any, List, Optional, Tuple
 
-from flax.server.ws_connection import WSFlaxConnection
+from taco.server.ws_connection import WSTacoConnection
 
 
 async def send_all_first_reply(
-    func: str, arg: Any, peers: List[WSFlaxConnection], timeout=15
-) -> Optional[Tuple[Any, WSFlaxConnection]]:
+    func: str, arg: Any, peers: List[WSTacoConnection], timeout=15
+) -> Optional[Tuple[Any, WSTacoConnection]]:
     """performs an API request to peers and returns the result of the first response and the peer that sent it."""
 
-    async def do_func(peer_x: WSFlaxConnection, func_x: str, arg_x: Any):
+    async def do_func(peer_x: WSTacoConnection, func_x: str, arg_x: Any):
         method_to_call = getattr(peer_x, func_x)
         result_x = await method_to_call(arg_x)
         if result_x is not None:
@@ -37,10 +37,10 @@ async def send_all_first_reply(
         return None
 
 
-async def send_to_random(func: str, arg: Any, peers: List[WSFlaxConnection]) -> Optional[Tuple[Any, WSFlaxConnection]]:
+async def send_to_random(func: str, arg: Any, peers: List[WSTacoConnection]) -> Optional[Tuple[Any, WSTacoConnection]]:
     """performs an API request to peers and returns the result of the first response and the peer that sent it."""
 
-    async def do_func(peer_x: WSFlaxConnection, func_x: str, arg_x: Any):
+    async def do_func(peer_x: WSTacoConnection, func_x: str, arg_x: Any):
         method_to_call = getattr(peer_x, func_x)
         result_x = await method_to_call(arg_x)
         if result_x is not None:

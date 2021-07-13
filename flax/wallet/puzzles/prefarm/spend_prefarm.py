@@ -3,15 +3,15 @@ import asyncio
 from blspy import G2Element
 from clvm_tools import binutils
 
-from flax.consensus.block_rewards import calculate_base_farmer_reward, calculate_pool_reward
-from flax.rpc.full_node_rpc_client import FullNodeRpcClient
-from flax.types.blockchain_format.program import Program
-from flax.types.coin_solution import CoinSolution
-from flax.types.spend_bundle import SpendBundle
-from flax.util.bech32m import decode_puzzle_hash
-from flax.util.config import load_config
-from flax.util.default_root import DEFAULT_ROOT_PATH
-from flax.util.ints import uint32, uint16
+from taco.consensus.block_rewards import calculate_base_farmer_reward, calculate_pool_reward
+from taco.rpc.full_node_rpc_client import FullNodeRpcClient
+from taco.types.blockchain_format.program import Program
+from taco.types.coin_solution import CoinSolution
+from taco.types.spend_bundle import SpendBundle
+from taco.util.bech32m import decode_puzzle_hash
+from taco.util.config import load_config
+from taco.util.default_root import DEFAULT_ROOT_PATH
+from taco.util.ints import uint32, uint16
 
 
 async def main() -> None:

@@ -2,8 +2,8 @@ import ipaddress
 from dataclasses import dataclass
 from typing import Optional, Union
 
-from flax.util.ints import uint16, uint64
-from flax.util.streamable import Streamable, streamable
+from taco.util.ints import uint16, uint64
+from taco.util.streamable import Streamable, streamable
 
 
 @dataclass(frozen=True)

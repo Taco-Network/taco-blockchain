@@ -1,13 +1,13 @@
 from dataclasses import dataclass
 from typing import Optional
 
-from flax.types.blockchain_format.slots import (
+from taco.types.blockchain_format.slots import (
     ChallengeChainSubSlot,
     InfusedChallengeChainSubSlot,
     RewardChainSubSlot,
     SubSlotProofs,
 )
-from flax.util.streamable import Streamable, streamable
+from taco.util.streamable import Streamable, streamable
 
 
 @dataclass(frozen=True)

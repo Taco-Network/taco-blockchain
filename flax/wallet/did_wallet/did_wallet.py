@@ -6,28 +6,28 @@ from typing import Dict, Optional, List, Any, Set, Tuple, Union
 
 from blspy import AugSchemeMPL, G1Element
 from secrets import token_bytes
-from flax.protocols import wallet_protocol
-from flax.protocols.wallet_protocol import RespondAdditions, RejectAdditionsRequest
-from flax.server.outbound_message import NodeType
-from flax.types.blockchain_format.coin import Coin
-from flax.types.coin_solution import CoinSolution
+from taco.protocols import wallet_protocol
+from taco.protocols.wallet_protocol import RespondAdditions, RejectAdditionsRequest
+from taco.server.outbound_message import NodeType
+from taco.types.blockchain_format.coin import Coin
+from taco.types.coin_solution import CoinSolution
 
-from flax.types.blockchain_format.program import Program
-from flax.types.spend_bundle import SpendBundle
-from flax.types.blockchain_format.sized_bytes import bytes32
-from flax.wallet.util.transaction_type import TransactionType
-from flax.util.ints import uint64, uint32, uint8
+from taco.types.blockchain_format.program import Program
+from taco.types.spend_bundle import SpendBundle
+from taco.types.blockchain_format.sized_bytes import bytes32
+from taco.wallet.util.transaction_type import TransactionType
+from taco.util.ints import uint64, uint32, uint8
 
-from flax.wallet.did_wallet.did_info import DIDInfo
-from flax.wallet.cc_wallet.ccparent import CCParent
-from flax.wallet.transaction_record import TransactionRecord
-from flax.wallet.util.wallet_types import WalletType
-from flax.wallet.wallet import Wallet
-from flax.wallet.wallet_coin_record import WalletCoinRecord
-from flax.wallet.wallet_info import WalletInfo
-from flax.wallet.derivation_record import DerivationRecord
-from flax.wallet.did_wallet import did_wallet_puzzles
-from flax.wallet.derive_keys import master_sk_to_wallet_sk
+from taco.wallet.did_wallet.did_info import DIDInfo
+from taco.wallet.cc_wallet.ccparent import CCParent
+from taco.wallet.transaction_record import TransactionRecord
+from taco.wallet.util.wallet_types import WalletType
+from taco.wallet.wallet import Wallet
+from taco.wallet.wallet_coin_record import WalletCoinRecord
+from taco.wallet.wallet_info import WalletInfo
+from taco.wallet.derivation_record import DerivationRecord
+from taco.wallet.did_wallet import did_wallet_puzzles
+from taco.wallet.derive_keys import master_sk_to_wallet_sk
 
 
 class DIDWallet:

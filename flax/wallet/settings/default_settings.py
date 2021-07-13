@@ -1,4 +1,4 @@
-from flax.wallet.settings.settings_objects import BackupInitialized
+from taco.wallet.settings.settings_objects import BackupInitialized
 
 default_backup_initialized = BackupInitialized(False, False, False, True)
 

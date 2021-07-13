@@ -1,13 +1,13 @@
 from typing import Callable, Dict, List
 
-from flax.harvester.harvester import Harvester
-from flax.util.ws_message import WsRpcMessage, create_payload_dict
+from taco.harvester.harvester import Harvester
+from taco.util.ws_message import WsRpcMessage, create_payload_dict
 
 
 class HarvesterRpcApi:
     def __init__(self, harvester: Harvester):
         self.service = harvester
-        self.service_name = "flax_harvester"
+        self.service_name = "taco_harvester"
 
     def get_routes(self) -> Dict[str, Callable]:
         return {

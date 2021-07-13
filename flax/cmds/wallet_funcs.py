@@ -7,27 +7,27 @@ from typing import Callable, List, Optional, Tuple
 
 import aiohttp
 
-from flax.cmds.units import units
-from flax.rpc.wallet_rpc_client import WalletRpcClient
-from flax.server.start_wallet import SERVICE_NAME
-from flax.util.bech32m import encode_puzzle_hash
-from flax.util.byte_types import hexstr_to_bytes
-from flax.util.config import load_config
-from flax.util.default_root import DEFAULT_ROOT_PATH
-from flax.util.ints import uint16, uint64
-from flax.wallet.transaction_record import TransactionRecord
-from flax.wallet.util.wallet_types import WalletType
+from taco.cmds.units import units
+from taco.rpc.wallet_rpc_client import WalletRpcClient
+from taco.server.start_wallet import SERVICE_NAME
+from taco.util.bech32m import encode_puzzle_hash
+from taco.util.byte_types import hexstr_to_bytes
+from taco.util.config import load_config
+from taco.util.default_root import DEFAULT_ROOT_PATH
+from taco.util.ints import uint16, uint64
+from taco.wallet.transaction_record import TransactionRecord
+from taco.wallet.util.wallet_types import WalletType
 
 
 def print_transaction(tx: TransactionRecord, verbose: bool, name) -> None:
     if verbose:
         print(tx)
     else:
-        flax_amount = Decimal(int(tx.amount)) / units["flax"]
+        taco_amount = Decimal(int(tx.amount)) / units["taco"]
         to_address = encode_puzzle_hash(tx.to_puzzle_hash, name)
         print(f"Transaction {tx.name}")
         print(f"Status: {'Confirmed' if tx.confirmed else ('In mempool' if tx.is_in_mempool() else 'Pending')}")
-        print(f"Amount: {flax_amount} {name}")
+        print(f"Amount: {taco_amount} {name}")
         print(f"To address: {to_address}")
         print("Created at:", datetime.fromtimestamp(tx.created_at_time).strftime("%Y-%m-%d %H:%M:%S"))
         print("")
@@ -75,8 +75,8 @@ async def send(args: dict, wallet_client: WalletRpcClient, fingerprint: int) -> 
     address = args["address"]
 
     print("Submitting transaction...")
-    final_amount = uint64(int(amount * units["flax"]))
-    final_fee = uint64(int(fee * units["flax"]))
+    final_amount = uint64(int(amount * units["taco"]))
+    final_fee = uint64(int(fee * units["taco"]))
     res = await wallet_client.send_transaction(wallet_id, final_amount, address, final_fee)
     tx_id = res.name
     start = time.time()
@@ -85,11 +85,11 @@ async def send(args: dict, wallet_client: WalletRpcClient, fingerprint: int) -> 
         tx = await wallet_client.get_transaction(wallet_id, tx_id)
         if len(tx.sent_to) > 0:
             print(f"Transaction submitted to nodes: {tx.sent_to}")
-            print(f"Do flax wallet get_transaction -f {fingerprint} -tx 0x{tx_id} to get status")
+            print(f"Do taco wallet get_transaction -f {fingerprint} -tx 0x{tx_id} to get status")
             return None
 
     print("Transaction not yet submitted to nodes")
-    print(f"Do 'flax wallet get_transaction -f {fingerprint} -tx 0x{tx_id}' to get status")
+    print(f"Do 'taco wallet get_transaction -f {fingerprint} -tx 0x{tx_id}' to get status")
 
 
 async def get_address(args: dict, wallet_client: WalletRpcClient, fingerprint: int) -> None:
@@ -118,15 +118,15 @@ async def print_balances(args: dict, wallet_client: WalletRpcClient, fingerprint
         else:
             print(f"Wallet ID {wallet_id} type {typ}")
             print(
-                f"   -Total Balance: {balances['confirmed_wallet_balance']/units['flax']} {address_prefix} "
+                f"   -Total Balance: {balances['confirmed_wallet_balance']/units['taco']} {address_prefix} "
                 f"({balances['confirmed_wallet_balance']} mojo)"
             )
             print(
-                f"   -Pending Total Balance: {balances['unconfirmed_wallet_balance']/units['flax']} {address_prefix} "
+                f"   -Pending Total Balance: {balances['unconfirmed_wallet_balance']/units['taco']} {address_prefix} "
                 f"({balances['unconfirmed_wallet_balance']} mojo)"
             )
             print(
-                f"   -Spendable: {balances['spendable_balance']/units['flax']} {address_prefix} "
+                f"   -Spendable: {balances['spendable_balance']/units['taco']} {address_prefix} "
                 f"({balances['spendable_balance']} mojo)"
             )
 
@@ -137,7 +137,7 @@ async def get_wallet(wallet_client: WalletRpcClient, fingerprint: int = None) ->
     else:
         fingerprints = await wallet_client.get_public_keys()
     if len(fingerprints) == 0:
-        print("No keys loaded. Run 'flax keys generate' or import a key")
+        print("No keys loaded. Run 'taco keys generate' or import a key")
         return None
     if len(fingerprints) == 1:
         fingerprint = fingerprints[0]
@@ -170,7 +170,7 @@ async def get_wallet(wallet_client: WalletRpcClient, fingerprint: int = None) ->
             use_cloud = True
             if "backup_path" in log_in_response:
                 path = log_in_response["backup_path"]
-                print(f"Backup file from backup.flaxnetwork.org downloaded and written to: {path}")
+                print(f"Backup file from backup.taconetwork.org downloaded and written to: {path}")
                 val = input("Do you want to use this file to restore from backup? (Y/N) ")
                 if val.lower() == "y":
                     log_in_response = await wallet_client.log_in_and_restore(fingerprint, path)

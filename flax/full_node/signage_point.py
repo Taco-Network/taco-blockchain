@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 from typing import Optional
 
-from flax.types.blockchain_format.vdf import VDFInfo, VDFProof
-from flax.util.streamable import Streamable, streamable
+from taco.types.blockchain_format.vdf import VDFInfo, VDFProof
+from taco.util.streamable import Streamable, streamable
 
 
 @dataclass(frozen=True)

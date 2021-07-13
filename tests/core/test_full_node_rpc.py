@@ -1,17 +1,17 @@
 import pytest
 from blspy import AugSchemeMPL
 
-from flax.consensus.pot_iterations import is_overflow_block
-from flax.protocols import full_node_protocol
-from flax.rpc.full_node_rpc_api import FullNodeRpcApi
-from flax.rpc.full_node_rpc_client import FullNodeRpcClient
-from flax.rpc.rpc_server import start_rpc_server
-from flax.simulator.simulator_protocol import FarmNewBlockProtocol
-from flax.types.spend_bundle import SpendBundle
-from flax.types.unfinished_block import UnfinishedBlock
-from flax.util.hash import std_hash
-from flax.util.ints import uint16
-from flax.util.wallet_tools import WalletTool
+from taco.consensus.pot_iterations import is_overflow_block
+from taco.protocols import full_node_protocol
+from taco.rpc.full_node_rpc_api import FullNodeRpcApi
+from taco.rpc.full_node_rpc_client import FullNodeRpcClient
+from taco.rpc.rpc_server import start_rpc_server
+from taco.simulator.simulator_protocol import FarmNewBlockProtocol
+from taco.types.spend_bundle import SpendBundle
+from taco.types.unfinished_block import UnfinishedBlock
+from taco.util.hash import std_hash
+from taco.util.ints import uint16
+from taco.util.wallet_tools import WalletTool
 from tests.setup_nodes import bt, self_hostname, setup_simulators_and_wallets, test_constants
 from tests.time_out_assert import time_out_assert
 

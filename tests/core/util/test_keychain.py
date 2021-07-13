@@ -4,7 +4,7 @@ from secrets import token_bytes
 
 from blspy import AugSchemeMPL, PrivateKey
 
-from flax.util.keychain import Keychain, bytes_from_mnemonic, bytes_to_mnemonic, generate_mnemonic, mnemonic_to_seed
+from taco.util.keychain import Keychain, bytes_from_mnemonic, bytes_to_mnemonic, generate_mnemonic, mnemonic_to_seed
 
 
 class TesKeychain(unittest.TestCase):

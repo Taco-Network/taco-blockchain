@@ -6,14 +6,14 @@ import io
 from clvm_tools import binutils
 from pytest import raises
 
-from flax.protocols.wallet_protocol import RespondRemovals
-from flax.types.blockchain_format.coin import Coin
-from flax.types.blockchain_format.program import Program
-from flax.types.blockchain_format.sized_bytes import bytes32
-from flax.types.full_block import FullBlock
-from flax.types.weight_proof import SubEpochChallengeSegment
-from flax.util.ints import uint8, uint32
-from flax.util.streamable import (
+from taco.protocols.wallet_protocol import RespondRemovals
+from taco.types.blockchain_format.coin import Coin
+from taco.types.blockchain_format.program import Program
+from taco.types.blockchain_format.sized_bytes import bytes32
+from taco.types.full_block import FullBlock
+from taco.types.weight_proof import SubEpochChallengeSegment
+from taco.util.ints import uint8, uint32
+from taco.util.streamable import (
     Streamable,
     streamable,
     parse_bool,

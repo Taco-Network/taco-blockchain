@@ -16,12 +16,12 @@ def init_cmd(ctx: click.Context, create_certs: str):
 
     \b
     Follow these steps to create new certificates for a remote harvester:
-    - Make a copy of your Farming Machine CA directory: ~/.flax/[version]/config/ssl/ca
-    - Shut down all flax daemon processes with `flax stop all -d`
-    - Run `flax init -c [directory]` on your remote harvester,
+    - Make a copy of your Farming Machine CA directory: ~/.taco/[version]/config/ssl/ca
+    - Shut down all taco daemon processes with `taco stop all -d`
+    - Run `taco init -c [directory]` on your remote harvester,
       where [directory] is the the copy of your Farming Machine CA directory
-    - Get more details on remote harvester on Flax wiki:
-      https://github.com/Flax-Network/flax-blockchain/wiki/Farming-on-many-machines
+    - Get more details on remote harvester on Taco wiki:
+      https://github.com/Taco-Network/taco-blockchain/wiki/Farming-on-many-machines
     """
     from pathlib import Path
     from .init_funcs import init
@@ -30,7 +30,7 @@ def init_cmd(ctx: click.Context, create_certs: str):
 
 
 if __name__ == "__main__":
-    from .init_funcs import flax_init
-    from flax.util.default_root import DEFAULT_ROOT_PATH
+    from .init_funcs import taco_init
+    from taco.util.default_root import DEFAULT_ROOT_PATH
 
-    flax_init(DEFAULT_ROOT_PATH)
+    taco_init(DEFAULT_ROOT_PATH)

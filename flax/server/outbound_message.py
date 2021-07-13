@@ -2,9 +2,9 @@ from dataclasses import dataclass
 from enum import IntEnum
 from typing import Any, Optional
 
-from flax.protocols.protocol_message_types import ProtocolMessageTypes
-from flax.util.ints import uint8, uint16
-from flax.util.streamable import Streamable, streamable
+from taco.protocols.protocol_message_types import ProtocolMessageTypes
+from taco.util.ints import uint8, uint16
+from taco.util.streamable import Streamable, streamable
 
 
 class NodeType(IntEnum):

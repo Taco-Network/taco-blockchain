@@ -1,9 +1,9 @@
 from dataclasses import dataclass
 
-from flax.types.blockchain_format.coin import Coin
-from flax.types.blockchain_format.sized_bytes import bytes32
-from flax.util.ints import uint32
-from flax.wallet.util.wallet_types import WalletType
+from taco.types.blockchain_format.coin import Coin
+from taco.types.blockchain_format.sized_bytes import bytes32
+from taco.util.ints import uint32
+from taco.wallet.util.wallet_types import WalletType
 
 
 @dataclass(frozen=True)

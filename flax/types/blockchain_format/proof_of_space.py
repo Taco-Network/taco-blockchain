@@ -6,11 +6,11 @@ from bitstring import BitArray
 from blspy import G1Element
 from chiapos import Verifier
 
-from flax.consensus.constants import ConsensusConstants
-from flax.types.blockchain_format.sized_bytes import bytes32
-from flax.util.hash import std_hash
-from flax.util.ints import uint8
-from flax.util.streamable import Streamable, streamable
+from taco.consensus.constants import ConsensusConstants
+from taco.types.blockchain_format.sized_bytes import bytes32
+from taco.util.hash import std_hash
+from taco.util.ints import uint8
+from taco.util.streamable import Streamable, streamable
 
 log = logging.getLogger(__name__)
 
