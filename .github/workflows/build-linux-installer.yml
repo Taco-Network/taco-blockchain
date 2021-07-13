@@ -34,7 +34,7 @@ jobs:
       with:
         fetch-depth: 0
         submodules: recursive
-        token: ${{ GH_PAT }}
+        token: ${{ taco }}
 
     - name: Setup Python environment
       uses: actions/setup-python@v2
