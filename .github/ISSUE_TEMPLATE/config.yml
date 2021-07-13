@@ -2,11 +2,11 @@ contact_links:
   - about: Ask a question or request support here
     name: Ask for Support
     url: >-
-      https://github.com/superdutyf3/taco-network/discussions/new?category=support
+      https://github.com/superdutyf3/taco-blockchain/discussions/new?category=support
   - about: Request a new feature or idea here
     name: Make a Request
     url: >-
-      https://github.com/superdutyf3/taco-network/discussions/new?category=ideas
+      https://github.com/superdutyf3/taco-blockchain/discussions/new?category=ideas
   - about: Get support on the Taco Discord chat channels.
     name: Join the Discord.io support chat
     url: 'https://discord.gg/TgJyxsEFFc'

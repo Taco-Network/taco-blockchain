@@ -1,6 +1,6 @@
 [submodule "taco-blockchain-gui"]
 	path = taco-blockchain-gui
-	url = https://github.com/superdutyf3/taco-network-gui.git
+	url = https://github.com/superdutyf3/taco-blockchain-gui.git
 	branch = main
 [submodule "mozilla-ca"]
 	path = mozilla-ca

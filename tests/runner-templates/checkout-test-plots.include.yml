@@ -1,7 +1,7 @@
     - name: Checkout test blocks and plots
       uses: actions/checkout@v2
       with:
-        repository: 'Taco-Network/test-cache'
+        repository: 'taco-blockchain/test-cache'
         path: '.taco'
         ref: '0.26.0'
         fetch-depth: 1
