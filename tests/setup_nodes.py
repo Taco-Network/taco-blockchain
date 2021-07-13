@@ -207,10 +207,10 @@ async def setup_farmer(
     config = bt.config["farmer"]
     config_pool = bt.config["pool"]
 
-    config["xtx_target_address"] = encode_puzzle_hash(b_tools.farmer_ph, ".com/superdutyf3/taco-blockchain")
+    config["xtx_target_address"] = encode_puzzle_hash(b_tools.farmer_ph, "xtx")
     config["pool_public_keys"] = [bytes(pk).hex() for pk in b_tools.pool_pubkeys]
     config["port"] = port
-    config_pool["xtx_target_address"] = encode_puzzle_hash(b_tools.pool_ph, ".com/superdutyf3/taco-blockchain")
+    config_pool["xtx_target_address"] = encode_puzzle_hash(b_tools.pool_ph, "xtx")
 
     if full_node_port:
         config["full_node_peer"]["host"] = self_hostname
