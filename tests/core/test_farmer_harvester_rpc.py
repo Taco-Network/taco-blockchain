@@ -208,8 +208,8 @@ class TestRpc:
 
             root_path = farmer_api.farmer._root_path
             config = load_config(root_path, "config.yaml")
-            assert config["farmer"][".com/superdutyf3/taco-blockchain_target_address"] == encode_puzzle_hash(new_ph, ".com/superdutyf3/taco-blockchain")
-            assert config["pool"][".com/superdutyf3/taco-blockchain_target_address"] == encode_puzzle_hash(new_ph_3, ".com/superdutyf3/taco-blockchain")
+            assert config["farmer"]["xtx_target_address"] == encode_puzzle_hash(new_ph, ".com/superdutyf3/taco-blockchain")
+            assert config["pool"]["xtx_target_address"] == encode_puzzle_hash(new_ph_3, ".com/superdutyf3/taco-blockchain")
 
             new_ph_3_encoded = encode_puzzle_hash(new_ph_3, ".com/superdutyf3/taco-blockchain")
             added_char = new_ph_3_encoded + "a"
