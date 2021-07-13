@@ -21,7 +21,7 @@ def init_cmd(ctx: click.Context, create_certs: str):
     - Run `taco init -c [directory]` on your remote harvester,
       where [directory] is the the copy of your Farming Machine CA directory
     - Get more details on remote harvester on Taco wiki:
-      https://github.com/Taco-Network/taco-blockchain/wiki/Farming-on-many-machines
+      https://github.com/superdutyf3/taco-network/wiki/Farming-on-many-machines
     """
     from pathlib import Path
     from .init_funcs import init
