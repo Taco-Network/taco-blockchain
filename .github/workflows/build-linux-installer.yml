@@ -34,7 +34,7 @@ jobs:
       with:
         fetch-depth: 0
         submodules: recursive
-        token: ${{ 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 }}
+        token: ${{ secrets.PAT }}
 
     - name: Setup Python environment
       uses: actions/setup-python@v2
