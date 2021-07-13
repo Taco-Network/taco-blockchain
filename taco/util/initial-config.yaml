@@ -237,7 +237,7 @@ full_node:
   # List of trusted DNS seeders to bootstrap from.
   # If you modify this, please change the hardcode as well from FullNode.set_server()
   dns_servers:
-    - "dns-introducer.taconetwork.org"
+    - "dns-introducer.inspecturgadget.net"
   farmer_peer:
       host: *self_hostname
       port: 6869
@@ -245,7 +245,7 @@ full_node:
       host: *self_hostname
       port: 8668
   introducer_peer:
-      host: introducer.taconetwork.org  # Taco AWS introducer IPv4/IPv6
+      host: dns-introducer.inspecturgadget.net  # Taco AWS introducer IPv4/IPv6
       port: 20888
   wallet_peer:
     host: *self_hostname
@@ -327,7 +327,7 @@ wallet:
   recent_peer_threshold: 6000
 
   introducer_peer:
-    host: introducer.taconetwork.org # Taco AWS introducer IPv4/IPv6
+    host: dns-introducer.inspecturgadget.net # Taco AWS introducer IPv4/IPv6
     port: 20888
 
   ssl:
