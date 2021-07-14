@@ -28,7 +28,6 @@ jobs:
       with:
         fetch-depth: 0
         submodules: recursive
-        token: ${{ secrets.PAT }}
 
     - name: Get npm cache directory
       id: npm-cache

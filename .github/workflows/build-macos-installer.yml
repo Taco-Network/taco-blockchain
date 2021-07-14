@@ -34,7 +34,6 @@ jobs:
       with:
         fetch-depth: 0
         submodules: recursive
-        token: ${{ secrets.PAT }}
 
     - name: Setup Python environment
       uses: actions/setup-python@v2
