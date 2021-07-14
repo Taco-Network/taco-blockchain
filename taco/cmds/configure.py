@@ -101,7 +101,7 @@ def configure(
         elif testnet == "false" or testnet == "f":
             print("Setting Mainnet")
             mainnet_port = "6888"
-            mainnet_introducer = "dns-introducer.inspecturgadget.net"
+            mainnet_introducer = "dns-introducer.taconetwork.net"
             net = "mainnet"
             config["full_node"]["port"] = int(mainnet_port)
             config["full_node"]["introducer_peer"]["port"] = int(mainnet_port)
