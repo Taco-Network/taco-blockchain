@@ -10,8 +10,8 @@ testnet_kwargs = {
     "SUB_SLOT_ITERS_STARTING": 2 ** 27,
     # DIFFICULTY_STARTING is the starting difficulty for the first epoch, which is then further
     # multiplied by another factor of DIFFICULTY_CONSTANT_FACTOR, to be used in the VDF iter calculation formula.
-    "DIFFICULTY_CONSTANT_FACTOR": 2 ** 57,
-    "DIFFICULTY_STARTING": 7,
+    "DIFFICULTY_CONSTANT_FACTOR": 2 ** 64,
+    "DIFFICULTY_STARTING": 1,
     "DIFFICULTY_CHANGE_MAX_FACTOR": 3,  # The next difficulty is truncated to range [prev / FACTOR, prev * FACTOR]
     # These 3 constants must be changed at the same time
     "SUB_EPOCH_BLOCKS": 384,  # The number of blocks per sub-epoch, mainnet 384
@@ -28,14 +28,14 @@ testnet_kwargs = {
     # Used as the initial cc rc challenges, as well as first block back pointers, and first SES back pointer
     # We override this value based on the chain being run (testnet0, testnet1, mainnet, etc)
     # Default used for tests is std_hash(b'')
-    "GENESIS_CHALLENGE": bytes.fromhex("e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"),
+    "GENESIS_CHALLENGE": bytes.fromhex("2a1c6b8aa764b1a86644da608cb8c89a32e35180edc16742358527e440ddf59a"),
     # Forks of taco should change this value to provide replay attack protection. This is set to mainnet genesis chall
     "AGG_SIG_ME_ADDITIONAL_DATA": bytes.fromhex("c37d35863a3cb05730a9905ed93b2370fea5a05726561b0b437cc841ce4b9dc5"),
     "GENESIS_PRE_FARM_POOL_PUZZLE_HASH": bytes.fromhex(
-        "e8e245e2e6536e17fd7cbc2e3bd90de06f55362ee3c84cea5a68391e5bad7ef6"
+        "70e1adfcab90f7b9e2a302d2f1cb6d09cb2f688d435527b5655d78dc4fe39f84"
     ),
     "GENESIS_PRE_FARM_FARMER_PUZZLE_HASH": bytes.fromhex(
-        "e8e245e2e6536e17fd7cbc2e3bd90de06f55362ee3c84cea5a68391e5bad7ef6"
+        "70e1adfcab90f7b9e2a302d2f1cb6d09cb2f688d435527b5655d78dc4fe39f84"
     ),
     "MAX_VDF_WITNESS_SIZE": 64,
     # Size of mempool = 50x the size of block
