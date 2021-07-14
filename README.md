@@ -6,6 +6,6 @@ For more information, see our website and downloads at https://taconetwork.org.
 
 WIP (icons might be messed up) will be fixed in future update
 
-Working node: dns-introducer.taconetwork.Network
+Working node: dns-introducer.taconetwork.net:18620
 
-Less than 1,000 coins pre-farmed
+Less than 300,000 coins pre-farmed
