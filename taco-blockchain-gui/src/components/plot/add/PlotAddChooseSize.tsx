@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { Trans } from '@lingui/macro';
 import { useFormContext } from 'react-hook-form';
-import { CardStep, ConfirmDialog, Link, Select, StateColor } from '@flax/core';
+import { CardStep, ConfirmDialog, Link, Select, StateColor } from '@taco/core';
 import { Grid, FormControl, Typography, InputLabel, MenuItem, FormHelperText } from '@material-ui/core';
 import { plotSizeOptions } from '../../../constants/plotSizes';
 import useOpenDialog from '../../../hooks/useOpenDialog';
@@ -62,7 +62,7 @@ export default function PlotAddChooseSize() {
       <Typography variant="subtitle1">
         <Trans>
           {'You do not need to be synched or connected to plot. Temporary files are created during the plotting process which exceed the size of the final plot files. Make sure you have enough space. '}
-          <Link target="_blank" href="https://github.com/Flax-Network/flax-blockchain/wiki/k-sizes">Learn more</Link>
+          <Link target="_blank" href="https://github.com/Taco-Network/taco-blockchain/wiki/k-sizes">Learn more</Link>
         </Trans>
       </Typography>
 

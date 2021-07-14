@@ -1,6 +1,6 @@
 import React from 'react';
 import { Trans } from '@lingui/macro';
-import { FormatLargeNumber } from '@flax/core';
+import { FormatLargeNumber } from '@taco/core';
 import FarmCard from './FarmCard';
 import usePlots from '../../../hooks/usePlots';
 

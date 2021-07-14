@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 import { AppBar, Toolbar, Box } from '@material-ui/core';
 import styled from 'styled-components';
-import { Flex, DarkModeToggle, LocaleToggle } from '@flax/core';
+import { Flex, DarkModeToggle, LocaleToggle } from '@taco/core';
 import { defaultLocale, locales } from '../../config/locales';
 
 const StyledWrapper = styled(Box)`

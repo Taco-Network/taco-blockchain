@@ -6,21 +6,21 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
 "Language: cs_CZ\n"
-"Project-Id-Version: flax-blockchain\n"
+"Project-Id-Version: taco-blockchain\n"
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: 2021-05-31 10:19\n"
 "Last-Translator: \n"
 "Language-Team: Czech\n"
 "Plural-Forms: nplurals=4; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 3;\n"
-"X-Crowdin-Project: flax-blockchain\n"
+"X-Crowdin-Project: taco-blockchain\n"
 "X-Crowdin-Project-ID: 440660\n"
 "X-Crowdin-Language: cs\n"
 "X-Crowdin-File: /main/src/locales/en-US/messages.po\n"
 "X-Crowdin-File-ID: 72\n"
 
 #: src/components/farm/FarmLatestBlockChallenges.tsx:70
-msgid "*Want to explore Flax’s blocks further? Check out <0>Flax Explorer</0> built by an open source developer."
-msgstr "*Chcete se o Flax blocích dozvědět více? Podívej se na <0>Flax Explorer</0> vytvořený open source vývojářem."
+msgid "*Want to explore Taco’s blocks further? Check out <0>Taco Explorer</0> built by an open source developer."
+msgstr "*Chcete se o Taco blocích dozvědět více? Podívej se na <0>Taco Explorer</0> vytvořený open source vývojářem."
 
 #: src/components/plot/add/PlotAddNumberOfPlots.tsx:94
 #~ msgid "0 automatically chooses bucket count"
@@ -36,8 +36,8 @@ msgstr "Tzv. harvester (sklízeč) je služba provozovaná na počítači, kde j
 
 #: src/electron/main.tsx:423
 #: src/electron/main.tsx:510
-msgid "About Flax Blockchain"
-msgstr "O Flax Blockchainu"
+msgid "About Taco Blockchain"
+msgstr "O Taco Blockchainu"
 
 #: src/components/trading/ViewOffer.jsx:85
 msgid "Accept"
@@ -187,8 +187,8 @@ msgid "Block VDF Iterations"
 msgstr "VDF iterace bloku"
 
 #: src/components/block/Block.jsx:311
-msgid "Block at height {0} in the Flax blockchain"
-msgstr "Blok v Flax blockchainu ve výšce {0}"
+msgid "Block at height {0} in the Taco blockchain"
+msgstr "Blok v Taco blockchainu ve výšce {0}"
 
 #: src/components/fullNode/FullNode.jsx:331
 #~ msgid "Block hash"
@@ -268,16 +268,16 @@ msgid "Chat on Discord"
 msgstr "Chat na Discord"
 
 #: src/electron/main.tsx:420
-msgid "Flax"
-msgstr "Flax"
+msgid "Taco"
+msgstr "Taco"
 
 #: src/electron/main.tsx:359
-msgid "Flax Blockchain Wiki"
-msgstr "Flax Blockchain Wiki"
+msgid "Taco Blockchain Wiki"
+msgstr "Taco Blockchain Wiki"
 
 #: src/components/wallet/Wallets.tsx:56
-msgid "Flax Wallet"
-msgstr "Flax peněženka"
+msgid "Taco Wallet"
+msgstr "Taco peněženka"
 
 #: src/components/plot/add/PlotAddNumberOfPlots.tsx:21
 msgid "Choose Number of Plots"
@@ -591,8 +591,8 @@ msgid "Edit"
 msgstr "Upravit"
 
 #: src/components/wallet/WalletImport.tsx:142
-msgid "Enter the 24 word mnemonic that you have saved in order to restore your Flax wallet."
-msgstr "Zadejte 24 slov, které jste si poznamenali při zakládání vaší Flax peněženky."
+msgid "Enter the 24 word mnemonic that you have saved in order to restore your Taco wallet."
+msgstr "Zadejte 24 slov, které jste si poznamenali při zakládání vaší Taco peněženky."
 
 #: src/components/farm/FarmerStatus.tsx:21
 #: src/components/farm/FarmerStatus.tsx:22
@@ -605,8 +605,8 @@ msgid "Error"
 msgstr "Chyba"
 
 #: src/components/wallet/standard/WalletStandard.tsx:415
-msgid "Error: Cannot send flax to coloured address. Please enter a flax address."
-msgstr "Chyba: Flax nelze odeslat na barevnou adresu. Zadejte prosím běžnou Flax adresu."
+msgid "Error: Cannot send taco to coloured address. Please enter a taco address."
+msgstr "Chyba: Taco nelze odeslat na barevnou adresu. Zadejte prosím běžnou Taco adresu."
 
 #: src/components/farm/card/FarmCardExpectedTimeToWin.tsx:51
 #: src/components/farm/card/FarmCardExpectedTimeToWin.tsx:61
@@ -1226,8 +1226,8 @@ msgid "Plots Passed Filter"
 msgstr "Pole vyhovující filtru"
 
 #: src/components/plot/overview/PlotOverviewHero.tsx:30
-msgid "Plots are allocated space on your hard drive used to farm and earn Flax. <0>Learn more</0>"
-msgstr "Pole jsou soubory, které můžete vytvořit na volném místě svého disku a pomocí kterých můžete farmařit Flax. <0>Zjistit více</0>"
+msgid "Plots are allocated space on your hard drive used to farm and earn Taco. <0>Learn more</0>"
+msgstr "Pole jsou soubory, které můžete vytvořit na volném místě svého disku a pomocí kterých můžete farmařit Taco. <0>Zjistit více</0>"
 
 #: src/components/plot/queue/PlotQueueIndicator.tsx:33
 msgid "Plotting"
@@ -1553,8 +1553,8 @@ msgstr "Délka intervalu výdajů (počet bloků)"
 
 #: src/components/wallet/rateLimited/WalletRateLimited.jsx:415
 #: src/components/wallet/rateLimited/WalletRateLimited.jsx:466
-msgid "Spending Limit (flax per interval): {0}"
-msgstr "Limit výdajů (flax na interval): {0}"
+msgid "Spending Limit (taco per interval): {0}"
+msgstr "Limit výdajů (taco na interval): {0}"
 
 #: src/components/fullNode/FullNode.jsx:95
 msgid "State"
@@ -1601,8 +1601,8 @@ msgstr "Stav:"
 #~ msgstr "Sub Block Height"
 
 #: src/components/block/Block.jsx:338
-#~ msgid "Sub Block at height {0} in the Flax blockchain"
-#~ msgstr "Sub Block at height {0} in the Flax blockchain"
+#~ msgid "Sub Block at height {0} in the Taco blockchain"
+#~ msgstr "Sub Block at height {0} in the Taco blockchain"
 
 #: src/components/wallet/rateLimited/WalletRateLimited.jsx:357
 msgid "Submit"
@@ -1706,8 +1706,8 @@ msgid "This feature is available only from the GUI."
 msgstr "Tato funkce je dostupná pouze v grafickém rozhraní."
 
 #: src/components/wallet/standard/WalletStandard.tsx:264
-msgid "This is the amount of Flax that you can currently use to make transactions. It does not include pending farming rewards, pending incoming transactions, and Flax that you have just spent but is not yet in the blockchain."
-msgstr "Flax zůstatek využitelný pro transakce. Neobsahuje nezpracované odměny za farmaření, nezpracované příchozí transakce a ani převody, které ještě nebyly zaneseny do blockchainu."
+msgid "This is the amount of Taco that you can currently use to make transactions. It does not include pending farming rewards, pending incoming transactions, and Taco that you have just spent but is not yet in the blockchain."
+msgstr "Taco zůstatek využitelný pro transakce. Neobsahuje nezpracované odměny za farmaření, nezpracované příchozí transakce a ani převody, které ještě nebyly zaneseny do blockchainu."
 
 #: src/components/wallet/standard/WalletStandard.tsx:313
 msgid "This is the pending change, which are change coins which you have sent to yourself, but have not been confirmed yet."
@@ -1726,8 +1726,8 @@ msgid "This is the time the block was created by the farmer, which is before it 
 msgstr "Čas vytvoření bloku farmářem ještě před jeho dokončením důkazem času (proof of time)"
 
 #: src/components/wallet/standard/WalletStandard.tsx:252
-msgid "This is the total amount of flax in the blockchain at the current peak sub block that is controlled by your private keys. It includes frozen farming rewards, but not pending incoming and outgoing transactions."
-msgstr "Celkový počet Flax v blockchainu při aktuální sub bloku kontrolovaný vaším privátním klíčem. Zahrnuje zmrazené odměny z farmaření ale nezahrnuje čekající příchozí ani odchozí transakce."
+msgid "This is the total amount of taco in the blockchain at the current peak sub block that is controlled by your private keys. It includes frozen farming rewards, but not pending incoming and outgoing transactions."
+msgstr "Celkový počet Taco v blockchainu při aktuální sub bloku kontrolovaný vaším privátním klíčem. Zahrnuje zmrazené odměny z farmaření ale nezahrnuje čekající příchozí ani odchozí transakce."
 
 #: src/components/wallet/standard/WalletStandard.tsx:291
 msgid "This is the total balance + pending balance: it is what your balance will be after all pending transactions are confirmed."
@@ -1754,8 +1754,8 @@ msgid "This trade was included on blockchain at this block height"
 msgstr "Tento obchod byl zahrnut do blockchainu v této výšce bloku"
 
 #: src/components/app/AppTimeBombAlert.tsx:18
-msgid "This version of Flax is no longer compatible with the blockchain and can not safely farm."
-msgstr "Tato verze Flax již není kompatibilní s blockchainem a nemůže bezpečně farmit."
+msgid "This version of Taco is no longer compatible with the blockchain and can not safely farm."
+msgstr "Tato verze Taco již není kompatibilní s blockchainem a nemůže bezpečně farmit."
 
 #: src/components/fullNode/FullNode.jsx:87
 msgid "Time Created"
@@ -1779,8 +1779,8 @@ msgstr "Komu"
 msgid "Total Balance"
 msgstr "Celkový zůstatek"
 
-#: src/components/farm/card/FarmCardTotalFlaxFarmed.tsx:15
-#~ msgid "Total Flax Farmed"
+#: src/components/farm/card/FarmCardTotalTacoFarmed.tsx:15
+#~ msgid "Total Taco Farmed"
 #~ msgstr ""
 
 #: src/components/fullNode/FullNode.jsx:192
@@ -1910,7 +1910,7 @@ msgstr "Čekání na synchronizaci"
 #~ msgstr ""
 
 #: src/components/wallet/Wallets.tsx:30
-#~ msgid "WalletItem.flaxWallet"
+#~ msgid "WalletItem.tacoWallet"
 #~ msgstr ""
 
 #: src/components/wallet/Wallets.tsx:48
@@ -1943,8 +1943,8 @@ msgstr "Peněženky"
 #~ msgstr ""
 
 #: src/components/plot/overview/PlotOverviewPlots.tsx:107
-msgid "Want to earn more Flax? Add more plots to your farm."
-msgstr "Chcete získat více Flax? Přidejte další pole do vaší farmy."
+msgid "Want to earn more Taco? Add more plots to your farm."
+msgstr "Chcete získat více Taco? Přidejte další pole do vaší farmy."
 
 #: src/components/plot/add/PlotAddNumberOfPlots.tsx:82
 msgid "Want to have a delay before the next plot starts?"
@@ -1959,8 +1959,8 @@ msgid "Weight is the total added difficulty of all sub blocks up to and includin
 msgstr "Váha je celková přidaná obtížnost všech dílčích bloků až po tento blok včetně"
 
 #: src/components/selectKey/SelectKey.tsx:115
-msgid "Welcome to Flax. Please log in with an existing key, or create a new key."
-msgstr "Vítejte v Flax. Přihlaste se pomocí existujícího klíče, nebo si vytvořte nový klíč."
+msgid "Welcome to Taco. Please log in with an existing key, or create a new key."
+msgstr "Vítejte v Taco. Přihlaste se pomocí existujícího klíče, nebo si vytvořte nový klíč."
 
 #: src/components/wallet/WalletAdd.tsx:66
 msgid "Welcome! The following words are used for your wallet backup. Without them, you will lose access to your wallet, keep them safe! Write down each word along with the order number next to them. (Order is important)"
@@ -2009,8 +2009,8 @@ msgstr "Vaše farma zabírá {0}% sítě, takže farmaření jednoho bloku zaber
 #~ msgstr "You have {0}% of the space on the network, so farming a block will take {expectedTimeToWin} in expectation. Actual results may take 3-4 times longer this estimate. <0>Learn about Expected Value</0>"
 
 #: src/components/app/AppTimeBomb.tsx:28
-#~ msgid "You need to upgrade the Flax application as this version will stop working soon!"
-#~ msgstr "You need to upgrade the Flax application as this version will stop working soon!"
+#~ msgid "You need to upgrade the Taco application as this version will stop working soon!"
+#~ msgstr "You need to upgrade the Taco application as this version will stop working soon!"
 
 #: src/components/farm/overview/FarmOverview.tsx:33
 msgid "Your Farm Overview"
@@ -2073,8 +2073,8 @@ msgstr "synchronizace"
 msgid "{currencyCode} Block Rewards"
 msgstr "Blokové odměny {currencyCode}"
 
-#: src/components/farm/card/FarmCardTotalFlaxFarmed.tsx:29
-msgid "{currencyCode} Total Flax Farmed"
+#: src/components/farm/card/FarmCardTotalTacoFarmed.tsx:29
+msgid "{currencyCode} Total Taco Farmed"
 msgstr "Celkem nafarmařeno {currencyCode}"
 
 #: src/components/farm/card/FarmCardUserFees.tsx:28

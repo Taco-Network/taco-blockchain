@@ -25,7 +25,7 @@ config/keys.yaml
 config/plots.yaml
 
 # Bundled code
-flax-blockchain.tar.gz.tar.gz
+taco-blockchain.tar.gz.tar.gz
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -66,7 +66,7 @@ activate
 .idea
 
 # Packaging
-flax-blockchain.tar.gz
+taco-blockchain.tar.gz
 
 # Timelord utilities
 vdf_bench

@@ -12,7 +12,7 @@ const convert = (amount, from, to) => {
   return Number.parseFloat(amountInFromUnit.div(units.getUnit(to)));
 };
 
-class Flax {
+class Taco {
   constructor(value, unit) {
     this._value = value;
     this._unit = unit;
@@ -73,42 +73,42 @@ class Flax {
   }
 }
 
-export const flax_formatter = (value, unit) => new Flax(value, unit);
+export const taco_formatter = (value, unit) => new Taco(value, unit);
 
-flax_formatter.convert = convert;
-flax_formatter.setDisplay = units.setDisplay;
-flax_formatter.setUnit = units.setUnit;
-flax_formatter.getUnit = units.getUnit;
-flax_formatter.setFiat = (currency, rate, display = null) => {
+taco_formatter.convert = convert;
+taco_formatter.setDisplay = units.setDisplay;
+taco_formatter.setUnit = units.setUnit;
+taco_formatter.getUnit = units.getUnit;
+taco_formatter.setFiat = (currency, rate, display = null) => {
   units.setUnit(currency, 1 / rate, display);
 };
 
-export const mojo_to_flax = (mojo) => {
-  return flax_formatter(Number.parseInt(mojo), 'mojo').to('flax').value();
+export const mojo_to_taco = (mojo) => {
+  return taco_formatter(Number.parseInt(mojo), 'mojo').to('taco').value();
 };
 
-export const flax_to_mojo = (flax) => {
-  return flax_formatter(Number.parseFloat(Number(flax)), 'flax')
+export const taco_to_mojo = (taco) => {
+  return taco_formatter(Number.parseFloat(Number(taco)), 'taco')
     .to('mojo')
     .value();
 };
 
-export const mojo_to_flax_string = (mojo) => {
-  return flax_formatter(Number(mojo), 'mojo').to('flax').toString();
+export const mojo_to_taco_string = (mojo) => {
+  return taco_formatter(Number(mojo), 'mojo').to('taco').toString();
 };
 
 export const mojo_to_colouredcoin = (mojo) => {
-  return flax_formatter(Number.parseInt(mojo), 'mojo')
+  return taco_formatter(Number.parseInt(mojo), 'mojo')
     .to('colouredcoin')
     .value();
 };
 
 export const colouredcoin_to_mojo = (colouredcoin) => {
-  return flax_formatter(Number.parseFloat(Number(colouredcoin)), 'colouredcoin')
+  return taco_formatter(Number.parseFloat(Number(colouredcoin)), 'colouredcoin')
     .to('mojo')
     .value();
 };
 
 export const mojo_to_colouredcoin_string = (mojo) => {
-  return flax_formatter(Number(mojo), 'mojo').to('colouredcoin').toString();
+  return taco_formatter(Number(mojo), 'mojo').to('colouredcoin').toString();
 };

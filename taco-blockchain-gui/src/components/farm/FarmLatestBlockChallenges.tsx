@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import {
   Typography,
 } from '@material-ui/core';
-import { Link, Table, Card } from '@flax/core';
+import { Link, Table, Card } from '@taco/core';
 import type { RootState } from '../../modules/rootReducer';
 import type { Row } from '../core/components/Table/Table';
 

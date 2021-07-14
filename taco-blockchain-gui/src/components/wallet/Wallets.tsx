@@ -12,7 +12,7 @@ import {
 } from '@material-ui/core';
 import { Route, Switch, useRouteMatch, useHistory } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
-import { Flex, FormatLargeNumber } from '@flax/core';
+import { Flex, FormatLargeNumber } from '@taco/core';
 import StandardWallet from './standard/WalletStandard';
 import {
   changeWalletMenu,
@@ -53,8 +53,8 @@ const WalletItem = (props: any) => {
 
   let mainLabel = <></>;
   if (wallet.type === WalletType.STANDARD_WALLET) {
-    mainLabel = <Trans>Flax Wallet</Trans>;
-    name = 'Flax';
+    mainLabel = <Trans>Taco Wallet</Trans>;
+    name = 'Taco';
   } else if (wallet.type === WalletType.COLOURED_COIN) {
     mainLabel = <Trans>CC Wallet</Trans>;
     if (name.length > 18) {

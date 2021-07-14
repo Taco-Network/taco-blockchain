@@ -15,7 +15,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { AlertDialog, Card, Dropzone, Flex } from '@flax/core';
+import { AlertDialog, Card, Dropzone, Flex } from '@taco/core';
 
 import {
   did_generate_backup_file,
@@ -31,7 +31,7 @@ import {
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { Tooltip } from '@material-ui/core';
 import HelpIcon from '@material-ui/icons/Help';
-import { mojo_to_flax_string } from '../../../util/flax';
+import { mojo_to_taco_string } from '../../../util/taco';
 import { useForm, Controller, useFieldArray } from 'react-hook-form';
 import { openDialog } from '../../../modules/dialog';
 import useCurrencyCode from '../../../hooks/useCurrencyCode';
@@ -472,7 +472,7 @@ const BalanceCardSubSection = (props) => {
           </Box>
           <Box>
             <Typography variant="subtitle1">
-              {mojo_to_flax_string(props.balance)} {currencyCode}
+              {mojo_to_taco_string(props.balance)} {currencyCode}
             </Typography>
           </Box>
         </Box>
@@ -774,7 +774,7 @@ const CreateAttest = (props) => {
       return;
     }
     let address = puzhash_input.value.trim();
-    if (address.substring(0, 12) === 'flax_addr://') {
+    if (address.substring(0, 12) === 'taco_addr://') {
       address = address.substring(12);
     }
     if (address.startsWith('0x') || address.startsWith('0X')) {

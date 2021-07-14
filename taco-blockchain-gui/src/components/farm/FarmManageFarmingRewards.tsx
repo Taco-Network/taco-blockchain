@@ -3,7 +3,7 @@ import { Trans } from '@lingui/macro';
 import { useForm } from 'react-hook-form';
 import { Alert } from '@material-ui/lab';
 import styled from 'styled-components';
-import { Flex, Form, TextField, Loading } from '@flax/core';
+import { Flex, Form, TextField, Loading } from '@taco/core';
 import { Button, Dialog, DialogActions, DialogTitle, DialogContent } from '@material-ui/core';
 import { useDispatch } from 'react-redux';
 import { getRewardTargets, setRewardTargets } from '../../modules/farmerMessages';

@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import { Trans } from '@lingui/macro';
-import { State, StateIndicator } from '@flax/core';
+import { State, StateIndicator } from '@taco/core';
 import FarmCard from './FarmCard';
 
 type Props = {

@@ -1,5 +1,5 @@
 {
   "dest": "dist/installers/",
-  "icon": "src/assets/img/flax.ico",
+  "icon": "src/assets/img/taco.ico",
   "tags": ["Blockchain"]
 }

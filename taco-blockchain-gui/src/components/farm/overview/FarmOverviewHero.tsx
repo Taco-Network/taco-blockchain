@@ -3,7 +3,7 @@ import { Trans } from '@lingui/macro';
 import { useHistory } from 'react-router-dom';
 import { Button, Divider, Grid, Typography } from '@material-ui/core';
 import styled from 'styled-components';
-import { CardHero, Link } from '@flax/core';
+import { CardHero, Link } from '@taco/core';
 import heroSrc from './images/hero.svg';
 import PlotAddDirectoryDialog from '../../plot/PlotAddDirectoryDialog';
 import useOpenDialog from '../../../hooks/useOpenDialog';
@@ -36,7 +36,7 @@ export default function FarmOverviewHero() {
               Farmers earn block rewards and transaction fees by committing
               spare space to the network to help secure transactions. This
               is where your farm will be once you add a plot.{' '}
-              <Link target="_blank" href="https://github.com/Flax-Network/flax-blockchain/wiki/Network-Architecture">Learn more</Link>
+              <Link target="_blank" href="https://github.com/Taco-Network/taco-blockchain/wiki/Network-Architecture">Learn more</Link>
             </Trans>
           </Typography>
           <Button

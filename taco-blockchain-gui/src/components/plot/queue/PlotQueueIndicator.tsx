@@ -1,6 +1,6 @@
 import React from 'react';
 import { Trans } from '@lingui/macro';
-import { Flex, Indicator, StateColor, TooltipIcon } from '@flax/core';
+import { Flex, Indicator, StateColor, TooltipIcon } from '@taco/core';
 import { Box } from '@material-ui/core';
 import PlotStatusEnum from '../../../constants/PlotStatus';
 import type PlotQueueItem from '../../../types/PlotQueueItem';

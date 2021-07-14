@@ -6,21 +6,21 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
 "Language: el_GR\n"
-"Project-Id-Version: flax-blockchain\n"
+"Project-Id-Version: taco-blockchain\n"
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: 2021-05-30 23:26\n"
 "Last-Translator: \n"
 "Language-Team: Greek\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Crowdin-Project: flax-blockchain\n"
+"X-Crowdin-Project: taco-blockchain\n"
 "X-Crowdin-Project-ID: 440660\n"
 "X-Crowdin-Language: el\n"
 "X-Crowdin-File: /main/src/locales/en-US/messages.po\n"
 "X-Crowdin-File-ID: 72\n"
 
 #: src/components/farm/FarmLatestBlockChallenges.tsx:70
-msgid "*Want to explore Flax’s blocks further? Check out <0>Flax Explorer</0> built by an open source developer."
-msgstr "*Θέλετε να εξερευνήσετε περαιτέρω τα μπλοκ της Flax? Δοκιμάστε το <0>Flax Explorer</0> που χτίστηκε από έναν προγραμματιστή ανοιχτού κώδικα."
+msgid "*Want to explore Taco’s blocks further? Check out <0>Taco Explorer</0> built by an open source developer."
+msgstr "*Θέλετε να εξερευνήσετε περαιτέρω τα μπλοκ της Taco? Δοκιμάστε το <0>Taco Explorer</0> που χτίστηκε από έναν προγραμματιστή ανοιχτού κώδικα."
 
 #: src/components/plot/add/PlotAddNumberOfPlots.tsx:94
 #~ msgid "0 automatically chooses bucket count"
@@ -36,8 +36,8 @@ msgstr "Ο harvester είναι μια υπηρεσία που εκτελείτ�
 
 #: src/electron/main.tsx:423
 #: src/electron/main.tsx:510
-msgid "About Flax Blockchain"
-msgstr "Περί Flax Blockchain"
+msgid "About Taco Blockchain"
+msgstr "Περί Taco Blockchain"
 
 #: src/components/trading/ViewOffer.jsx:85
 msgid "Accept"
@@ -187,8 +187,8 @@ msgid "Block VDF Iterations"
 msgstr "Επαναλήψεις VDF του Block"
 
 #: src/components/block/Block.jsx:311
-msgid "Block at height {0} in the Flax blockchain"
-msgstr "Block στο ύψος {0} στο Flax blockchain"
+msgid "Block at height {0} in the Taco blockchain"
+msgstr "Block στο ύψος {0} στο Taco blockchain"
 
 #: src/components/fullNode/FullNode.jsx:331
 #~ msgid "Block hash"
@@ -268,16 +268,16 @@ msgid "Chat on Discord"
 msgstr "Συνομιλήστε στο Discord"
 
 #: src/electron/main.tsx:420
-msgid "Flax"
-msgstr "Flax"
+msgid "Taco"
+msgstr "Taco"
 
 #: src/electron/main.tsx:359
-msgid "Flax Blockchain Wiki"
-msgstr "Flax Blockchain Wiki"
+msgid "Taco Blockchain Wiki"
+msgstr "Taco Blockchain Wiki"
 
 #: src/components/wallet/Wallets.tsx:56
-msgid "Flax Wallet"
-msgstr "Πορτοφόλι Flax"
+msgid "Taco Wallet"
+msgstr "Πορτοφόλι Taco"
 
 #: src/components/plot/add/PlotAddNumberOfPlots.tsx:21
 msgid "Choose Number of Plots"
@@ -591,8 +591,8 @@ msgid "Edit"
 msgstr "Επεξεργασία"
 
 #: src/components/wallet/WalletImport.tsx:142
-msgid "Enter the 24 word mnemonic that you have saved in order to restore your Flax wallet."
-msgstr "Εισάγετε το μνημονικό 24ων λέξεων που έχετε αποθηκεύσει για να επαναφέρετε το Flax πορτοφόλι σας."
+msgid "Enter the 24 word mnemonic that you have saved in order to restore your Taco wallet."
+msgstr "Εισάγετε το μνημονικό 24ων λέξεων που έχετε αποθηκεύσει για να επαναφέρετε το Taco πορτοφόλι σας."
 
 #: src/components/farm/FarmerStatus.tsx:21
 #: src/components/farm/FarmerStatus.tsx:22
@@ -605,8 +605,8 @@ msgid "Error"
 msgstr "Σφάλμα"
 
 #: src/components/wallet/standard/WalletStandard.tsx:415
-msgid "Error: Cannot send flax to coloured address. Please enter a flax address."
-msgstr "Σφάλμα: Δεν μπορείτε να στείλετε flax σε χρωματισμένη διεύθυνση. Παρακαλώ εισάγετε μια διεύθυνση flax."
+msgid "Error: Cannot send taco to coloured address. Please enter a taco address."
+msgstr "Σφάλμα: Δεν μπορείτε να στείλετε taco σε χρωματισμένη διεύθυνση. Παρακαλώ εισάγετε μια διεύθυνση taco."
 
 #: src/components/farm/card/FarmCardExpectedTimeToWin.tsx:51
 #: src/components/farm/card/FarmCardExpectedTimeToWin.tsx:61
@@ -1226,8 +1226,8 @@ msgid "Plots Passed Filter"
 msgstr "Plots Passed Filter"
 
 #: src/components/plot/overview/PlotOverviewHero.tsx:30
-msgid "Plots are allocated space on your hard drive used to farm and earn Flax. <0>Learn more</0>"
-msgstr "Τα plots κατανέμονται στο σκληρό σας δίσκο που είναι για farm και κερδίζετε Flax. <0>Μάθετε περισσότερα</0>"
+msgid "Plots are allocated space on your hard drive used to farm and earn Taco. <0>Learn more</0>"
+msgstr "Τα plots κατανέμονται στο σκληρό σας δίσκο που είναι για farm και κερδίζετε Taco. <0>Μάθετε περισσότερα</0>"
 
 #: src/components/plot/queue/PlotQueueIndicator.tsx:33
 msgid "Plotting"
@@ -1553,8 +1553,8 @@ msgstr "Spending Interval Length (number of blocks)"
 
 #: src/components/wallet/rateLimited/WalletRateLimited.jsx:415
 #: src/components/wallet/rateLimited/WalletRateLimited.jsx:466
-msgid "Spending Limit (flax per interval): {0}"
-msgstr "Όριο δαπανών (flax ανά διάστημα): {0}"
+msgid "Spending Limit (taco per interval): {0}"
+msgstr "Όριο δαπανών (taco ανά διάστημα): {0}"
 
 #: src/components/fullNode/FullNode.jsx:95
 msgid "State"
@@ -1601,8 +1601,8 @@ msgstr "Κατάσταση:"
 #~ msgstr "Sub Block Height"
 
 #: src/components/block/Block.jsx:338
-#~ msgid "Sub Block at height {0} in the Flax blockchain"
-#~ msgstr "Sub Block at height {0} in the Flax blockchain"
+#~ msgid "Sub Block at height {0} in the Taco blockchain"
+#~ msgstr "Sub Block at height {0} in the Taco blockchain"
 
 #: src/components/wallet/rateLimited/WalletRateLimited.jsx:357
 msgid "Submit"
@@ -1706,8 +1706,8 @@ msgid "This feature is available only from the GUI."
 msgstr "Αυτή η δυνατότητα είναι διαθέσιμη μόνο στα μέλη PRO."
 
 #: src/components/wallet/standard/WalletStandard.tsx:264
-msgid "This is the amount of Flax that you can currently use to make transactions. It does not include pending farming rewards, pending incoming transactions, and Flax that you have just spent but is not yet in the blockchain."
-msgstr "Αυτό είναι το ποσό των Flax που μπορείτε να χρησιμοποιήσετε επί του παρόντος για να πραγματοποιήσετε συναλλαγές. Δεν περιλαμβάνει εκκρεμείς ανταμοιβές για τη συγκομιδή, εκκρεμείς εισερχόμενες συναλλαγές, και Flax που έχετε μόλις ξοδέψει αλλά δεν είναι ακόμη στο blockchain."
+msgid "This is the amount of Taco that you can currently use to make transactions. It does not include pending farming rewards, pending incoming transactions, and Taco that you have just spent but is not yet in the blockchain."
+msgstr "Αυτό είναι το ποσό των Taco που μπορείτε να χρησιμοποιήσετε επί του παρόντος για να πραγματοποιήσετε συναλλαγές. Δεν περιλαμβάνει εκκρεμείς ανταμοιβές για τη συγκομιδή, εκκρεμείς εισερχόμενες συναλλαγές, και Taco που έχετε μόλις ξοδέψει αλλά δεν είναι ακόμη στο blockchain."
 
 #: src/components/wallet/standard/WalletStandard.tsx:313
 msgid "This is the pending change, which are change coins which you have sent to yourself, but have not been confirmed yet."
@@ -1726,8 +1726,8 @@ msgid "This is the time the block was created by the farmer, which is before it 
 msgstr "Αυτή είναι η στιγμή που το μπλοκ δημιουργήθηκε από τον farmer, η οποία είναι πριν οριστικοποιηθεί με αποδεικτικό χρόνου"
 
 #: src/components/wallet/standard/WalletStandard.tsx:252
-msgid "This is the total amount of flax in the blockchain at the current peak sub block that is controlled by your private keys. It includes frozen farming rewards, but not pending incoming and outgoing transactions."
-msgstr "Αυτή είναι η συνολική ποσότητα flax στο blockchain στο τρέχον υπο-μπλοκ κορυφής που ελέγχεται από τα ιδιωτικά σας κλειδιά. Περιλαμβάνει βραβεία frozen farming, αλλά όχι εισερχόμενες και εξερχόμενες συναλλαγές."
+msgid "This is the total amount of taco in the blockchain at the current peak sub block that is controlled by your private keys. It includes frozen farming rewards, but not pending incoming and outgoing transactions."
+msgstr "Αυτή είναι η συνολική ποσότητα taco στο blockchain στο τρέχον υπο-μπλοκ κορυφής που ελέγχεται από τα ιδιωτικά σας κλειδιά. Περιλαμβάνει βραβεία frozen farming, αλλά όχι εισερχόμενες και εξερχόμενες συναλλαγές."
 
 #: src/components/wallet/standard/WalletStandard.tsx:291
 msgid "This is the total balance + pending balance: it is what your balance will be after all pending transactions are confirmed."
@@ -1754,8 +1754,8 @@ msgid "This trade was included on blockchain at this block height"
 msgstr "Αυτή η συναλλαγή συμπεριλήφθηκε στο blockchain σε αυτό το ύψος μπλοκ"
 
 #: src/components/app/AppTimeBombAlert.tsx:18
-msgid "This version of Flax is no longer compatible with the blockchain and can not safely farm."
-msgstr "Αυτή η έκδοση του Flax δεν είναι πλέον συμβατή με το blockchain και δεν μπορεί να γίνει farm με ασφάλεια."
+msgid "This version of Taco is no longer compatible with the blockchain and can not safely farm."
+msgstr "Αυτή η έκδοση του Taco δεν είναι πλέον συμβατή με το blockchain και δεν μπορεί να γίνει farm με ασφάλεια."
 
 #: src/components/fullNode/FullNode.jsx:87
 msgid "Time Created"
@@ -1779,8 +1779,8 @@ msgstr "Προς"
 msgid "Total Balance"
 msgstr "Συνολικό Υπόλοιπο"
 
-#: src/components/farm/card/FarmCardTotalFlaxFarmed.tsx:15
-#~ msgid "Total Flax Farmed"
+#: src/components/farm/card/FarmCardTotalTacoFarmed.tsx:15
+#~ msgid "Total Taco Farmed"
 #~ msgstr ""
 
 #: src/components/fullNode/FullNode.jsx:192
@@ -1910,7 +1910,7 @@ msgstr "Αναμονή για συγχρονισμό"
 #~ msgstr ""
 
 #: src/components/wallet/Wallets.tsx:30
-#~ msgid "WalletItem.flaxWallet"
+#~ msgid "WalletItem.tacoWallet"
 #~ msgstr ""
 
 #: src/components/wallet/Wallets.tsx:48
@@ -1943,8 +1943,8 @@ msgstr "Πορτοφόλια"
 #~ msgstr ""
 
 #: src/components/plot/overview/PlotOverviewPlots.tsx:107
-msgid "Want to earn more Flax? Add more plots to your farm."
-msgstr "Θέλετε να κερδίσετε περισσότερα Flax? Προσθέστε περισσότερα plots στο farm σας."
+msgid "Want to earn more Taco? Add more plots to your farm."
+msgstr "Θέλετε να κερδίσετε περισσότερα Taco? Προσθέστε περισσότερα plots στο farm σας."
 
 #: src/components/plot/add/PlotAddNumberOfPlots.tsx:82
 msgid "Want to have a delay before the next plot starts?"
@@ -1959,8 +1959,8 @@ msgid "Weight is the total added difficulty of all sub blocks up to and includin
 msgstr "Το βάρος είναι η συνολική προστιθέμενη δυσκολία όλων των υπο-μπλοκ μέχρι και αυτό"
 
 #: src/components/selectKey/SelectKey.tsx:115
-msgid "Welcome to Flax. Please log in with an existing key, or create a new key."
-msgstr "Καλώς ήρθατε στη Flax. Παρακαλώ συνδεθείτε με ένα υπάρχον κλειδί ή δημιουργήστε ένα νέο κλειδί."
+msgid "Welcome to Taco. Please log in with an existing key, or create a new key."
+msgstr "Καλώς ήρθατε στη Taco. Παρακαλώ συνδεθείτε με ένα υπάρχον κλειδί ή δημιουργήστε ένα νέο κλειδί."
 
 #: src/components/wallet/WalletAdd.tsx:66
 msgid "Welcome! The following words are used for your wallet backup. Without them, you will lose access to your wallet, keep them safe! Write down each word along with the order number next to them. (Order is important)"
@@ -2009,8 +2009,8 @@ msgstr "Έχετε {0}% του χώρου στο δίκτυο, έτσι ώστε
 #~ msgstr "You have {0}% of the space on the network, so farming a block will take {expectedTimeToWin} in expectation. Actual results may take 3-4 times longer this estimate. <0>Learn about Expected Value</0>"
 
 #: src/components/app/AppTimeBomb.tsx:28
-#~ msgid "You need to upgrade the Flax application as this version will stop working soon!"
-#~ msgstr "You need to upgrade the Flax application as this version will stop working soon!"
+#~ msgid "You need to upgrade the Taco application as this version will stop working soon!"
+#~ msgstr "You need to upgrade the Taco application as this version will stop working soon!"
 
 #: src/components/farm/overview/FarmOverview.tsx:33
 msgid "Your Farm Overview"
@@ -2073,9 +2073,9 @@ msgstr "συγχρονισμός..."
 msgid "{currencyCode} Block Rewards"
 msgstr "{currencyCode} Ανταμοιβές μπλοκ"
 
-#: src/components/farm/card/FarmCardTotalFlaxFarmed.tsx:29
-msgid "{currencyCode} Total Flax Farmed"
-msgstr "{currencyCode} Σύνολο Flax που έχουν γίνει Farmed"
+#: src/components/farm/card/FarmCardTotalTacoFarmed.tsx:29
+msgid "{currencyCode} Total Taco Farmed"
+msgstr "{currencyCode} Σύνολο Taco που έχουν γίνει Farmed"
 
 #: src/components/farm/card/FarmCardUserFees.tsx:28
 msgid "{currencyCode} User Transaction Fees"

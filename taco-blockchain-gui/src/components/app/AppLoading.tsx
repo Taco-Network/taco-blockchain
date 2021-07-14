@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Spinner } from '@flax/core';
+import { Spinner } from '@taco/core';
 import { RootState } from '../../modules/rootReducer';
 
 export default function AppLoading() {

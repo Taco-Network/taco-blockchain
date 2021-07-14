@@ -1,6 +1,6 @@
 import React from 'react';
 import { Trans } from '@lingui/macro';
-import { AlertDialog } from '@flax/core';
+import { AlertDialog } from '@taco/core';
 import styled from 'styled-components';
 import { Grid, Typography } from '@material-ui/core';
 import {

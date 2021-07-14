@@ -18,7 +18,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import { useStyles } from './WalletCreate';
 import { create_did_action } from '../../../modules/message';
-import { flax_to_mojo } from '../../../util/flax';
+import { taco_to_mojo } from '../../../util/taco';
 import { openDialog } from '../../../modules/dialog';
 import { useForm, Controller, useFieldArray } from 'react-hook-form';
 
@@ -121,7 +121,7 @@ export const CreateDIDWallet = () => {
       dispatch(openDialog('Please enter a valid numeric amount'));
       return;
     }
-    var amount_val = flax_to_mojo(parseInt(data.amount));
+    var amount_val = taco_to_mojo(parseInt(data.amount));
     const num_of_backup_ids_needed = parseInt(1);
     dispatch(createState(true, true));
     dispatch(create_did_action(amount_val, didArray, num_of_backup_ids_needed));

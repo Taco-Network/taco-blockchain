@@ -1,7 +1,7 @@
 import React from 'react';
 import { Trans } from '@lingui/macro';
 import { useSelector } from 'react-redux';
-import { FormatBytes } from '@flax/core';
+import { FormatBytes } from '@taco/core';
 import type { RootState } from '../../../modules/rootReducer';
 import FarmCard from './FarmCard';
 

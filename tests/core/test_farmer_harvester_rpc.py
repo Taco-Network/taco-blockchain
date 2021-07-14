@@ -211,7 +211,7 @@ class TestRpc:
             assert config["farmer"]["xtx_target_address"] == encode_puzzle_hash(new_ph, "xtx")
             assert config["pool"]["xtx_target_address"] == encode_puzzle_hash(new_ph_3, "xtx")
 
-            new_ph_3_encoded = encode_puzzle_hash(new_ph_3, ".com/superdutyf3/taco-blockchain")
+            new_ph_3_encoded = encode_puzzle_hash(new_ph_3, ".com/Taco-Network/taco-blockchain")
             added_char = new_ph_3_encoded + "a"
             with pytest.raises(ValueError):
                 await client.set_reward_targets(None, added_char)

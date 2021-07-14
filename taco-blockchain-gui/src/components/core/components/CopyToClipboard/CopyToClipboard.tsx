@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Trans } from '@lingui/macro';
 import { useCopyToClipboard } from 'react-use';
-import { IconButton } from '@flax/core';
+import { IconButton } from '@taco/core';
 import { Tooltip } from '@material-ui/core';
 import { Assignment as AssignmentIcon } from '@material-ui/icons';
 // @ts-ignore

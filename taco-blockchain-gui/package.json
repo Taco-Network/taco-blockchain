@@ -1,8 +1,8 @@
 {
-  "name": "flax-blockchain",
-  "author": "Flax Network <hello@flaxnetwork.org> (https://flaxnetwork.org/)",
-  "description": "GUI for Flax Blockchain",
-  "productName": "Flax Blockchain",
+  "name": "taco-blockchain",
+  "author": "Taco Network <hello@taconetwork.org> (https://taconetwork.org/)",
+  "description": "GUI for Taco Blockchain",
+  "productName": "Taco Blockchain",
   "private": true,
   "homepage": "./",
   "main": "build/electron/main.js",

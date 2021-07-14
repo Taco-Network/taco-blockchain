@@ -1,7 +1,7 @@
 import React, { ReactElement, ReactNode } from 'react';
 import { Box, Container, Drawer, Toolbar } from '@material-ui/core';
 import styled from 'styled-components';
-import { Flex } from '@flax/core';
+import { Flex } from '@taco/core';
 import DashboardTitle from '../dashboard/DashboardTitle';
 
 const StyledSideBarContainer = styled(Box)`

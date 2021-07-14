@@ -14,16 +14,16 @@ function getInstallerConfig () {
   const outPath = path.join(rootPath, 'release-builds')
 
   return Promise.resolve({
-    appDirectory: path.join(rootPath, 'Flax-win32-x64'),
-    authors: 'Flax Network',
-    version: process.env.FLAX_INSTALLER_VERSION,
+    appDirectory: path.join(rootPath, 'Taco-win32-x64'),
+    authors: 'Taco Network',
+    version: process.env.TACO_INSTALLER_VERSION,
     noMsi: true,
-    iconUrl: 'https://raw.githubusercontent.com/Flax-Network/flax-blockchain/master/electron-react/src/assets/img/flax.ico',
+    iconUrl: 'https://raw.githubusercontent.com/Taco-Network/taco-blockchain/master/electron-react/src/assets/img/taco.ico',
     outputDirectory: path.join(outPath, 'windows-installer'),
     certificateFile: 'win_code_sign_cert.p12',
     certificatePassword: process.env.WIN_CODE_SIGN_PASS,
-    exe: 'Flax.exe',
-    setupExe: 'FlaxSetup-' + process.env.FLAX_INSTALLER_VERSION + '.exe',
-    setupIcon: path.join(rootPath, 'src', 'assets', 'img', 'flax.ico')
+    exe: 'Taco.exe',
+    setupExe: 'TacoSetup-' + process.env.TACO_INSTALLER_VERSION + '.exe',
+    setupIcon: path.join(rootPath, 'src', 'assets', 'img', 'taco.ico')
   })
 }

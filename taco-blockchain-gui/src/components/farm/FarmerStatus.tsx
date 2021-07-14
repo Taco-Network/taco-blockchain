@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Trans } from '@lingui/macro';
-import { Flex, StateColor } from '@flax/core';
+import { Flex, StateColor } from '@taco/core';
 import { FiberManualRecord as FiberManualRecordIcon } from '@material-ui/icons';
 import FarmerStatus from '../../constants/FarmerStatus';
 import useFarmerStatus from '../../hooks/useFarmerStatus';

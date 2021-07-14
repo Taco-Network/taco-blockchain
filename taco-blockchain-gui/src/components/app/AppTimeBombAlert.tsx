@@ -15,7 +15,7 @@ export default function AppTimeBomb() {
   if (isVisible) {
     return (
       <Alert severity="warning">
-        <Trans>This version of Flax is no longer compatible with the blockchain and can not safely farm.</Trans>
+        <Trans>This version of Taco is no longer compatible with the blockchain and can not safely farm.</Trans>
       </Alert>
     );
   }

@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import React, { useMemo } from 'react';
-import { Dropzone } from '@flax/core';
+import { Dropzone } from '@taco/core';
 import { Trans } from '@lingui/macro';
 import {
   CssBaseline, 
@@ -15,7 +15,7 @@ import {
   CircularProgress,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { Card } from '@flax/core';
+import { Card } from '@taco/core';
 
 import {
   createState,
@@ -24,7 +24,7 @@ import {
 } from '../../../modules/createWallet';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import { recover_did_action } from '../../../modules/message';
-import { flax_to_mojo } from '../../../util/flax';
+import { taco_to_mojo } from '../../../util/taco';
 import { openDialog } from '../../../modules/dialog';
 import { useForm, Controller, useFieldArray } from 'react-hook-form';
 

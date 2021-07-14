@@ -12,7 +12,7 @@ import { Autocomplete } from '@material-ui/lab';
 import { ArrowBackIos as ArrowBackIosIcon } from '@material-ui/icons';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router';
-import { Flex, Logo } from '@flax/core';
+import { Flex, Logo } from '@taco/core';
 import { matchSorter } from 'match-sorter';
 import LayoutHero from '../layout/LayoutHero';
 import { mnemonic_word_added, resetMnemonic } from '../../modules/mnemonic';
@@ -141,7 +141,7 @@ export default function WalletImport() {
           <Typography variant="subtitle1" align="center">
             <Trans>
               Enter the 24 word mnemonic that you have saved in order to restore
-              your Flax wallet.
+              your Taco wallet.
             </Trans>
           </Typography>
           <Grid container spacing={2}>

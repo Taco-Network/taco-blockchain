@@ -5,7 +5,7 @@ import { Trans } from '@lingui/macro';
 import { Button } from '@material-ui/core';
 import { ChevronRight as ChevronRightIcon } from '@material-ui/icons';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { Flex, Form } from '@flax/core';
+import { Flex, Form } from '@taco/core';
 import { PlotHeaderSource } from '../PlotHeader';
 import PlotAddChooseSize from './PlotAddChooseSize';
 import PlotAddNumberOfPlots from './PlotAddNumberOfPlots';

@@ -8,7 +8,7 @@
       "esnext"
     ],
     "paths": {
-      "@flax/*": ["./components/*"]
+      "@taco/*": ["./components/*"]
     },
     "allowJs": true,
     "skipLibCheck": true,

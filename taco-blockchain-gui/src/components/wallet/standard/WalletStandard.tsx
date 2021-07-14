@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 import { Trans } from '@lingui/macro';
 import Grid from '@material-ui/core/Grid';
-import { AlertDialog, Flex, Card } from '@flax/core';
+import { AlertDialog, Flex, Card } from '@taco/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -23,7 +23,7 @@ import {
   send_transaction,
   farm_block,
 } from '../../../modules/message';
-import { mojo_to_flax_string, flax_to_mojo } from '../../../util/flax';
+import { mojo_to_taco_string, taco_to_mojo } from '../../../util/taco';
 import { openDialog } from '../../../modules/dialog';
 import { get_transaction_result } from '../../../util/transaction_result';
 import config from '../../../config/config';
@@ -213,7 +213,7 @@ function BalanceCardSubSection(props: BalanceCardSubSectionProps) {
         </Box>
         <Box>
           <Typography variant="subtitle1">
-            {mojo_to_flax_string(props.balance)} {currencyCode}
+            {mojo_to_taco_string(props.balance)} {currencyCode}
           </Typography>
         </Box>
       </Box>
@@ -250,7 +250,7 @@ function BalanceCard(props: BalanceCardProps) {
         balance={balance}
         tooltip={
           <Trans>
-            This is the total amount of flax in the blockchain at the current
+            This is the total amount of taco in the blockchain at the current
             peak sub block that is controlled by your private keys. It includes
             frozen farming rewards, but not pending incoming and outgoing
             transactions.
@@ -262,9 +262,9 @@ function BalanceCard(props: BalanceCardProps) {
         balance={balance_spendable}
         tooltip={
           <Trans>
-            This is the amount of Flax that you can currently use to make
+            This is the amount of Taco that you can currently use to make
             transactions. It does not include pending farming rewards, pending
-            incoming transactions, and Flax that you have just spent but is not
+            incoming transactions, and Taco that you have just spent but is not
             yet in the blockchain.
           </Trans>
         }
@@ -405,15 +405,15 @@ function SendCard(props: SendCardProps) {
       );
       return;
     }
-    const amount = flax_to_mojo(amount_input.value);
-    const fee = flax_to_mojo(fee_input.value);
+    const amount = taco_to_mojo(amount_input.value);
+    const fee = taco_to_mojo(fee_input.value);
 
     if (address.includes('colour')) {
       dispatch(
         openDialog(
           <AlertDialog>
             <Trans>
-              Error: Cannot send flax to coloured address. Please enter a flax
+              Error: Cannot send taco to coloured address. Please enter a taco
               address.
             </Trans>
           </AlertDialog>,
@@ -421,7 +421,7 @@ function SendCard(props: SendCardProps) {
       );
       return;
     }
-    if (address.slice(0, 12) === 'flax_addr://') {
+    if (address.slice(0, 12) === 'taco_addr://') {
       address = address.slice(12);
     }
     if (address.startsWith('0x') || address.startsWith('0X')) {

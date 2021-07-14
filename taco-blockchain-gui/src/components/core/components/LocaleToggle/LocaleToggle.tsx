@@ -40,7 +40,7 @@ export default function LocaleToggle(props: Props) {
   function handleHelpTranslate() {
     handleClose();
 
-    openExternal('https://github.com/Flax-Network/flax-blockchain-gui/tree/main/src/locales/README.md');
+    openExternal('https://github.com/Taco-Network/taco-blockchain-gui/tree/main/src/locales/README.md');
   }
 
   const localeData = useMemo(

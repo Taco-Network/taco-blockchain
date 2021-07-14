@@ -1,9 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Box, BoxProps } from '@material-ui/core';
-import { Flax } from '@flax/icons';
+import { Taco } from '@taco/icons';
 
-const StyledFlax = styled(Flax)`
+const StyledTaco = styled(Taco)`
   max-width: 100%;
   width: auto;
   height: auto;
@@ -12,7 +12,7 @@ const StyledFlax = styled(Flax)`
 export default function Logo(props: BoxProps) {
   return (
     <Box {...props}>
-      <StyledFlax />
+      <StyledTaco />
     </Box>
   );
 }

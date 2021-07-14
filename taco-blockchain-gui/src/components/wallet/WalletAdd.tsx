@@ -10,7 +10,7 @@ import {
 import { ArrowBackIos as ArrowBackIosIcon } from '@material-ui/icons';
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffectOnce } from 'react-use';
-import { Flex, Loading, Link, Logo } from '@flax/core';
+import { Flex, Loading, Link, Logo } from '@taco/core';
 import { genereate_mnemonics, add_new_key_action } from '../../modules/message';
 import LayoutHero from '../layout/LayoutHero';
 import type { RootState } from '../../modules/rootReducer';

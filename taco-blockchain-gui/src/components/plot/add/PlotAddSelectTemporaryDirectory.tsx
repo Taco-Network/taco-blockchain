@@ -1,7 +1,7 @@
 import React from 'react';
 import { Trans } from '@lingui/macro';
 import { useFormContext } from 'react-hook-form';
-import { AdvancedOptions, ButtonSelected, CardStep, Flex, TextField } from '@flax/core';
+import { AdvancedOptions, ButtonSelected, CardStep, Flex, TextField } from '@taco/core';
 import { Typography } from '@material-ui/core';
 import useSelectDirectory from '../../../hooks/useSelectDirectory';
 

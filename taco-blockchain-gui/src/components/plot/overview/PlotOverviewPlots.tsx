@@ -2,7 +2,7 @@ import React from 'react';
 import { Trans } from '@lingui/macro';
 import styled from 'styled-components';
 import { Warning as WarningIcon } from '@material-ui/icons';
-import { Card, Flex, Table, FormatBytes, StateColor } from '@flax/core';
+import { Card, Flex, Table, FormatBytes, StateColor } from '@taco/core';
 import {
   Box,
   Typography,
@@ -105,7 +105,7 @@ export default function PlotOverviewPlots() {
           <Flex flexGrow={1}>
             <Typography variant="body2">
               <Trans>
-                Want to earn more Flax? Add more plots to your farm.
+                Want to earn more Taco? Add more plots to your farm.
               </Trans>
             </Typography>
           </Flex>

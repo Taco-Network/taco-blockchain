@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Trans } from '@lingui/macro';
-import { Link, Table, Card, FormatBytes } from '@flax/core';
+import { Link, Table, Card, FormatBytes } from '@taco/core';
 import { Typography } from '@material-ui/core';
 import moment from 'moment';
 import type { Row } from '../core/components/Table/Table';
@@ -50,7 +50,7 @@ export default function FarmLastAttemptedProof() {
       tooltip={(
         <Trans>
           This table shows you the last time your farm attempted to win a block challenge.{' '}
-          <Link target="_blank" href="https://github.com/Flax-Network/flax-blockchain/wiki/FAQ#what-is-the-plot-filter-and-why-didnt-my-plot-pass-it">Learn more</Link>
+          <Link target="_blank" href="https://github.com/Taco-Network/taco-blockchain/wiki/FAQ#what-is-the-plot-filter-and-why-didnt-my-plot-pass-it">Learn more</Link>
         </Trans>
       )}
       interactive

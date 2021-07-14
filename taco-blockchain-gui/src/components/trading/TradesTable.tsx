@@ -1,9 +1,9 @@
 import React, { useMemo, ReactNode } from 'react';
-import { Table } from '@flax/core';
+import { Table } from '@taco/core';
 import styled from 'styled-components';
 import { Trans } from '@lingui/macro';
 import { Box } from '@material-ui/core';
-import { mojo_to_flax_string } from '../../util/flax';
+import { mojo_to_taco_string } from '../../util/taco';
 
 const Amount = styled(Box)`
   white-space: normal;
@@ -48,7 +48,7 @@ export default function TradesTable(props: Props) {
       ),
       amount: (
         <Amount>
-          {mojo_to_flax_string(humanAmount)}
+          {mojo_to_taco_string(humanAmount)}
         </Amount>
       ),
     };
