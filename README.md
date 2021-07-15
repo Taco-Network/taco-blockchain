@@ -6,6 +6,8 @@ WIP (icons might be messed up) will be fixed in future update
 
 Working node: dns-introducer.taconetwork.net:18620
 
+7/15/2021 BLOCKCHAIN RESET
+
 0 coin pre-farm
 
 https://discord.gg/xguteVCYHh
