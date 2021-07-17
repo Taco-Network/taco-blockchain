@@ -5,7 +5,7 @@ from secrets import token_bytes
 from typing import List, Optional, Tuple
 
 from blspy import AugSchemeMPL, G1Element, PrivateKey
-from tacopos import DiskPlotter
+from chiapos import DiskPlotter
 
 from taco.plotting.plot_tools import add_plot_directory, stream_plot_info_ph, stream_plot_info_pk
 from taco.types.blockchain_format.proof_of_space import ProofOfSpace

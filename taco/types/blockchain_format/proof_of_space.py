@@ -4,7 +4,7 @@ from typing import Optional
 
 from bitstring import BitArray
 from blspy import G1Element, AugSchemeMPL, PrivateKey
-from tacopos import Verifier
+from chiapos import Verifier
 
 from taco.consensus.constants import ConsensusConstants
 from taco.types.blockchain_format.sized_bytes import bytes32

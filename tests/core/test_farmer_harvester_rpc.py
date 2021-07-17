@@ -4,7 +4,7 @@ from secrets import token_bytes
 
 import pytest
 from blspy import AugSchemeMPL
-from tacopos import DiskPlotter
+from chiapos import DiskPlotter
 
 from taco.consensus.coinbase import create_puzzlehash_for_pk
 from taco.plotting.plot_tools import stream_plot_info_ph, stream_plot_info_pk
