@@ -246,7 +246,10 @@ class CCWallet:
             program: BlockGenerator = simple_solution_generator(tx.spend_bundle)
             # npc contains names of the coins removed, puzzle_hashes and their spend conditions
             result: NPCResult = get_name_puzzle_conditions(
-                program, self.wallet_state_manager.constants.MAX_BLOCK_COST_CLVM, True
+                program,
+                self.wallet_state_manager.constants.MAX_BLOCK_COST_CLVM,
+                cost_per_byte=self.wallet_state_manager.constants.COST_PER_BYTE,
+                safe_mode=True,
             )
             cost_result: uint64 = calculate_cost_of_program(
                 program.program, result, self.wallet_state_manager.constants.COST_PER_BYTE
@@ -280,7 +283,7 @@ class CCWallet:
         assert self.cc_info.my_genesis_checker is not None
         return bytes(self.cc_info.my_genesis_checker).hex()
 
-    async def coin_added(self, coin: Coin, header_hash: bytes32, removals: List[Coin], height: uint32):
+    async def coin_added(self, coin: Coin, height: uint32):
         """Notification from wallet state manager that wallet has been received."""
         self.log.info(f"CC wallet has been notified that {coin} was added")
 

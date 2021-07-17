@@ -8,7 +8,6 @@ from taco.rpc.wallet_rpc_api import WalletRpcApi
 from taco.server.outbound_message import NodeType
 from taco.server.start_service import run_service
 from taco.types.peer_info import PeerInfo
-from taco.util.block_tools import test_constants
 from taco.util.config import load_config_cli, load_config
 from taco.util.default_root import DEFAULT_ROOT_PATH
 from taco.util.keychain import Keychain
@@ -36,6 +35,8 @@ def service_kwargs_for_wallet(
         trusted_peer = full_node_config["ssl"]["public_crt"]
         config["trusted_peers"] = {}
         config["trusted_peers"]["local_node"] = trusted_peer
+    if "short_sync_blocks_behind_threshold" not in config:
+        config["short_sync_blocks_behind_threshold"] = 20
     node = WalletNode(
         config,
         keychain,
@@ -81,6 +82,8 @@ def main() -> None:
     # This is simulator
     local_test = config["testing"]
     if local_test is True:
+        from tests.block_tools import test_constants
+
         constants = test_constants
         current = config["database_path"]
         config["database_path"] = f"{current}_simulation"

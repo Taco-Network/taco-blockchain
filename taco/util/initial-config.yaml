@@ -11,23 +11,85 @@ network_overrides: &network_overrides
   constants:
     mainnet:
       NETWORK_TYPE: 0
-      GENESIS_CHALLENGE: 2aed672adcd351b98e860a7b3d78de0a5e2af16c22df88e66e1919eb1e611f8e
-      GENESIS_PRE_FARM_POOL_PUZZLE_HASH: "5593755c5604a1651c85700d2db91a2fa4d978fcd9d5bb9aa948fbf4d0093193"
-      GENESIS_PRE_FARM_FARMER_PUZZLE_HASH: "5593755c5604a1651c85700d2db91a2fa4d978fcd9d5bb9aa948fbf4d0093193"
+      GENESIS_CHALLENGE: ccd5bb71183532bff220ba46c268991a3ff07eb358e8255a65c30a2dce0e5fbb
+      GENESIS_PRE_FARM_POOL_PUZZLE_HASH: "d23da14695a188ae5708dd152263c4db883eb27edeb936178d4d988b8f3ce5fc"
+      GENESIS_PRE_FARM_FARMER_PUZZLE_HASH: "3d8765d3a597ec1d99663f6c9816d915b9f68613ac94009884c4addaefcce6af"
     testnet0:
-      GENESIS_CHALLENGE: 28a206a22e7e2060230c88ad149d81cc8e74bcf5e8e74aafcce8b8efe6181dbb
+      MIN_PLOT_SIZE: 18
+      GENESIS_CHALLENGE: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
       NETWORK_TYPE: 1
-      GENESIS_PRE_FARM_POOL_PUZZLE_HASH: "5593755c5604a1651c85700d2db91a2fa4d978fcd9d5bb9aa948fbf4d0093193"
-      GENESIS_PRE_FARM_FARMER_PUZZLE_HASH: "5593755c5604a1651c85700d2db91a2fa4d978fcd9d5bb9aa948fbf4d0093193"
+      GENESIS_PRE_FARM_POOL_PUZZLE_HASH: "d23da14695a188ae5708dd152263c4db883eb27edeb936178d4d988b8f3ce5fc"
+      GENESIS_PRE_FARM_FARMER_PUZZLE_HASH: "3d8765d3a597ec1d99663f6c9816d915b9f68613ac94009884c4addaefcce6af"
+    testnet2:
+      MIN_PLOT_SIZE: 18
+      GENESIS_CHALLENGE: ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad
+      NETWORK_TYPE: 1
+      INITIAL_FREEZE_PERIOD: 100
+      DIFFICULTY_CONSTANT_FACTOR: 10052721566054
+      GENESIS_PRE_FARM_POOL_PUZZLE_HASH: "d23da14695a188ae5708dd152263c4db883eb27edeb936178d4d988b8f3ce5fc"
+      GENESIS_PRE_FARM_FARMER_PUZZLE_HASH: "3d8765d3a597ec1d99663f6c9816d915b9f68613ac94009884c4addaefcce6af"
+    testnet3:
+      DIFFICULTY_CONSTANT_FACTOR: 10052721566054
+      GENESIS_CHALLENGE: ca7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015af
+      GENESIS_PRE_FARM_FARMER_PUZZLE_HASH: 3d8765d3a597ec1d99663f6c9816d915b9f68613ac94009884c4addaefcce6af
+      GENESIS_PRE_FARM_POOL_PUZZLE_HASH: d23da14695a188ae5708dd152263c4db883eb27edeb936178d4d988b8f3ce5fc
+      MIN_PLOT_SIZE: 18
+      NETWORK_TYPE: 1
+      MEMPOOL_BLOCK_BUFFER: 10
+    testnet4:
+      DIFFICULTY_CONSTANT_FACTOR: 10052721566054
+      GENESIS_CHALLENGE: dd7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015af
+      GENESIS_PRE_FARM_FARMER_PUZZLE_HASH: 3d8765d3a597ec1d99663f6c9816d915b9f68613ac94009884c4addaefcce6af
+      GENESIS_PRE_FARM_POOL_PUZZLE_HASH: d23da14695a188ae5708dd152263c4db883eb27edeb936178d4d988b8f3ce5fc
+      INITIAL_FREEZE_END_TIMESTAMP: 1618776900  # Sun Apr 18 2021 16:15:00 GMT-0400 (Eastern Daylight Time)
+      MIN_PLOT_SIZE: 18
+      NETWORK_TYPE: 1
+      MEMPOOL_BLOCK_BUFFER: 10
+      EPOCH_BLOCKS: 768
+      DIFFICULTY_STARTING: 30
+    testnet5:
+      DIFFICULTY_CONSTANT_FACTOR: 10052721566054
+      GENESIS_CHALLENGE: ee7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015af
+      GENESIS_PRE_FARM_FARMER_PUZZLE_HASH: 3d8765d3a597ec1d99663f6c9816d915b9f68613ac94009884c4addaefcce6af
+      GENESIS_PRE_FARM_POOL_PUZZLE_HASH: d23da14695a188ae5708dd152263c4db883eb27edeb936178d4d988b8f3ce5fc
+      INITIAL_FREEZE_END_TIMESTAMP: 1618869600  # Mon Apr 19 2021 18:00:00 GMT-0400 (Eastern Daylight Time)
+      MIN_PLOT_SIZE: 18
+      NETWORK_TYPE: 1
+      MEMPOOL_BLOCK_BUFFER: 10
+      EPOCH_BLOCKS: 768
+      DIFFICULTY_STARTING: 30
+    testnet7:
+      DIFFICULTY_CONSTANT_FACTOR: 10052721566054
+      GENESIS_CHALLENGE: 117816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015af
+      GENESIS_PRE_FARM_FARMER_PUZZLE_HASH: 3d8765d3a597ec1d99663f6c9816d915b9f68613ac94009884c4addaefcce6af
+      GENESIS_PRE_FARM_POOL_PUZZLE_HASH: d23da14695a188ae5708dd152263c4db883eb27edeb936178d4d988b8f3ce5fc
+      INITIAL_FREEZE_END_TIMESTAMP: 1619661600  # Wed Apr 28 2021 22:00:00 GMT-0400 (Eastern Daylight Time)
+      MIN_PLOT_SIZE: 18
+      NETWORK_TYPE: 1
+      MEMPOOL_BLOCK_BUFFER: 10
+      EPOCH_BLOCKS: 768
+      DIFFICULTY_STARTING: 30
   config:
     mainnet:
       address_prefix: "xtx"
+      default_full_node_port: 18620
     testnet0:
       address_prefix: "txtx"
+    testnet1:
+      address_prefix: "txtx"
+    testnet2:
+      address_prefix: "txtx"
+    testnet3:
+      address_prefix: "txtx"
+    testnet4:
+      address_prefix: "txtx"
+    testnet7:
+      address_prefix: "txtx"
+      default_full_node_port: 58444
 
 selected_network: &selected_network "mainnet"
-ALERTS_URL: https://download.taconetwork.org/notify/mainnet_alert.txt
-TACO_ALERTS_PUBKEY: a88dc9b53e21088dcd53347eda53b533aec7cd5ff267c3968b1dfc0dc132e39575cf401f0d6bc9952404dbbfc30731c5
+ALERTS_URL: https://download.taconetwork.net/notify/mainnet_alert.txt
+TACO_ALERTS_PUBKEY: 89b7fd87cb56e926ecefb879a29aae308be01f31980569f6a75a69d2a9a69daefd71fb778d865f7c50d6c967e3025937
 
 # public ssl ca is included in source code
 # Private ssl ca is used for trusted connections between machines user owns
@@ -51,6 +113,9 @@ logging: &logging
   log_filename: "log/debug.log"
   log_level: "WARNING"  # Can be CRITICAL, ERROR, WARNING, INFO, DEBUG, NOTSET
   log_maxfilesrotation: 7 #  Max files in rotation. Default value 7 if the key is not set
+  log_syslog: False  # If True, outputs to SysLog host and port specified
+  log_syslog_host: "localhost"  # Send logging messages to a remote or local Unix syslog
+  log_syslog_port: 514  # UDP port of the remote or local Unix syslog
 
 harvester:
   # The harvester server (if run) will run on this port
@@ -219,7 +284,7 @@ full_node:
   # Only connect to peers who we have heard about in the last recent_peer_threshold seconds
   recent_peer_threshold: 6000
 
-  # Send to a Bluebox (sanitizing timelord) uncompact blocks once every
+  # Send to a Bluebox (sanatizing timelord) uncompact blocks once every
   # 'send_uncompact_interval' seconds. Set to 0 if you don't use this feature.
   send_uncompact_interval: 0
   # At every 'send_uncompact_interval' seconds, send blueboxes 'target_uncompact_proofs' proofs to be normalized.
@@ -245,7 +310,7 @@ full_node:
       host: *self_hostname
       port: 18622
   introducer_peer:
-      host: dns-introducer.taconetwork.net  # Taco AWS introducer IPv4/IPv6
+      host: introducer.taconetwork.net  # Taco AWS introducer IPv4/IPv6
       port: 18620
   wallet_peer:
     host: *self_hostname
@@ -300,6 +365,8 @@ wallet:
   port: 18625
   rpc_port: 19432
 
+  enable_profiler: False
+
   # The minimum height that we care about for our transactions. Set to zero
   # If we are restoring from private key and don't know the height.
   starting_height: 0
@@ -327,7 +394,7 @@ wallet:
   recent_peer_threshold: 6000
 
   introducer_peer:
-    host: dns-introducer.taconetwork.net # Taco AWS introducer IPv4/IPv6
+    host: introducer.taconetwork.net # Taco AWS introducer IPv4/IPv6
     port: 18620
 
   ssl:
@@ -338,3 +405,5 @@ wallet:
 
   trusted_peers:
     trusted_node_1: "config/ssl/full_node/public_full_node.crt"
+
+  short_sync_blocks_behind_threshold: 20

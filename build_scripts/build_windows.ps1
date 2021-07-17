@@ -10,8 +10,9 @@ git status
 Write-Output "   ---"
 Write-Output "curl miniupnpc"
 Write-Output "   ---"
-Invoke-WebRequest -Uri "https://pypi.chia.net/simple/miniupnpc/miniupnpc-2.1-cp37-cp37m-win_amd64.whl" -OutFile "miniupnpc-2.1-cp37-cp37m-win_amd64.whl"
-Write-Output "Using win_amd64 python 3.7 wheel from https://github.com/miniupnp/miniupnp/pull/475 (2.2.0-RC1)"
+Invoke-WebRequest -Uri "https://pypi.taconetwork.net/simple/miniupnpc/miniupnpc-2.2.2-cp39-cp39-win_amd64.whl" -OutFile "miniupnpc-2.2.2-cp39-cp39-win_amd64.whl"
+Write-Output "Using win_amd64 python 3.9 wheel from https://github.com/miniupnp/miniupnp/pull/475 (2.2.0-RC1)"
+Write-Output "Actual build from https://github.com/miniupnp/miniupnp/commit/7783ac1545f70e3341da5866069bde88244dd848"
 If ($LastExitCode -gt 0){
     Throw "Failed to download miniupnpc!"
 }
@@ -22,7 +23,7 @@ else
 }
 
 Write-Output "   ---"
-Write-Output "Create venv - python3.7 or 3.8 is required in PATH"
+Write-Output "Create venv - python3.9 is required in PATH"
 Write-Output "   ---"
 python -m venv venv
 . .\venv\Scripts\Activate.ps1
@@ -47,7 +48,7 @@ Write-Output "   ---"
 Write-Output "   ---"
 Write-Output "Build taco-blockchain wheels"
 Write-Output "   ---"
-pip wheel --use-pep517 --extra-index-url https://pypi.chia.net/simple/ -f . --wheel-dir=.\build_scripts\win_build .
+pip wheel --use-pep517 --extra-index-url https://pypi.taconetwork.net/simple/ -f . --wheel-dir=.\build_scripts\win_build .
 
 Write-Output "   ---"
 Write-Output "Install taco-blockchain wheels into venv with pip"
@@ -79,6 +80,7 @@ git status
 Write-Output "   ---"
 Write-Output "Prepare Electron packager"
 Write-Output "   ---"
+$Env:NODE_OPTIONS = "--max-old-space-size=3000"
 npm install --save-dev electron-winstaller
 npm install -g electron-packager
 npm install
@@ -95,7 +97,7 @@ If ($LastExitCode -gt 0){
 }
 
 Write-Output "   ---"
-Write-Output "Increase the stack for taco command for (taco plots create) chiapos limitations"
+Write-Output "Increase the stack for taco command for (taco plots create) tacopos limitations"
 # editbin.exe needs to be in the path
 editbin.exe /STACK:8000000 daemon\taco.exe
 Write-Output "   ---"

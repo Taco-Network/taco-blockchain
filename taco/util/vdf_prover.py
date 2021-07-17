@@ -1,6 +1,6 @@
 from typing import Tuple
 
-from chiavdf import prove
+from tacovdf import prove
 
 from taco.consensus.constants import ConsensusConstants
 from taco.types.blockchain_format.classgroup import ClassgroupElement

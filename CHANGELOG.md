@@ -6,7 +6,75 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project does not yet adhere to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 for setuptools_scm/PEP 440 reasons.
 
-## 1.1.7 Taco Blockchain 2021-06-05
+## 1.2.0 Taco blockchain 2021-07-07
+
+### Added
+
+- Portable pooled plots are now available using our new plot NFT. These allow you to plot new plots to an NFT that can either self farm or join and leave pools. During development there were changes to the plot NFT so portable pool plots (those made with `-c` option to `taco plots create`) using code from before June 25th are invalid on mainnet.
+OG plots made before this release can continue to be farmed side by side with the new portable pool plots but can not join pools using the official pooling protocol. You can learn more as a farmer by checking out the [pool user guide](https://github.com/Taco-Network/taco-blockchain/wiki/Pooling-User-Guide). Pool operators and those wanting to understand how the official pooling protocol operates should check out our [pooling implementation reference repository](https://github.com/Taco-Network/pool-reference). If you plan to use plot NFT, all your farmers and harvesters must be on 1.2.0 to function properly for portable pool plots.
+- The exact commit after which Plot NFTs should be valid is the 89f7a4b3d6329493cd2b4bc5f346a819c99d3e7b commit (in which `pools.testnet9` branch was merged to main) or 5d62b3d1481c1e225d8354a012727ab263342c0a within the `pools.testnet9` branch.
+- `taco farm summary` and the GUI now use a new RPC endpoint to properly show plots for local and remote harvesters. This should address issues #6563, #5881, #3875, #1461.
+- `taco configure` now supports command line updates to peer count and target peer count.
+- Thank you @gldecurtins for adding logging support for remote syslog.
+- Thanks to @maran and @Animazing for adding farmer and pool public key display to the RPC.
+- We have added translations for Hungarian, Belarusian, Catalan, and Albanian.  For Hungarian thanks to @SirGeoff, @azazio @onokaxxx, @rolandfarkasCOM, @HUNDavid , @horvathpalzsolt, @stishun74, @tusdavgaming, @idotitusz, @rasocsabi, @mail.kope, @gsprblnt, @mbudahazi, @csiberius, @tomatos83, @zok42, @ocel0t, @rwtoptomi, @djxpitke, @ftamas85, @zotya0330, @fnni, @kapabeates, @zamery, @viktor.gonczi, @pal.suta, @miv, and @Joeman_. For Belarusian thanks to @shurix83, @haxycgm, and @metalomaniax. For Catalan thank you to @Poliwhirl, @Pep-33, @marqmarti, @meuca, @Guiwdin, @carlescampi, @jairobtx, @Neoares, @darknsis, @augustfarrerasgimeno, and @fornons. Finally for Albanian thanks to @ATSHOOTER and @lakedeejay. We apologize if we missed anyone and welcome corrections.
+- Our release process is now fully automated from tagging a release to publishing installers to all of the appropriate locations and now makes the release artifacts available via torrents as well.
+- All Taco repositories now automatically build M1 wheels and create a new MacOS M1 native installer.
+- New CLI command `taco plotnft` to manage pools.
+- We have added a new RPC `get_harvesters` to the farmer. This returns information about remote harvesters and plots.
+- We have added a new RPC `check_delete_key` to the wallet, to check keys prior to deleting them.
+- We have added a new RPC `delete_unconfirmed_transactions` to the wallet which deletes these transactions for a given wallet ID.
+- We have added a new RPC `get_puzzle_and_solution` to the full node, which takes in a coin ID.
+- We have added a new RPC `get_recent_signage_point_or_eos` to the full node, to support pooling.
+- We have added a new RPC `send_transaction_multi` to the wallet, which sends a payment with multiple payees.
+
+### Changed
+
+- We have made a host of changes to the GUI to support pooling and to improve the wallet experience.
+- We updated tacopos to version 1.0.3. This adds parallel reads to GetFullProof. Thanks to @marcoabreu ! We now print target/final directory early in the logs refs and log process ID. Thanks to @grayfallstown ! We are now using Gulrak 1.5.6.
+@683280 optimized code in phase1.hpp. @jespino and @mrhacky started migrating to flags instead of booleans parameters for `show_progress` and `nobitfield`. If you are providing third-party tools you may need to make adjustments if relying on the tacopos log.
+- Updated tacovdf to version 1.0.2 to fix certain tests.
+- Windows builds now rely upon Python 3.9 which obviates the fix in 1.1.7.
+- We are now using miniupnpc version 2.2.2 so that we can support Python 3.9 on Windows.
+- We updated to clvm 0.9.6 and clvm_rs 0.1.8. CLVMObject now lazily converts python types to CLVM types as elements are inspected in clvm. cvlm_rs now returns python objects rather than a serialized object.
+- We now have rudimentary checks to makes sure that fees are less than the amount being spent.
+- The harvester API no longer relies upon time:time with thanks to @x1957.
+- We have increased the strictness of validating Tacolisp in the mempool and clvm.
+- Thanks to @ruslanskorb for improvements to the human-readable forms in the CLI.
+- Thanks to @etr2460 for improvements to the plotting progress bar in the GUI and enhancements to human-readable sizes.
+- @dkackman changed the way that configuration was found on startup.
+- We now delay peer start for wallet until after backup init and make sure only one copy is started.
+- Wallets now trust the local node more for enhanced wallet sync speed.
+- We now store tasks used to initiate peer connections to ensure they are kept alive and to be able to wait for them if we hit the upper limit on number of pending outgoing connections.
+- We improved weight proof validation.
+- @cvet changed the wallet to take `override` instead of `confirm`.
+
+### Fixed
+
+- The delete plots button in the Windows GUI has been fixed and re-enabled.
+- Sometimes upon startup, the GUI takes a while to load the plots to display. We've made a temporary improvement that adds a "Refresh Plots" button whenever the GUI has not yet found plots.
+- Correctly display private key in `taco keys show`.
+- Thanks to @gldecurtins for removing a default printout of the private key mnemonic in `taco keys show`.
+- Shutting down the full node is cleaner and manages uPnP better.
+- DNS introducer could fail.
+- Fixed a potential timelord bug that could lead to a chain stall.
+- Add an explicit error message when mnemonic words are not in the dictionary; should help users self-service issues like #3425 faster. Thank you to @elliotback for this PR.
+- Thank you to @Nikolaj-K for various typo corrections around the Mozilla CA, code simplifications and improvements in converting to human-readable size estimations, and clean up in the RPCs and logging.
+- Thank you to @TacoMineJP for various improvements.
+- @asdf2014 removed some useless code in the wallet node API.
+- Thanks to @willi123yao for a fix to under development pool wallets.
+- `taco farm summary` better handles wallet errors.
+- @Hoinor fixed formatting issues around the Chinese translation in the GUI.
+- Sometimes the GUI would stop refreshing certain fields.
+- We have better error handling for misbehaving peers from naive forks/clones.
+- We have fixed an error where the wallet could get corrupted, which previously required restarting the application.
+- We have fixed an error where transactions were not being resubmitted from the wallet.
+
+### Known Issues
+
+- If you resync your wallet, transactions made with your plot NFTs will show incorrectly in the GUI. The internal accounting, and total balance displayed is correct.
+
+### 1.1.7 Taco Blockchain 2021-06-05
 
 ### Fixed
 
@@ -39,7 +107,7 @@ Batch process weight proof epochs in groups of 900 to fit below May 2020 sqlite 
 - Optimized Streamable parsing by avoiding extra post-init checks, making parsing block records from database up to 40% faster.
 - Made the serialization of Coin follow the normal protocol of implementing stream().
 - Minor improvements to add_spendbundle and weight proofs.
-- We now use version 1.0.2 of chiapos. We now reopen files on read or write failure with thanks to @mreid-moz! We also prevent chiapos prover crashing for more bad plots.
+- We now use version 1.0.2 of tacopos. We now reopen files on read or write failure with thanks to @mreid-moz! We also prevent tacopos prover crashing for more bad plots.
 - Disabled deletion of running plot for Windows users as the crash/lockup bug has returned.
 - We more clearly prohibit root from installing/running the GUI.
 - Thanks to @sargonas for improvements to the template for creating Issues.
@@ -191,6 +259,7 @@ Batch process weight proof epochs in groups of 900 to fit below May 2020 sqlite 
 - Help -> About was blank.
 - Our estimate for k=32 was about 0.4GiB too low in some cases.
 - Building the GUI in especially ARM64 Linux was painful enough to be considered broken.
+
 ## 1.0.4 Taco Blockchain 2021-04-12
 
 ### Added
@@ -225,13 +294,13 @@ Batch process weight proof epochs in groups of 900 to fit below May 2020 sqlite 
 ### Fixed
 
 - An incorrect merge brought in unreleased features and broke `taco keys`.
-- Omitted from the 1.0.2 changelog, we fixed one crash in harvester with the release of chiapos 1.0.0 as well.
+- Omitted from the 1.0.2 changelog, we fixed one crash in harvester with the release of tacopos 1.0.0 as well.
 
 ## 1.0.2 Taco Blockchain 2021-03-30
 
 ### Added
 
-- We have released version 1.0.0 of [chiapos](https://github.com/taco-blockchain/chiapos). This includes a 20% speed increase for bitfield plotting compared to the previous version on the same machine. In many cases this will mean that bitfield plotting is as fast or faster than non bitfield plotting.
+- We have released version 1.0.0 of [tacopos](https://github.com/Taco-Network/tacopos). This includes a 20% speed increase for bitfield plotting compared to the previous version on the same machine. In many cases this will mean that bitfield plotting is as fast or faster than non bitfield plotting.
 - @xorinox improved our support for RedHat related distributions in `install.sh`.
 - @ayaseen improved our support for RedHat related distributions in `install-timelord.sh`.
 - We have added Dutch and Polish to supported translations. Thanks @psydafke, @WesleyVH, @pieterhauwaerts, @bartlomiej.tokarzewski, @abstruso, @feel.the.code, and @Axadiw for contributions to [translations on Crowdin](https://crowdin.com/project/taco-blockchain).
@@ -283,7 +352,7 @@ Batch process weight proof epochs in groups of 900 to fit below May 2020 sqlite 
 
 ### Added
 
-- This is the first production release of the Taco Blockchain. This can be installed and will wait for the green flag that will be dropped at approximately 7AM PDST (14:00 UTC) on Friday March 19, 2021. All farming rewards from that point forward will be considered valid and valuable XCH. There is a six week lock on all transactions. During those six weeks farmers will be earning their farming rewards but those rewards can not be spent.
+- This is the first production release of the Taco Blockchain. This can be installed and will wait for the green flag that will be dropped at approximately 7AM PDST (14:00 UTC) on Friday March 19, 2021. All farming rewards from that point forward will be considered valid and valuable XTX. There is a six week lock on all transactions. During those six weeks farmers will be earning their farming rewards but those rewards can not be spent.
 - Initial difficulty will be set for 100PB. This may mean the initial epoch may be slow. Mainnet difficulty resets are targeted for 24 hours so this difficulty will adjust to the actual space brought online in 24 to 48 hours after launch.
 - Transactions are not enabled in the 1.0.0 version and will be soft forked in during the six week period via a 1.1.0 release.
 - There will also be a 1.0.1 release after the green flag process is complete to simplify install for new users by removing the green flag alert. In the interim there will be new testnet releases using the 1.1bx version scheme.
@@ -305,14 +374,15 @@ Batch process weight proof epochs in groups of 900 to fit below May 2020 sqlite 
 - Thank you @L3Sota for bringing this log back into 2021.
 - The errant warning on Electron startup has been removed. Thanks @dkackman.
 
-
 ## 1.0rc9 aka Release Candidate 9 - 2021-03-16
 
 ### Changed
+
 - This is a hard fork/breaking change from RC6/7/8. The current plan is to drop the flag at noon pacific time, today 3/16.
 - Using the real prefarm keys for this test
 
 ### Fixed
+
 - Found and fixed another green flag related issue
 - Fixed an issue with weight proofs where all sub-epochs were sampled, and the size of the weight proof kept growing
 - Fixed an issue with install-gui.sh, where npm audit fix was failing. (Thanks @Depado!)
@@ -322,7 +392,7 @@ Batch process weight proof epochs in groups of 900 to fit below May 2020 sqlite 
 
 ### Added
 
-- This is a hard fork/breaking change from RC6/7. TXCH Coins will **not** be moved forward but your plots and keys and parts of your configuration do. When you install this version before 10AM PDST on 3/16/2021 it will load up, start finding peers, and otherwise wait for the flag drop at that time to start farming. This is likely to be the last dress rehearsal for mainnet launch. Our [3/15/2021 blog post](https://www.taconetwork.org/2021/03/15/mainnet-update.html) has more details on the current mainnet launch plan.
+- This is a hard fork/breaking change from RC6/7. TXTX Coins will **not** be moved forward but your plots and keys and parts of your configuration do. When you install this version before 10AM PDST on 3/16/2021 it will load up, start finding peers, and otherwise wait for the flag drop at that time to start farming. This is likely to be the last dress rehearsal for mainnet launch. Our [3/15/2021 blog post](https://www.taconetwork.net/2021/03/15/mainnet-update.html) has more details on the current mainnet launch plan.
 - The GUI now has a tooltip that directs users to the explanation of the plot filter.
 - The GUI now has a tooltip to explain the "Disable bitfield plotting" option. Thanks @shaneo257 for the idea.
 - The GUI now has a tooltip to explain Hierarchical Deterministic keys next to Receive Address on the Wallet page.
@@ -333,7 +403,7 @@ Batch process weight proof epochs in groups of 900 to fit below May 2020 sqlite 
 - Harvester now catches another error class and continues to harvest. Thanks to @xorinox for this PR.
 - We now use a smaller weight proof sample size to ease the load on smaller machines when syncing.
 - Starting the GUI from Linux will now also error out if `npm run build` is run outside the venv. Huge thanks to @dkackman for that PR.
-- `taco farm summary` will now display TXCH or XCH as appropriate.
+- `taco farm summary` will now display TXTX or XTX as appropriate.
 - We added more time to our API timeouts and improved logging around times outs.
 
 ### Fixed
@@ -372,7 +442,7 @@ Batch process weight proof epochs in groups of 900 to fit below May 2020 sqlite 
 
 ### Added
 
-- This is a hard fork/breaking change from RC5. TXCH Coins will **not** be moved forward but your plots and keys and parts of your configuration do. We will be testing the final mainnet release strategy with the launch of RC6. For the test, those who are comfortable running the dev branch will update and start up their farms. All harvesters and plots will load and until the green flag drops, peers will be gossiped so your farm can establish good network connectivity. When the flag drops, each node will pull down the signed genesis challenge and start farming. Block 1 will be broadcast to anyone who hasn't seen the flag drop yet. The only difference for mainnet is that there will be 1.0 installers and a main branch release more than 24 hours before the real green flag.
+- This is a hard fork/breaking change from RC5. TXTX Coins will **not** be moved forward but your plots and keys and parts of your configuration do. We will be testing the final mainnet release strategy with the launch of RC6. For the test, those who are comfortable running the dev branch will update and start up their farms. All harvesters and plots will load and until the green flag drops, peers will be gossiped so your farm can establish good network connectivity. When the flag drops, each node will pull down the signed genesis challenge and start farming. Block 1 will be broadcast to anyone who hasn't seen the flag drop yet. The only difference for mainnet is that there will be 1.0 installers and a main branch release more than 24 hours before the real green flag.
 - There is now basic plot queueing functionality in the GUI. By default, plotting works as it has in the past. However you can now name a queue in Step 2 Advanced Options. Chose something like `first`. Everything you add to the `first` queue will start up like it has in the past but now you can go through the steps again and create a queue named `second` and it will immediately start plotting as if it is unaware of and parallel with `first`. A great use case is that you would set `first` to plot 5 plots sequentially and then you'd set `second` to plot 5 sequentially and that would give you two parallel queues of 5 plot's each. We will be returning to plotting speed and UI soon. Thanks @jespino for this clever work around for now.
 - There is now an option on the Farm page to manage your farming rewards receive addresses. This makes it easy to send your farming rewards to an offline wallet. This also checks your existing rewards addresses and warns if you do not have the matching private key. That is expected if you are using an offline wallet of course.
 - Functionally has been added to the farmer rpc including checking and changing your farming rewards target addresses.
@@ -384,9 +454,9 @@ Batch process weight proof epochs in groups of 900 to fit below May 2020 sqlite 
 
 - Remove `taco plots "-s" "--stripe_size"` and the strip size setting in the Advanced section of the GUI. We now always use the best default of 64K for the GUI and cli.
 - `taco keys add` takes secret words a prompt on the command line or stdin instead of command line arguments for security.
-- Version 1.0.1 of chiavdf was added. This brought MPIR on Windows to the most recent release. Additionally we removed inefficient ConvertIntegerToBytes() and ConvertBytesToInt() functions, use GMP library's mpz_export/mpz_import for big integers and simple helper functions for built-in integer types. The latter are taken from chiavdf. We now require compressed forms to be encoded canonically when deserializing. This should prevent potential grinding attacks where some non-canonical encodings of a compressed form could be used to change its hash and thus the next challenges derived from it. Canonically encoded compressed forms must be reduced and must produce the same string when deserialized and serialized again.
+- Version 1.0.1 of tacovdf was added. This brought MPIR on Windows to the most recent release. Additionally we removed inefficient ConvertIntegerToBytes() and ConvertBytesToInt() functions, use GMP library's mpz_export/mpz_import for big integers and simple helper functions for built-in integer types. The latter are taken from tacovdf. We now require compressed forms to be encoded canonically when deserializing. This should prevent potential grinding attacks where some non-canonical encodings of a compressed form could be used to change its hash and thus the next challenges derived from it. Canonically encoded compressed forms must be reduced and must produce the same string when deserialized and serialized again.
 - Version 1.0 of our BLS signature library is included. We brought Relic, gmp and MPIR up to their most recent releases. We again thank the Dash team for their fixes and improvements.
-- We now hand build Apple Silicon native binary wheels for all taco-blockchain dependencies and host them at [https://pypi.taconetwork.org/simple](https://pypi.taconetwork.org/simple). We are likely to hand build a MacOS ARM64 dmg available and certainly will for 1.0. You can install natively on M1 now with the `git clone` developer method today. Just make sure Python 3.9 is installed. `python3 --version` works.
+- We now hand build Apple Silicon native binary wheels for all taco-blockchain dependencies and host them at [https://pypi.taconetwork.net/simple](https://pypi.taconetwork.net/simple). We are likely to hand build a MacOS ARM64 dmg available and certainly will for 1.0. You can install natively on M1 now with the `git clone` developer method today. Just make sure Python 3.9 is installed. `python3 --version` works.
 - The GUI now shows you which network you are connected to on the Full Node page. It will also wait patiently for the green flag to drop on a network launch.
 - In the GUI you can only plot k=32 or larger with the single exception of k=25 for testing. You will have to confirm choosing k=25 however. Thanks to @jespino for help on this and limiting the cli as well.
 - The restore smart wallets from backup prompt has been improved to better get the intent across and that it can be skipped.
@@ -401,16 +471,16 @@ Batch process weight proof epochs in groups of 900 to fit below May 2020 sqlite 
 - When processing mempool transactions, Coin IDs are now calculated from parent coin ID and amount
 - We implemented rate limiting for full node. This can and will lead to short term bans of certain peers that didn't behave in expected ways. This is ok and normal, but strong defense against many DDOS attacks.
 - `requirements-dev.txt` has been removed in favor of the CI actions and test scripts.
-- We have moved to a new and much higher scalability download.taconetwork.org to support the mainnet launch flag and additional download demand.
-- To always get the latest testnet and then mainnet installers you can now use a latest URL: [Windows](https://download.taconetwork.org/latest/Setup-Win64.exe) and [MacOS x86_64](https://download.taconetwork.org/latest/Setup-MacOS.dmg).
-- Taco wheels not on Pypi and some dependecies not found there also are now on pypi.taconetwork.org.
+- We have moved to a new and much higher scalability download.taconetwork.net to support the mainnet launch flag and additional download demand.
+- To always get the latest testnet and then mainnet installers you can now use a latest URL: [Windows](https://download.taconetwork.net/latest/Setup-Win64.exe) and [MacOS x86_64](https://download.taconetwork.net/latest/Setup-MacOS.dmg).
+- Taco wheels not on Pypi and some dependecies not found there also are now on pypi.taconetwork.net.
 - Additional typing has been added to the Python code with thanks to @jespino.
 - Cryptography and Keyring have been bumped to their current releases.
 - PRs and commits to the taco-blockchain-gui repository will automatically have their locales updated.
 
 ## Fixed
 
-- The Farm page will now no longer get stuck at 50 TXCH farmed.
+- The Farm page will now no longer get stuck at 50 TXTX farmed.
 - `taco farm` has had multiple bugs and spelling issues addressed. Thanks to @alfonsoperez, @soulmerge and @olivernyc for your contributions.
 - `taco wallet` had various bugs.
 - Various weight proof improvements.
@@ -424,8 +494,8 @@ Batch process weight proof epochs in groups of 900 to fit below May 2020 sqlite 
 
 ### Added
 
-- The RC5 release is a new breaking change/hard fork blockchain. Plots and keys from previous chains will work fine on RC5 but balances of TXCH will not come forward.
-- We now support a "green flag" chain launch process. A new version of the software will poll download.taconetwork.org/notify/ for a signed json file that will be the genesis block of the chain for that version. This will allow unattended start at mainnet.
+- The RC5 release is a new breaking change/hard fork blockchain. Plots and keys from previous chains will work fine on RC5 but balances of TXTX will not come forward.
+- We now support a "green flag" chain launch process. A new version of the software will poll download.taconetwork.net/notify/ for a signed json file that will be the genesis block of the chain for that version. This will allow unattended start at mainnet.
 - Bluebox Timelords are back. These are Timelords most anyone can run. They search through the historical chain and find large proofs of times and compact them down to their smallest representation. This significantly speeds up syncing for newly started nodes. Currently this is only supported on Linux and MacOS x86_64 but we will expand that. Any desktop or server of any age will be fast enough to be a useful Bluebox Timelord.
 - Thanks to @jespino there is now `taco farm summary`. You can now get almost exactly the same farming information on the CLI as the GUI.
 - We have added Romanian to the GUI translations. Thank you to @bicilis on [Crowdin](https://crowdin.com/project/taco-blockchain). We also added a couple of additional target languages. Klingon anyone?
@@ -441,14 +511,14 @@ Batch process weight proof epochs in groups of 900 to fit below May 2020 sqlite 
 - We have updated the display of peer nodes and moved adding a peer to it's own pop up in the GUI.
 - Block searching in the GUI has been improved.
 - @jespino added i18n support and refactored how locales are loaded in the GUI. Additionally he moved more strings into the translation infrastructure for translators.
-- In chiavdf we changed n-Wesolowski proofs to include B instead of y in segments. Proof segments now have the form (iters, B, proof) instead of (iters, y, proof). This reduces proof segment size from 208 to 141 bytes.
-- The new chiavdf proof format is not compatible with the old one, however zero-Wesolowski proofs are not affected as they have zero proof segments and consist only of (y, proof).
-- We made two HashPrime optimizations in chiavdf. This forces numbers being tested for primality to be odd and avoids an unnecessary update of the sprout vector by stopping after the first non-zero value. This is a breaking change as it changes the prime numbers generated from a given seed. We believe this is the final breaking change for chiavdf.
+- In tacovdf we changed n-Wesolowski proofs to include B instead of y in segments. Proof segments now have the form (iters, B, proof) instead of (iters, y, proof). This reduces proof segment size from 208 to 141 bytes.
+- The new tacovdf proof format is not compatible with the old one, however zero-Wesolowski proofs are not affected as they have zero proof segments and consist only of (y, proof).
+- We made two HashPrime optimizations in tacovdf. This forces numbers being tested for primality to be odd and avoids an unnecessary update of the sprout vector by stopping after the first non-zero value. This is a breaking change as it changes the prime numbers generated from a given seed. We believe this is the final breaking change for tacovdf.
 - chiabip158 was set to a gold 1.0 version.
 - Comments to Tacolisp and clvm source have been updated for all of the Tacolisp changes over the proceeding three weeks.
 - And thanks yet again to @jespino for a host of PRs to add more detailed typing to various components in taco-blockchain.
 - aiohttp was updated to 3.7.4 to address a low severity [security issue](https://github.com/advisories/GHSA-v6wp-4m6f-gcjg).
-- calccrypto/uint128_t was updated in the Windows chiapos implementation. Tacopos required some changes its build process to support MacOS ARM64.
+- calccrypto/uint128_t was updated in the Windows tacopos implementation. Tacopos required some changes its build process to support MacOS ARM64.
 
 ### Fixed
 
@@ -456,7 +526,7 @@ Batch process weight proof epochs in groups of 900 to fit below May 2020 sqlite 
 - Nodes that were interrupted by a network crash or standby on a laptop were not syncing upon reconnection in RC4.
 - Sync issues could stop syncing from restarting and could lead to a peer host that you could not remove.
 - Adding Click changed the behavior of `taco keys add -m`. The help now makes it clear that the 24 word mnemonic needs to be surrounded by a pair of quotes.
-- Python root CA certificates have issues so we have added the Mozilla certificate store via curl.se and use that to connect to backup.taconetwork.org via https, for example.
+- Python root CA certificates have issues so we have added the Mozilla certificate store via curl.se and use that to connect to backup.taconetwork.net via https, for example.
 - The difficulty adjustment calculation was simplified.
 - All of the taco sub repositories that were attempting to build MacOS Universal wheels were only generating x86_64 wheels internally. We have moved back to only generating x86_64 MacOS wheels on CI.
 - However, we have updated and test compiled all Taco dependencies on Apple Silicon and will be making available a test .dmg for MacOS ARM64 shortly.
@@ -475,7 +545,7 @@ Batch process weight proof epochs in groups of 900 to fit below May 2020 sqlite 
 
 ### Added
 
-- RC3 is a new chain to support the last major tacolisp changes. TXCH from the RC1/2 chain do not come forward to this chain but plots and keys continue to work as usual.
+- RC3 is a new chain to support the last major tacolisp changes. TXTX from the RC1/2 chain do not come forward to this chain but plots and keys continue to work as usual.
 - We have lowered the transaction lock to the first 5000 blocks to facilitate testing. We also started this chain at a lower difficulty.
 - A new RPC api: /push_tx. Using this RPC, you can spend custom tacolisp programs. You need to make a SpendBundle, which includes the puzzle reveal (tacolisp), a solution (tacolisp) and a signature.
 - You can now use the RPC apis to query the mempool.
@@ -546,37 +616,36 @@ validation was changed to allow blocks like these to be made. This will enable c
 - Sub blocks renamed to blocks, and blocks renamed to transaction blocks, everywhere. This effects the RPC, now
 all fields that referred to sub blocks are changed to blocks.
 - Base difficulty and weight have increased, so difficulty of "5" in the rc1 testnet will be equivalent to "21990232555520" in the previous testnet.
-- 'taco wallet send' now takes in TXCH or XCH as units instead of mojos.
+- 'taco wallet send' now takes in TXTX or XTX as units instead of mojos.
 - Transactions have been further sped up.
 - The blockchain database has more careful validation.
 - The GUI is now using bech32m.
 
 ### Fixed
 
-- We updated chiapos to hopefully address some harvester crashes when moving plot files.
+- We updated tacopos to hopefully address some harvester crashes when moving plot files.
 - Many of the cards on the Farming page have had bugs addressed including last block farmed, block rewards, and user fees.
 - Improved validation of overflow blocks.
-
 
 ## [1.0beta27] aka Beta 1.27 - 2021-02-11
 
 ### Added
 
-- The Beta 27 chain is a hard fork. All TXCH from previous releases has been reset on this chain. Your keys and plots of k=32 or larger continue to work just fine on this new chain.
+- The Beta 27 chain is a hard fork. All TXTX from previous releases has been reset on this chain. Your keys and plots of k=32 or larger continue to work just fine on this new chain.
 - We now use the rust version of clvm, clvm_rs, in preference to validate transactions. We have additionally published binary wheels or clvm_rs for all four platforms and all three supported python versions. The rust version is approximately 50 times faster than the python version used to validate on chain transactions in previous versions.
-- We have moved to compressed quadratic forms for VDFs. Using compressed representation of quadratic forms reduces their serialized size from 130 to 100 bytes (for forms with 1024-bit discriminant). This shrinks the size of VDF outputs and VDF proofs, and it's a breaking change as the compressed representation is not compatible with the older uncompressed (a, b) representation. Compressed forms are also used in calls to chiavdf and in timelord's communication with VDF clients. The form compression algorithm is based on ["Trustless Groups of Unknown Order with Hyperelliptic Curves"](https://eprint.iacr.org/2020/196) by Samuel Dobson, Steven D. Galbraith and Benjamin Smith.
+- We have moved to compressed quadratic forms for VDFs. Using compressed representation of quadratic forms reduces their serialized size from 130 to 100 bytes (for forms with 1024-bit discriminant). This shrinks the size of VDF outputs and VDF proofs, and it's a breaking change as the compressed representation is not compatible with the older uncompressed (a, b) representation. Compressed forms are also used in calls to tacovdf and in timelord's communication with VDF clients. The form compression algorithm is based on ["Trustless Groups of Unknown Order with Hyperelliptic Curves"](https://eprint.iacr.org/2020/196) by Samuel Dobson, Steven D. Galbraith and Benjamin Smith.
 - Last Attempted Proof on the Farm tab of the GUI now shows hours:minutes:seconds instead of just hours:minutes. This makes it much easier to see that your farmer is responding to recent challenges at a glance.
 - You can now send and receive transactions with the command line. Try `taco wallet -h` to learn more. Also, `taco wallet` now requires a third argument of `show`, therefor you will use `taco wallet show` to see your wallet balance.
 - We have added the [Crowdin](https://crowdin.com/) translation platform to [taco blockchain gui](https://crowdin.com/project/taco-blockchain). We are still getting it fully set up, but helping to translate the GUI is going to be much easier.
 - Full Node > Connections in the GUI now shows the peak sub block height your connected peers believe they are at. A node syncing from you will not be at the true peak sub block height until it gets into sync.
 - `taco init -c [directory]` will create new TLS certificates signed by your CA located in `[directory]`. Use this feature to configure a new remote harvester. Type `taco init -h` to get instructions. Huge thanks to a very efficient @eFishCent for this quick and thorough pull request.
-- We build both MacOS x86_64 and MacOS universal wheels for chiapos, chiavdf, blpsy, and chiabip158 in Python 3.9. The universal build allows M1 Macs to run these dependencies in ARM64 native mode.
+- We build both MacOS x86_64 and MacOS universal wheels for tacopos, tacovdf, blpsy, and chiabip158 in Python 3.9. The universal build allows M1 Macs to run these dependencies in ARM64 native mode.
 - On first run in the GUI (or when there are no plot directories) there is now an "Add Plot Directories" on the Farm tab also.
 
 ### Changed
 
 - We are moving away from the terms sub blocks and blocks in our new consensus. What used to be called sub blocks will now just be blocks. Some blocks are now also transaction blocks. This is simpler both in the code and to reason about. Not all the code or UI may have caught up yet.
-- This release has the final mainnet rewards schedule. During the first three years, each block winner will win 2 TXCH/XCH per block for a total of 9216 TXCH per day from 4608 challenges per day.
+- This release has the final mainnet rewards schedule. During the first three years, each block winner will win 2 TXTX/XTX per block for a total of 9216 TXTX per day from 4608 challenges per day.
 - Smart transactions now use an announcement instead of 'coin consumed' or lock methods.
 - The GUI is now in a separate submodule repository from taco-blockchain, [taco-blockchain-gui](https://github.com/Taco-Network/taco-blockchain-gui). The installers and install scripts have been updated and it continues to follow the same install steps. Note that the GUI directory will now be `taco-blockchain-gui`. The workflow for this may be "touch and go" for people who use the git install methods over the short term.
 - Very large coin counts are now supported.
@@ -594,7 +663,7 @@ all fields that referred to sub blocks are changed to blocks.
 - The GUI was incorrectly reporting the time frame that the netspace estimate it displays utilizes. It is technically 312.5 minutes, on average, over the trailing 1000 sub blocks.
 - Coloured coins were not working in the new consensus.
 - Some Haswell processors do not have certain AVX extensions and therefor would not run.
-- The cli wallet, `taco wallet`, was incorrectly displaying TXCH balances as if they were Coloured Coins.
+- The cli wallet, `taco wallet`, was incorrectly displaying TXTX balances as if they were Coloured Coins.
 - We addressed [CVE-2020-28477](https://nvd.nist.gov/vuln/detail/CVE-2020-28477) in the GUI.
 - We made changes to CI to hopefully not repeat our skipped releases from the previous release cycle.
 
@@ -609,7 +678,7 @@ all fields that referred to sub blocks are changed to blocks.
 
 ### Changed
 
-- Significant improvements have been made to how the full node handles the mempool. This generally cuts CPU usage of node by 2x or more. Part of this increase is that we have temporarily limited the size of transactions. If you want to test sending a transaction you should keep the value of your transaction below 20 TXCH as new consensus will cause you to use a lot of inputs. This will be returned to the expected level as soon as the integration of [clvm rust](https://github.com/taco-blockchain/clvm_rs) is complete.
+- Significant improvements have been made to how the full node handles the mempool. This generally cuts CPU usage of node by 2x or more. Part of this increase is that we have temporarily limited the size of transactions. If you want to test sending a transaction you should keep the value of your transaction below 20 TXTX as new consensus will cause you to use a lot of inputs. This will be returned to the expected level as soon as the integration of [clvm rust](https://github.com/Taco-Network/clvm_rs) is complete.
 - We have changed the way TLS between nodes and between taco services work. Each node now has two certificate authorities. One is a public, shared CA that signs the TLS certificates that every node uses to connect to other nodes on 8444 or 58444. You now also have a self generated private CA that must sign e.g. farmer and harvester's certificates. To run a remote harvester you need a new harvester key that is then signed by your private CA. We know this is not easy for remote harvester in this release but will address it quickly.
 - We have changed the way we compile the proof of space plotter and added one additional optimization. On many modern processors this will mean that using the plotter with the `-e` flag will be 2-3% faster than the Beta 17 plotter on the same CPU. We have found this to be very sensitive to different CPUs but are now confident that, at worst, the Beta 24 plotter with `-e` will be the same speed as Beta 17 if not slightly faster on the same hardware. Huge thanks to @xorinox for meticulously tracking down and testing this.
 - If a peer is not responsive during sync, node will disconnect it.
@@ -628,7 +697,7 @@ all fields that referred to sub blocks are changed to blocks.
 - Plot filename is now back in the Plots table of the GUI.
 - There was a bug in adding a sub block to weight proofs and an issue in the weight proof index.
 - Over time the node would think that there were no peers attached with peak sub block heights higher than 0.
-- There was a potential bug in Python 3.9.0 that required us to update blspy, chiapos, chiavdf, and chiabip158.
+- There was a potential bug in Python 3.9.0 that required us to update blspy, tacopos, tacovdf, and chiabip158.
 - An off by one issue could cause syncing to ask for 1 sub block when it should ask for e.g. 32.
 - Short sync and backtrack sync both had various issues.
 - There was an edge case in bip158 handling.
@@ -747,19 +816,19 @@ all fields that referred to sub blocks are changed to blocks.
 
 ### Added
 
-- Welcome to the new consensus. This release is an all but a full re-write of the blockchain in under 30 days. There is now only one tip of the blockchain but we went from two chains to three. Block times are now a little under a minute but there are a couple of sub blocks between each transaction block. A block is also itself a special kind of sub block and each sub block rewards the farmer who won it 1 TXCH. Sub blocks come, on average, about every 17 to 18 seconds.
-- Starting with this Beta, there are 4608 opportunities per day for a farmer to win 1 TXCH compared to Beta 18 where there were 288 opportunities per day for a farmer to win 16 TXCH.
-- There is a lot more information and explanation of the new consensus algorithm in the New Consensus Working Document linked from [taconetwork.org](https://taconetwork.org/). Among the improvements this gives the Taco blockchain are a much higher security level against all attacks, more frequent transaction blocks that have less time variation between them and are then buried under confirmations (sub blocks also count towards re-org security) much more quickly.
-- New consensus means this is a very hard fork. All of your TXCH from Beta 17/18 will be gone. Your plots and keys will work just fine however. You will have to sync to the new chain.
+- Welcome to the new consensus. This release is an all but a full re-write of the blockchain in under 30 days. There is now only one tip of the blockchain but we went from two chains to three. Block times are now a little under a minute but there are a couple of sub blocks between each transaction block. A block is also itself a special kind of sub block and each sub block rewards the farmer who won it 1 TXTX. Sub blocks come, on average, about every 17 to 18 seconds.
+- Starting with this Beta, there are 4608 opportunities per day for a farmer to win 1 TXTX compared to Beta 18 where there were 288 opportunities per day for a farmer to win 16 TXTX.
+- There is a lot more information and explanation of the new consensus algorithm in the New Consensus Working Document linked from [taconetwork.net](https://taconetwork.net/). Among the improvements this gives the Taco blockchain are a much higher security level against all attacks, more frequent transaction blocks that have less time variation between them and are then buried under confirmations (sub blocks also count towards re-org security) much more quickly.
+- New consensus means this is a very hard fork. All of your TXTX from Beta 17/18 will be gone. Your plots and keys will work just fine however. You will have to sync to the new chain.
 - You now have to sync 16 times more "blocks" for every 5 minutes of historical time so syncing is slower than it was on the old chain. We're aware of this and will be speeding it up and addressing blockchain database growth in the nest couple of releases.
-- Prior to this Beta 19, we had block times that targeted 5 minutes and rewarded 16 TXCH to one farmer. Moving forward we have epoch times that target 10 minutes and reward 32 TXCH to 32 farmers about every 17-18 seconds over that period. This has subtle naming and UI impacts in various places.
+- Prior to this Beta 19, we had block times that targeted 5 minutes and rewarded 16 TXTX to one farmer. Moving forward we have epoch times that target 10 minutes and reward 32 TXTX to 32 farmers about every 17-18 seconds over that period. This has subtle naming and UI impacts in various places.
 - Total transaction throughput is still targeted at 2.1x Bitcoin's throughput per hour but you will get more confirmations on a transaction much faster. This release has the errata that it doesn't limit transaction block size correctly.
-- For testing purposes this chain is quickly halving block rewards. By the time you're reading this and using the chain, farmers and pools will be receiving less than 1 TXCH for each block won as if it were 15-20 years from now. Block rewards are given in two components, 7/8's to the pool key and 1/8 to the farmer. The farmer also receives any transaction fees from the block.
+- For testing purposes this chain is quickly halving block rewards. By the time you're reading this and using the chain, farmers and pools will be receiving less than 1 TXTX for each block won as if it were 15-20 years from now. Block rewards are given in two components, 7/8's to the pool key and 1/8 to the farmer. The farmer also receives any transaction fees from the block.
 - You can now plot in parallel using the GUI. A known limitation is that you can't yet specify that you want 4 sets of two parallel plots. Each parallel plot added starts immediately parallel. We will continue to improve this.
 - The GUI now warns if you attempt to create a plot smaller than k=32.
 - Added Chinese language localization (zh-cn). A big thank you to @goomario for their pull request!
 - You can now specify which private key to use for `taco plots create`. After obtaining the fingerprint from `taco keys show`, try `taco plots create -a FINGERPRINT`. Thanks to @eFishCent for this pull request!
-- We use a faster hash to prime function for chiavdf from the current release of gmp-6.2.1 which we have upgraded chiavdf and blspy to support.
+- We use a faster hash to prime function for tacovdf from the current release of gmp-6.2.1 which we have upgraded tacovdf and blspy to support.
 - There is a new cli command - `taco configure`. This allows you to update certain configuration details like log level in config.yaml from the command line. This is particularly useful in containerization and linux automation. Try `taco configure -h`. Note that if taco services are running and you issue this command you will have to restart them for changes to take effect but you can use this command in the venv when no services are running or call it directly by path in the venv without activating the venv. Expect the options for this command to expand.
 - We now fully support Python 3.9.
 
@@ -768,7 +837,7 @@ all fields that referred to sub blocks are changed to blocks.
 - The Plot tab on the GUI is now the Plots tab. It starts out with a much more friendly new user wizard and otherwise keeps all of your farming plots listed here. Use the "+ ADD A PLOT" button in the top right to plot your second or later plot.
 - The new plots page offers advanced plotting options in the various "Show Advanced Options" fold outs.
 - The plotter supports the new bitfield back propagation method and the old method from Beta 17. To choose the old method add a `-e` to the command line or choose "Disable bitfield plotting" in "Show Advanced Options" of the Plots tab. Bitfield back propagation writes about 13% less total writes and can be faster on some slower hard drive temp spaces. For now, SSD temp space will likely plot faster with bitfield back propagation disabled. We will be returning to speed enhancements to the plotter as we approach and pass our mainnet launch.
-- The Farm tab in the GUI is significantly enhanced. Here you have a dashboard overview of your farm and your activity in response to challenges blockchain challnegs, how long it will take you - on average - to win a block, and how much TXCH you've won so far. Harvester and Full Node connections have moved to Advanced Options.
+- The Farm tab in the GUI is significantly enhanced. Here you have a dashboard overview of your farm and your activity in response to challenges blockchain challnegs, how long it will take you - on average - to win a block, and how much TXTX you've won so far. Harvester and Full Node connections have moved to Advanced Options.
 - Harvester and farmer will start when the GUI starts instead of waiting for key selection if there are already keys available. This means you will start farming on reboot if you have the Taco application set to launch on start.
 - Testnet is now running at the primary port of 58444. Update your routers appropriately. This opens 8444 for mainnet.
 - All networking code has been refactored and mostly moved to websockets.
@@ -779,13 +848,13 @@ all fields that referred to sub blocks are changed to blocks.
 - All appropriate Tacolisp smart transactions have been updated to use aggsig_me.
 - Full node should be more aggressive about finding other peers.
 - Peer disconnect messages are now set to log level INFO down from WARNING.
-- chiavdf now allows passing in input to a VDF for new consensus.
+- tacovdf now allows passing in input to a VDF for new consensus.
 - sha256tree has been removed from Tacolisp.
 - `taco show -s` has been refactored to support the new consensus.
 - `taco netspace` has been refactored for new consensus.
 - aiohttp, clvm-tools, colorlog, concurrent-log-handler, keyring, cryptography, and sortedcontainers have been upgraded to their current versions.
 - Tests now place a cache of blocks and plots in the ~/.taco/ directory to speed up total testing time.
-- Changes were made to chiapos to correctly support the new bitfiled backpropogation on FreeBSD and OpenBSD. With the exception of needing to work around python cryptography as outlined on the wiki, FreeBSD and OpenBSD should be able to compile and run taco-blockchain.
+- Changes were made to tacopos to correctly support the new bitfiled backpropogation on FreeBSD and OpenBSD. With the exception of needing to work around python cryptography as outlined on the wiki, FreeBSD and OpenBSD should be able to compile and run taco-blockchain.
 - With the change to new consensus many components of the chain and local database are not yet stored optimally. Startup and sync times may be slower than usual so please be patient. This will improve next release.
 - Errata: Coinbase amount is missing from the GUI Block view.
 - Eratta: wallet Backup, and Fly-sync on the wallet are currently not working.
@@ -803,7 +872,7 @@ all fields that referred to sub blocks are changed to blocks.
 ### Added
 
 - F1 generation in the plotter is now fully parallel for a small speedup.
-- We have bitfield optimized phase 2 of plotting. There is only about a 1% increase in speed from this change but there is a 12% decrease in writes with a penalty of 3% more reads. More details in [PR 120](https://github.com/taco-blockchain/chiapos/pull/120). Note that some sorts in phase 2 and phase 3 will now appear "out of order" and that is now expected behavior.
+- We have bitfield optimized phase 2 of plotting. There is only about a 1% increase in speed from this change but there is a 12% decrease in writes with a penalty of 3% more reads. More details in [PR 120](https://github.com/Taco-Network/tacopos/pull/120). Note that some sorts in phase 2 and phase 3 will now appear "out of order" and that is now expected behavior.
 - Partial support for Python 3.9. That includes new versions of Taco dependencies like chiabip158.
 
 ### Changed
@@ -845,7 +914,7 @@ all fields that referred to sub blocks are changed to blocks.
 ### Changed
 
 - The entire GUI has been refactored for code quality and performance.
-- Updated to chiapos 0.12.32. This update significantly speeds up the F1/first table plot generation. It also now can log disk usage while plotting and generate graphs. More details in the [chiapos release notes](https://github.com/taco-blockchain/chiapos/releases/tag/0.12.32).
+- Updated to tacopos 0.12.32. This update significantly speeds up the F1/first table plot generation. It also now can log disk usage while plotting and generate graphs. More details in the [tacopos release notes](https://github.com/Taco-Network/tacopos/releases/tag/0.12.32).
 - Node losing or not connecting to another peer node (which is entirely normal behaviour) is now logged at INFO and not WARNING. Your logs will be quieter.
 - Both the GUI and CLI now default to putting the second temporary directory files into the specified temporary directory.
 - SSL Certificate handling was refactored along with Consensus constants, service launching, and internal configuration management.
@@ -857,7 +926,7 @@ all fields that referred to sub blocks are changed to blocks.
 
 - A bug in bls-singatures/blspy could cause a stack overflow if too many signatures were verified at once. This caused the block of death at 11997 of the Beta 15 chain. Updated to 0.2.4 to address the issue.
 - GUI Wallet now correctly updates around reorgs.
-- chiapos 0.12.32 fixed a an out of bounds read that could crash the plotter. It also contains a fix to better handle the case of drive letters on Windows.
+- tacopos 0.12.32 fixed a an out of bounds read that could crash the plotter. It also contains a fix to better handle the case of drive letters on Windows.
 - Node would fail to start on Windows Server 2016 with lots of cores. This [python issue explains]( https://bugs.python.org/issue26903) the problem.
 
 ### Known Issues
@@ -890,11 +959,11 @@ all fields that referred to sub blocks are changed to blocks.
 - The rate limited wallet library now supports coin aggregation for adding additional funds after the time of creation.
 - Fees are now used in all applicable rate limited wallet calls
 - New parameters for plotting: -r (number of threads) -s (stripe size) -u (number of buckets) in cli and GUI
-- chiavdf now has full IFMA optimizations for processors that support it.
+- tacovdf now has full IFMA optimizations for processors that support it.
 
 ### Changed
 
-- Multithreading support in chiapos, as well as a new algorithm which is faster and does 70% less IO. This is a significant improvement in speed, much lower total writing, and configurability for different hardware environments.
+- Multithreading support in tacopos, as well as a new algorithm which is faster and does 70% less IO. This is a significant improvement in speed, much lower total writing, and configurability for different hardware environments.
 - Default -b changed to 3072 to improve performance
 - The correct amount of memory is used for plotting
 - `sh install.sh` was upgraded so that on Ubuntu it will install any needed OS dependencies.
@@ -910,7 +979,7 @@ all fields that referred to sub blocks are changed to blocks.
 - Tables in the README.MD were not rendering correctly on Pypi. Thanks again @altendky.
 - Tacopos issue where memory was spiking and increasing
 - Fixed working space estimates so they are exact
-- Log all errors in chiapos
+- Log all errors in tacopos
 - Fixed a bug that was causing Bluebox vdfs to fail.
 
 ## [1.0beta13] aka Beta 1.13 - 2020-09-15
@@ -932,7 +1001,7 @@ all fields that referred to sub blocks are changed to blocks.
 ### Added
 
 - Rate limited wallets can now have unspent and un-spendable funds clawed back by the Admin wallet.
-- You can now backup your wallet related metadata in an encrypted and signed file to a free service from Taco Network at backup.taconetwork.org. Simply having a backup of your private key will allow you to fully restore the state of your wallet including coloured coins, rate limited wallets, distributed identity wallets and many more. Your private key is used to automatically restore the last backup you saved to the Taco backup cloud service. This service is open source and ultimately you will be able to configure your backups to go to backup.taconetwork.org, your own installation, or a third party's version of it.
+- You can now backup your wallet related metadata in an encrypted and signed file to a free service from Taco Network at backup.taconetwork.net. Simply having a backup of your private key will allow you to fully restore the state of your wallet including coloured coins, rate limited wallets, distributed identity wallets and many more. Your private key is used to automatically restore the last backup you saved to the Taco backup cloud service. This service is open source and ultimately you will be able to configure your backups to go to backup.taconetwork.net, your own installation, or a third party's version of it.
 - Added a Code of Conduct in CODE_OF_CONDUCT.md.
 - Added a bug report template in `.github/ISSUE_TEMPLATE/bug_report.md`.
 
@@ -953,8 +1022,8 @@ all fields that referred to sub blocks are changed to blocks.
 
 - `taco show -w` should now more reliably work. Wallet balances should be more often correct.
 - View -> Developer -> Developer Tools now correctly opens the developer tools. Thank you to @roxaaams for this pull request!
-- Fixed 'Receive Address' typo in Wallet. Thanks @meurtn on Discord.
-- Fixed a typo in `taco show -w` with thanks to @pyl on Discord.
+- Fixed 'Receive Address' typo in Wallet. Thanks @meurtn on Keybase.
+- Fixed a typo in `taco show -w` with thanks to @pyl on Keybase.
 - In Windows the start menu item is now Taco Network and the icon in Add/Remove is updated.
 
 ## [1.0beta11] aka Beta 1.11 - 2020-08-24
@@ -966,7 +1035,7 @@ all fields that referred to sub blocks are changed to blocks.
 
 ### Changed
 
-- To complement the new About menu, we have revamped all Electron menus and made them OS native. There are now direct links to the Wiki, Discord, and FAQ in the Help menu.
+- To complement the new About menu, we have revamped all Electron menus and made them OS native. There are now direct links to the Wiki, Keybase, and FAQ in the Help menu.
 - There are minor improvements to how working space is calculated and displayed by the plotter. The plotter also has additional debugging information in its output.
 - Successful plots only have an atomic rename.
 
@@ -990,7 +1059,7 @@ all fields that referred to sub blocks are changed to blocks.
 
 - Wallet addresses and other key related elements are now expressed in Chech32 which is the Taco implementation of [Bech32](https://github.com/bitcoin/bips/blob/master/bip-0173.mediawiki). All of your old wallet addresses will be replaced with the new Chech32 addresses. The only thing you can't do is send test taco between 1.8/1.9 and 1.10 software. Anyone who upgrades to 1.10 will keep their transactions and balances of test taco from the earlier two releases however.
 - We added a first few enhancements to plotting speed. For a k=30 on a ramdisk with `-b 64 GiB` it results in an 11% speedup in overall plotting speed and a 23% improvement in phase 1 speed. Many more significant increases in plotting speed are in the works.
-- The proof of space document in chiapos has been updated to the new format and edited for clarity. Additionally GitHub actions now has the on demand ability to create the PDF version.
+- The proof of space document in tacopos has been updated to the new format and edited for clarity. Additionally GitHub actions now has the on demand ability to create the PDF version.
 - Relic has upstreamed our changes required for the IETF BLS standard. We now build directly from the Relic repository for all but Windows and will be migrating Windows in the next release.
 - Minor improvements to the Coloured Coin wallet were integrated in advance of an upcoming re-factor.
 - Smart wallet backup was upgraded to encrypt and sign the contents of the backup.
@@ -1000,7 +1069,7 @@ all fields that referred to sub blocks are changed to blocks.
 - Proof of space plotting now correctly calculates the total working space used in the `-t` directory.
 - `taco show -w` now displays a message when balances cannot be displayed instead of throwing an error. Thanks to @freddiecoleman for this fix!
 - Fix issue with shutting down full node (full node processes remained open, and caused a spinner when launching Taco)
-- Various code review alerts for comparing to a wider type in chiapos were fixed. Additionally, unused code was removed from chiapos
+- Various code review alerts for comparing to a wider type in tacopos were fixed. Additionally, unused code was removed from tacopos
 - Benchmarking has been re-enabled in bls-signatures.
 - Various node security vulnerabilities were addressed.
 - Updated keyring, various GitHub actions, colorlog, cbor2, and clvm_tools.
@@ -1056,7 +1125,7 @@ the now deprecated AES methods. This should increase plotting speed and support
 more processors.
 - Plot refreshing happens during all new challenges and only new/modified files
 are read.
-- Updated [blspy](https://github.com/taco-blockchain/bls-signatures) to use the
+- Updated [blspy](https://github.com/Taco-Network/bls-signatures) to use the
 new [IETF standard for BLS signatures](https://tools.ietf.org/html/draft-irtf-cfrg-bls-signature-02).
 - Added a faster VDF process which generates n-wesolowski proofs quickly
 after the VDF result is known. This requires a high number of CPUs. To use it,
@@ -1075,7 +1144,7 @@ specify so you'll have to add any subfolders you want to also contain plots.
 - The UI now asks for confirmation before closing and shows shutdown progress.
 - UI now tries to shut down servers gracefully before exiting, and also closes
 the daemon before starting.
-- The various sub repositories (chiapos, chiavdf, etc.) now build ARM64 binary
+- The various sub repositories (tacopos, tacovdf, etc.) now build ARM64 binary
 wheels for Linux with Python 3.8. This makes installing on Ubuntu 20.04 lts on
 a Raspberry Pi 3 or 4 easy.
 - Ci's check to see if they have secret access and attempt to fail cleanly so
@@ -1093,7 +1162,7 @@ in Windows or
 
 - Minor changes have been made across the repositories to better support
 compiling on OpenBSD. HT @n1000.
-- Changed XCH units to TXCH units for testnet.
+- Changed XTX units to TXTX units for testnet.
 - A push to a branch will cancel all ci runs still running for that branch.
 - Ci's now cache pip and npm caches between runs.
 - Improve test speed with smaller discriminants, less blocks, less keys, and
@@ -1120,7 +1189,7 @@ farmer and full node protocols.
 other chains.
 - Keys are now derived with the EIP 2334 (m/12381/8444/a/b).
 - Removed the ability to pass in sk_seed to plotting, to increase security.
-- Linux builds of chiavdf and blspy now use a fresh build of gmp 6.2.1.
+- Linux builds of tacovdf and blspy now use a fresh build of gmp 6.2.1.
 
 ### Fixed
 
@@ -1197,7 +1266,7 @@ relic. We will make a patch available for these systems shortly.
 - We added total network storage space estimation to the node RPC at the `/get_network_space` endpoint instead of only being available in the cli. The RPC endpoint takes two block header hashes and estimates space between those header hashes.
 - Logs now autorotate. Once the debug.log reaches 20MB it is compressed and archived keeping 7 historical 20MB logs.
 - We now have a CHANGELOG.md that adheres closely to the [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) standard. We merged in the version history and updated some previous release notes to capture items important to the change log. We are modifying our release process to accumulate changes at the top of the change log and then copy those to the release notes at the time of the release.
-- We added [lgtm](https://lgtm.com/) source analysis on pull request to the taco-blockchain, chiapos, chiavdf, chiabip158, and bls-library repositories to add some automated security analysis to our ci.
+- We added [lgtm](https://lgtm.com/) source analysis on pull request to the taco-blockchain, tacopos, tacovdf, chiabip158, and bls-library repositories to add some automated security analysis to our ci.
 
 ### Changed
 
@@ -1210,7 +1279,7 @@ relic. We will make a patch available for these systems shortly.
   current LCA. Optionally you can use the `-b` flag to start the calculation from a different block
   height. Use `-d` to specify the delta number of blocks back into history to estimate over from either LCA or your `-b` block height.
 - The Full node RPC response formats have been changed. All API calls now return a dict with success, and an additional value, for example {"success": True, "block": block}.
-- chiapos is now easier to compile with MSVC.
+- tacopos is now easier to compile with MSVC.
 - create plots now takes in an optional sk_seed, it is no longer read in from keys.yaml. If not passed in, it is randomly generated. The -i argument can now only be used when you provide an sk_seed.
 - Moved to PyYAML 5.3.1 which prevents arbitrary code execution during python/object/new constructor.
 - Moved to Python cryptography 2.9.2 which deprecates OpenSSL 1.0.1 and now relies upon OpenSSL 1.1.1g.
@@ -1243,13 +1312,13 @@ relic. We will make a patch available for these systems shortly.
 - We have implemented a workaround for the `taco start` issues some were having upon crash or reboot. We will be rebuilding start and stop to be robust across platforms.
 - This release re-includes `taco-start-harvester`.
 - Coloured coins now have a prefix to help identify them. When sending transactions, the new prefix is incompatible with older clients.
-- The user interface now refers to taco coins with their correct currency code of XCH.
+- The user interface now refers to taco coins with their correct currency code of XTX.
 - The next release will now be in the dev branch instead of the e.g. beta-1.5. Additionally we are enforcing linear merge into dev and prefer rebase merges or partial squash merges of particularly chatty commit histories.
-- Building the sub reposities (chiapos, chiavdf, blslibrary) now requires CMake 3.14+.
+- Building the sub reposities (tacopos, tacovdf, blslibrary) now requires CMake 3.14+.
 
 ### Fixed
 
-- There was a regression in Taco Proof of Space ([chiapos](https://github.com/taco-blockchain/chiapos)) that came from our efforts to speed up plotting on Windows native. Now k>=32 plots work correctly. We made additional bug fixes and corrected limiting small k size generation.
+- There was a regression in Taco Proof of Space ([tacopos](https://github.com/Taco-Network/tacopos)) that came from our efforts to speed up plotting on Windows native. Now k>=32 plots work correctly. We made additional bug fixes and corrected limiting small k size generation.
 - There was a bug in Timelord handling that could stop all VDF progress.
 
 ### Deprecated
@@ -1265,7 +1334,7 @@ relic. We will make a patch available for these systems shortly.
 
 ### Added
 
-- This release adds Coloured coin support with offers. Yes that is the correct spelling. Coloured coins allow you to issue a coin, token, or asset with nearly unlimited issuance plans and functionality. They support inner smart transactions so they can inherit any of the other functionality you can implement in Tacolisp. Offers are especially cool as they create a truly decentralized exchange capability. Read much more about them in Bram's [blog post on Coloured coins](https://taconetwork.org/2020/04/29/coloured-coins-launch.en.html).
+- This release adds Coloured coin support with offers. Yes that is the correct spelling. Coloured coins allow you to issue a coin, token, or asset with nearly unlimited issuance plans and functionality. They support inner smart transactions so they can inherit any of the other functionality you can implement in Tacolisp. Offers are especially cool as they create a truly decentralized extxange capability. Read much more about them in Bram's [blog post on Coloured coins](https://taconetwork.net/2020/04/29/coloured-coins-launch.en.html).
 - This release adds support for native Windows via a (mostly) automated installer and MacOS Mojave. Windows still requires some PowerShell command line use. You should expect ongoing improvements in ease of install and replication of the command line tools in the GUI. Again huge thanks to @dkackman for continued Windows installer development. Native Windows is currently slightly slower than the same version running in WSL 2 on the same machine for both block verification and plotting.
 - We made some speed improvements that positively affected all platforms while trying to increase plotting speed in Windows.
 - The graphical Full Node display now shows the expected finish times of each of the prospective chain tips.
@@ -1344,7 +1413,7 @@ relic. We will make a patch available for these systems shortly.
 
 ### Added
 
-- There is now full transaction support on the Taco blockchain. In this initial Beta 1.0 release, all transaction types are supported though the wallets and UIs currently only directly support basic transactions like coinbase rewards and sending coins while paying fees. UI support for our [smart transactions](https://github.com/taco-blockchain/wallets/blob/main/README.md) will be available in the UIs shortly.
+- There is now full transaction support on the Taco blockchain. In this initial Beta 1.0 release, all transaction types are supported though the wallets and UIs currently only directly support basic transactions like coinbase rewards and sending coins while paying fees. UI support for our [smart transactions](https://github.com/Taco-Network/wallets/blob/main/README.md) will be available in the UIs shortly.
 - Wallet and Node GUI’s are available on Windows, Mac, and desktop Linux platforms. We now use an Electron UI that is a full light client wallet that can also serve as a node UI. Our Windows Electron Wallet can run standalone by connecting to other nodes on the network or another node you run. WSL 2 on Windows can run everything except the Wallet but you can run the Wallet on the native Windows side of the same machine. Also the WSL 2 install process is 3 times faster and _much_ easier. Windows native node/farmer/plotting functionality are coming soon.
 - Install is significantly easier with less dependencies on all supported platforms.
 - If you’re a farmer you can use the Wallet to keep track of your earnings. Either use the same keys.yaml on the same machine or copy the keys.yaml to another machine where you want to track of and spend your coins.
@@ -1355,13 +1424,13 @@ relic. We will make a patch available for these systems shortly.
 - We have revamped the taco management command line. To start a farmer all you have to do is start the venv with `. ./activate` and then type `taco-start-farmer &`. The [README.md](https://github.com/Taco-Network/taco-blockchain/blob/main/README.md) has been updated to reflect the new commands.
 - We have moved all node to node communication to TLS 1.3 by default. For now, all TLS is unauthenticated but certain types of over the wire node to node communications will have the ability to authenticate both by certificate and by inter protocol signature. Encrypting over the wire by default stops casual snooping of transaction origination, light wallet to trusted node communication, and harvester-farmer-node communication for example. This leaves only the mempool and the chain itself open to casual observation by the public and the various entities around the world.
 - Configuration directories have been moved to a default location of HomeDirectory/.taco/release/config, plots/ db/, wallet/ etc. This can be overridden by `export TACO_ROOT=~/.taco` for example which would then put the plots directory in `HomeDirectory/.taco/plots`.
-- The libraries taco-pos, taco-fast-vdf, and taco-bip-158 have been moved to their own repositories: [chiapos](https://github.com/taco-blockchain/chiapos), [chiavdf](https://github.com/taco-blockchain/chiavdf), and [chaibip158](https://github.com/taco-blockchain/chiabip158). They are brought in by taco-blockchain at install time. Our BLS signature library remains at [bls-signatures](https://github.com/taco-blockchain/bls-signatures).
-- The install process now brings in chiapos, chiavdf, etc from Pypi where they are auto published via GitHub Actions ci using cibuildwheel. Check out `.github/workflows/build.yml` for build methods in each of the sub repositories.
+- The libraries taco-pos, taco-fast-vdf, and taco-bip-158 have been moved to their own repositories: [tacopos](https://github.com/Taco-Network/tacopos), [tacovdf](https://github.com/Taco-Network/tacovdf), and [chaibip158](https://github.com/Taco-Network/chiabip158). They are brought in by taco-blockchain at install time. Our BLS signature library remains at [bls-signatures](https://github.com/Taco-Network/bls-signatures).
+- The install process now brings in tacopos, tacovdf, etc from Pypi where they are auto published via GitHub Actions ci using cibuildwheel. Check out `.github/workflows/build.yml` for build methods in each of the sub repositories.
 - `taco-regenerate-keys` has been renamed `taco-generate-keys`.
 - setproctitle is now an optional install dependency that we will continue to install in the default install methods.
 - The project now defaults to `venv` without the proceeding . to better match best practices.
 - Developer requirements were separated from the actual requirements.
-- `install-timelord.sh` has been pulled out from `install.sh`. This script downloads the source python package for chiavdf and compiles it locally for timelords. vdf_client can be included or excluded to make building normal user wheels easier.
+- `install-timelord.sh` has been pulled out from `install.sh`. This script downloads the source python package for tacovdf and compiles it locally for timelords. vdf_client can be included or excluded to make building normal user wheels easier.
 
 ### Removed
 
@@ -1388,7 +1457,7 @@ relic. We will make a patch available for these systems shortly.
 - There is a new restart_harvester.sh in scripts/ to easily restart a harvester when you want to add a newly completed plot to the farm without restarting farmer, fullnode, timelord, etc.
 - Harvesters now log errors if they encounter a malformed or corrupted plot file. Again thanks @xorinox.
 - New AJAX based full node UI. To access go to [http://127.0.0.1:8555/index.html](http://127.0.0.1:8555/index.html) with any modern web browser on the same machine as the full node.
-- If you want to benchmark your CPU as a VDF you can use vdf_bench square_asm 500000 for the assembly optimized test or just vdf_bench square 500000 for the plain C++ code path. This tool is found in lib/chiavdf/fast_vdf/.
+- If you want to benchmark your CPU as a VDF you can use vdf_bench square_asm 500000 for the assembly optimized test or just vdf_bench square 500000 for the plain C++ code path. This tool is found in lib/tacovdf/fast_vdf/.
 - Improvements to shutting down services in all of the scripts in scripts/. Another @xorinox HT.
 
 ### Changed
@@ -1520,7 +1589,7 @@ relic. We will make a patch available for these systems shortly.
 ### Added
 
 - This is the first release of the Taco testnet! Blockchain consensus, proof of time, and proof of space are included.
-- More details on the release at [https://www.taconetwork.org/developer/](https://www.taconetwork.org/developer/)
+- More details on the release at [https://www.taconetwork.net/developer/](https://www.taconetwork.net/developer/)
 
 [unreleased]: https://github.com/Taco-Network/taco-blockchain/compare/1.0beta5...dev
 [1.0beta5]: https://github.com/Taco-Network/taco-blockchain/compare/1.0beta4...1.0beta5

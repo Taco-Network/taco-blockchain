@@ -628,7 +628,7 @@ export default [
   { word: 'exact', value: 626 },
   { word: 'example', value: 627 },
   { word: 'excess', value: 628 },
-  { word: 'exchange', value: 629 },
+  { word: 'extxange', value: 629 },
   { word: 'excite', value: 630 },
   { word: 'exclude', value: 631 },
   { word: 'excuse', value: 632 },

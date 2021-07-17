@@ -246,8 +246,8 @@ ignored-classes=optparse.Values,thread._local,_thread._local
 # supports qualified module names, as well as Unix pattern matching.
 ignored-modules=blspy,
                 chiabip158,
-                chiapos,
-                chiavdf,
+                tacopos,
+                tacovdf,
                 cryptography,
                 aiohttp,
                 websockets,

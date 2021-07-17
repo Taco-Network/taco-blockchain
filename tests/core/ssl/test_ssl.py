@@ -9,7 +9,7 @@ from taco.server.server import TacoServer, ssl_context_for_client
 from taco.server.ws_connection import WSTacoConnection
 from taco.ssl.create_ssl import generate_ca_signed_cert
 from taco.types.peer_info import PeerInfo
-from taco.util.block_tools import test_constants
+from tests.block_tools import test_constants
 from taco.util.ints import uint16
 from tests.setup_nodes import (
     bt,

@@ -5,7 +5,7 @@ from enum import IntEnum
 from typing import Optional
 from functools import lru_cache
 
-from chiavdf import create_discriminant, verify_n_wesolowski
+from tacovdf import create_discriminant, verify_n_wesolowski
 
 from taco.consensus.constants import ConsensusConstants
 from taco.types.blockchain_format.classgroup import ClassgroupElement
@@ -16,7 +16,7 @@ from taco.util.streamable import Streamable, streamable
 log = logging.getLogger(__name__)
 
 
-@lru_cache(maxsize=20)
+@lru_cache(maxsize=200)
 def get_discriminant(challenge, size_bites) -> int:
     return int(
         create_discriminant(challenge, size_bites),
@@ -24,7 +24,7 @@ def get_discriminant(challenge, size_bites) -> int:
     )
 
 
-@lru_cache(maxsize=100)
+@lru_cache(maxsize=1000)
 def verify_vdf(
     disc: int,
     input_el: bytes100,

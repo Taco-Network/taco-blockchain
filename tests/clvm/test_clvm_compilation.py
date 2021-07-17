@@ -32,6 +32,11 @@ wallet_program_files = set(
         "taco/wallet/puzzles/block_program_zero.clvm",
         "taco/wallet/puzzles/test_generator_deserialize.clvm",
         "taco/wallet/puzzles/test_multiple_generator_input_arguments.clvm",
+        "taco/wallet/puzzles/p2_singleton.clvm",
+        "taco/wallet/puzzles/pool_waitingroom_innerpuz.clvm",
+        "taco/wallet/puzzles/pool_member_innerpuz.clvm",
+        "taco/wallet/puzzles/singleton_launcher.clvm",
+        "taco/wallet/puzzles/p2_singleton_or_delayed_puzhash.clvm",
     ]
 )
 

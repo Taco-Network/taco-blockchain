@@ -28,13 +28,13 @@ from taco.types.end_of_slot_bundle import EndOfSubSlotBundle
 from taco.types.full_block import FullBlock
 from taco.types.spend_bundle import SpendBundle
 from taco.types.unfinished_block import UnfinishedBlock
-from taco.util.block_tools import BlockTools, get_vdf_info_and_proof
+from tests.block_tools import BlockTools, get_vdf_info_and_proof
 from taco.util.errors import Err
 from taco.util.hash import std_hash
 from taco.util.ints import uint8, uint64, uint32
 from taco.util.merkle_set import MerkleSet
 from taco.util.recursive_replace import recursive_replace
-from taco.util.wallet_tools import WalletTool
+from tests.wallet_tools import WalletTool
 from tests.core.fixtures import default_400_blocks  # noqa: F401; noqa: F401
 from tests.core.fixtures import default_1000_blocks  # noqa: F401
 from tests.core.fixtures import default_10000_blocks  # noqa: F401
@@ -1947,7 +1947,7 @@ class TestBodyValidation:
         blocks = bt.get_consecutive_blocks(
             1, block_list_input=blocks, guarantee_transaction_block=True, transaction_data=tx
         )
-        assert (await b.receive_block(blocks[-1]))[1] == Err.BLOCK_COST_EXCEEDS_MAX
+        assert (await b.receive_block(blocks[-1]))[1] == Err.INVALID_BLOCK_COST
 
     @pytest.mark.asyncio
     async def test_clvm_must_not_fail(self, empty_blockchain):
@@ -2006,7 +2006,7 @@ class TestBodyValidation:
         new_fsb_sig = bt.get_plot_signature(new_m, block.reward_chain_block.proof_of_space.plot_public_key)
         block_2 = recursive_replace(block_2, "foliage.foliage_transaction_block_signature", new_fsb_sig)
         err = (await b.receive_block(block_2))[1]
-        assert err == Err.GENERATOR_RUNTIME_ERROR
+        assert err == Err.INVALID_BLOCK_COST
 
         # too high
         block_2: FullBlock = recursive_replace(block, "transactions_info.cost", uint64(1000000))
@@ -2021,7 +2021,9 @@ class TestBodyValidation:
         block_2 = recursive_replace(block_2, "foliage.foliage_transaction_block_signature", new_fsb_sig)
 
         err = (await b.receive_block(block_2))[1]
-        assert err == Err.INVALID_BLOCK_COST
+        # when the CLVM program exceeds cost during execution, it will fail with
+        # a general runtime error
+        assert err == Err.GENERATOR_RUNTIME_ERROR
 
         err = (await b.receive_block(block))[1]
         assert err is None

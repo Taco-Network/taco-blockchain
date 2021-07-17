@@ -9,7 +9,7 @@ from taco.types.blockchain_format.program import Program, INFINITE_COST
 from taco.types.condition_opcodes import ConditionOpcode
 from taco.types.condition_with_args import ConditionWithArgs
 from taco.util.ints import uint32
-from taco.util.wallet_tools import WalletTool
+from tests.wallet_tools import WalletTool
 from taco.wallet.derive_keys import master_sk_to_wallet_sk
 from taco.wallet.puzzles.p2_delegated_puzzle import puzzle_for_pk
 

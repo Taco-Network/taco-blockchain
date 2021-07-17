@@ -7,7 +7,7 @@ import time
 import traceback
 from typing import Callable, Dict, List, Optional, Tuple, Set
 
-from chiavdf import create_discriminant
+from tacovdf import create_discriminant
 
 from taco.consensus.constants import ConsensusConstants
 from taco.consensus.pot_iterations import calculate_sp_iters, is_overflow_block
@@ -180,6 +180,9 @@ class Timelord:
                 break
         if found_index == -1:
             log.warning(f"Will not infuse {block.rc_prev} because its reward chain challenge is not in the chain")
+            return None
+        if ip_iters > block_ip_iters:
+            log.warning("Too late to infuse block")
             return None
 
         new_block_iters = uint64(block_ip_iters - ip_iters)
