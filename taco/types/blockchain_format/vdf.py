@@ -5,7 +5,7 @@ from enum import IntEnum
 from typing import Optional
 from functools import lru_cache
 
-from tacovdf import create_discriminant, verify_n_wesolowski
+from chiavdf import create_discriminant, verify_n_wesolowski
 
 from taco.consensus.constants import ConsensusConstants
 from taco.types.blockchain_format.classgroup import ClassgroupElement

@@ -247,7 +247,7 @@ ignored-classes=optparse.Values,thread._local,_thread._local
 ignored-modules=blspy,
                 chiabip158,
                 chiapos,
-                tacovdf,
+                chiavdf,
                 cryptography,
                 aiohttp,
                 websockets,
