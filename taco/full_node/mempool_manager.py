@@ -394,7 +394,7 @@ class MempoolManager:
                 log.warning(f"{npc.puzzle_hash} != {coin_record.coin.puzzle_hash}")
                 return None, MempoolInclusionStatus.FAILED, Err.WRONG_PUZZLE_HASH
 
-            tacolisp_height = (
+            chialisp_height = (
                 self.peak.prev_transaction_block_height if not self.peak.is_transaction_block else self.peak.height
             )
             assert self.peak.timestamp is not None
@@ -403,7 +403,7 @@ class MempoolManager:
                 coin_announcements_in_spend,
                 puzzle_announcements_in_spend,
                 npc.condition_dict,
-                uint32(tacolisp_height),
+                uint32(chialisp_height),
                 self.peak.timestamp,
             )
 
