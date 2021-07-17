@@ -2,11 +2,11 @@ from setuptools import setup
 
 dependencies = [
     "blspy==1.0.2",  # Signature library
-    "chiavdf==1.0.1",  # timelord and vdf verification
+    "tacovdf==1.0.2",  # timelord and vdf verification
     "chiabip158==1.0",  # bip158-style wallet filters
-    "chiapos==1.0.2",  # proof of space
-    "clvm==0.9.6",
-    "clvm_rs==0.1.7",
+    "tacopos==1.0.3",  # proof of space
+    "clvm==0.9.7",
+    "clvm_rs==0.1.8",
     "clvm_tools==0.4.3",
     "aiohttp==3.7.4",  # HTTP server for full node rpc
     "aiosqlite==0.17.0",  # asyncio wrapper for sqlite, to store blocks
@@ -27,7 +27,7 @@ dependencies = [
 ]
 
 upnp_dependencies = [
-    "miniupnpc==2.1",  # Allows users to open ports on their router
+    "miniupnpc==2.2.2",  # Allows users to open ports on their router
 ]
 
 dev_dependencies = [
@@ -43,9 +43,9 @@ dev_dependencies = [
 kwargs = dict(
     name="taco-blockchain",
     author="Mariano Sorgente",
-    author_email="mariano@taconetwork.org",
+    author_email="mariano@taconetwork.net",
     description="Taco blockchain full node, farmer, timelord, and wallet.",
-    url="https://taconetwork.org/",
+    url="https://taconetwork.net/",
     license="Apache License",
     python_requires=">=3.7, <4",
     keywords="taco blockchain node",
@@ -60,6 +60,7 @@ kwargs = dict(
         "build_scripts",
         "taco",
         "taco.cmds",
+        "taco.clvm",
         "taco.consensus",
         "taco.daemon",
         "taco.full_node",
@@ -68,6 +69,7 @@ kwargs = dict(
         "taco.harvester",
         "taco.introducer",
         "taco.plotting",
+        "taco.pools",
         "taco.protocols",
         "taco.rpc",
         "taco.server",
