@@ -26,7 +26,7 @@ msgstr "(Optional)"
 msgid "*Want to explore Taco’s blocks further? Check out <0>Taco Explorer</0> built by an open source developer."
 msgstr "*Möchtest du mehr über Taco's Blocks erfahren? Besuche <0>Taco Explorer</0>, entwickelt von einem Open Source Entwickler."
 
-#: src/components/plot/add/PlotAddNFT.tsx:125
+#: src/components/plot/add/PlotAddNFT.tsx:123
 msgid "+ Add New Plot NFT"
 msgstr "+ Neues Plot-NFT hinzufügen"
 
@@ -63,7 +63,7 @@ msgstr "Aktion"
 
 #: src/components/farm/FarmFullNodeConnections.tsx:67
 #: src/components/farm/FarmYourHarvesterNetwork.tsx:67
-#: src/components/fullNode/FullNodeConnections.tsx:83
+#: src/components/fullNode/FullNodeConnections.tsx:82
 #: src/components/pool/PoolOverview.tsx:69
 msgid "Actions"
 msgstr "Aktionen"
@@ -86,8 +86,8 @@ msgstr "Plot zur Warteschlange hinzufügen"
 
 #: src/components/farm/overview/FarmOverviewHero.tsx:46
 #: src/components/plot/PlotHeader.tsx:63
-#: src/components/plot/add/PlotAdd.tsx:162
-#: src/components/plot/overview/PlotOverviewHero.tsx:49
+#: src/components/plot/add/PlotAdd.tsx:160
+#: src/components/plot/overview/PlotOverviewHero.tsx:54
 #: src/components/plotNFT/PlotExternalNFTCard.tsx:232
 #: src/components/plotNFT/PlotNFTCard.tsx:271
 msgid "Add a Plot"
@@ -120,7 +120,7 @@ msgstr "Adresse"
 msgid "Address / Puzzle hash"
 msgstr "Adresse / Puzzle hash"
 
-#: src/components/core/components/Amount/Amount.tsx:98
+#: src/components/core/components/Amount/Amount.tsx:96
 #: src/components/trading/CreateOffer.jsx:196
 #: src/components/trading/TradesTable.tsx:20
 #: src/components/wallet/WalletHistory.tsx:62
@@ -308,18 +308,6 @@ msgstr "Pool wechseln"
 msgid "Chat on KeyBase"
 msgstr "Chatte auf KeyBase"
 
-#: src/electron/main.tsx:419
-msgid "Taco"
-msgstr "Taco"
-
-#: src/electron/main.tsx:358
-msgid "Taco Blockchain Wiki"
-msgstr "Taco Blockchain Wiki"
-
-#: src/components/wallet/standard/WalletStandard.tsx:647
-msgid "Taco Wallet"
-msgstr "Taco Wallet"
-
 #: src/components/plot/add/PlotAddNumberOfPlots.tsx:36
 msgid "Choose Number of Plots"
 msgstr "Anzahl der Plots wählen"
@@ -399,7 +387,7 @@ msgid "Connect"
 msgstr "Verbinden"
 
 #: src/components/fullNode/FullNodeAddConnection.tsx:68
-#: src/components/fullNode/FullNodeConnections.tsx:113
+#: src/components/fullNode/FullNodeConnections.tsx:112
 msgid "Connect to other peers"
 msgstr "Mit anderen Peers verbinden"
 
@@ -425,11 +413,11 @@ msgstr "Verbindungsstatus"
 msgid "Connection Status:"
 msgstr "Verbindungsstatus:"
 
-#: src/components/fullNode/FullNodeConnections.tsx:76
+#: src/components/fullNode/FullNodeConnections.tsx:75
 msgid "Connection type"
 msgstr "Verbindungstyp"
 
-#: src/components/fullNode/FullNodeConnections.tsx:110
+#: src/components/fullNode/FullNodeConnections.tsx:109
 msgid "Connections"
 msgstr "Verbindungen"
 
@@ -453,7 +441,7 @@ msgid "Copy to Clipboard"
 msgstr "In die Zwischenablage kopieren"
 
 #: src/components/backup/BackupCreate.tsx:78
-#: src/components/plot/add/PlotAdd.tsx:179
+#: src/components/plot/add/PlotAdd.tsx:177
 #: src/components/plotNFT/select/PlotNFTSelectPool.tsx:175
 #: src/components/wallet/create/createExistingColouredCoin.jsx:133
 #: src/components/wallet/create/createNewColouredCoin.jsx:142
@@ -670,7 +658,7 @@ msgid "Distributed Identity Options"
 msgstr "Verteilte Identitätsoptionen"
 
 #: src/components/farm/overview/FarmOverviewHero.tsx:52
-#: src/components/plot/overview/PlotOverviewHero.tsx:59
+#: src/components/plot/overview/PlotOverviewHero.tsx:69
 msgid "Do you have existing plots on this machine? <0>Add Plot Directory</0>"
 msgstr "Hast du bereits Plots auf diesem Computer? <0> Plot Verzeichnis hinzufügen</0>"
 
@@ -915,7 +903,7 @@ msgstr "Header hash"
 
 #: src/components/block/Block.jsx:201
 #: src/components/fullNode/FullNode.jsx:81
-#: src/components/fullNode/FullNodeConnections.tsx:80
+#: src/components/fullNode/FullNodeConnections.tsx:79
 msgid "Height"
 msgstr "Höhe"
 
@@ -940,7 +928,7 @@ msgstr "Historie"
 msgid "Host Name"
 msgstr "Host Name"
 
-#: src/components/fullNode/FullNodeConnections.tsx:41
+#: src/components/fullNode/FullNodeConnections.tsx:40
 msgid "IP address"
 msgstr "IP Adresse"
 
@@ -1015,7 +1003,7 @@ msgid "Join Pool"
 msgstr "Pool beitreten"
 
 #: src/components/plot/add/PlotAddNFT.tsx:59
-#: src/components/plot/add/PlotAddNFT.tsx:143
+#: src/components/plot/add/PlotAddNFT.tsx:141
 #: src/components/pool/PoolHero.tsx:31
 msgid "Join a Pool"
 msgstr "Einem Pool beitreten"
@@ -1028,7 +1016,7 @@ msgstr "Trete einem Pool bei und erhalte konsistente XTX Farming-Belohnungen. De
 msgid "Join a pool and get consistent XTX farming rewards. The average returns are the same, but it is much less volatile. Assign plots to a plot NFT. You can easily switch pools without having to re-plot."
 msgstr "Trete einem Pool bei und erhalte konsistente XTX Farming-Belohnungen. Der durchschnittliche Ertrag ist derselbe, aber er ist viel weniger volatil. Weise Plots einem Plot-NFT zu. Du kannst einfach zwischen Pools wechseln, ohne neu plotten zu müssen."
 
-#: src/components/plot/add/PlotAddNFT.tsx:135
+#: src/components/plot/add/PlotAddNFT.tsx:133
 msgid "Join a pool and get more consistent XTX farming rewards. Create a plot NFT and assign your new plots to a group."
 msgstr "Trete einem Pool bei und erhalte konsistente XTX Farming-Belohnungen. Erstelle ein Plot-NFT und weise deine neuen Plots einer Gruppe zu."
 
@@ -1143,7 +1131,7 @@ msgstr "Farming Belohnungen verwalten"
 msgid "Manage Your Farming Rewards Target Addresses"
 msgstr "Verwalte deine Farming Belohnungs Adressen"
 
-#: src/components/fullNode/FullNodeConnections.tsx:69
+#: src/components/fullNode/FullNodeConnections.tsx:68
 msgid "MiB Up/Down"
 msgstr "MiB Up/Down"
 
@@ -1217,7 +1205,7 @@ msgstr "Keine privaten Schlüssel für eine oder beide Adresse. Nur sicher, wenn
 
 #: src/components/farm/FarmFullNodeConnections.tsx:32
 #: src/components/farm/FarmYourHarvesterNetwork.tsx:32
-#: src/components/fullNode/FullNodeConnections.tsx:37
+#: src/components/fullNode/FullNodeConnections.tsx:36
 msgid "Node ID"
 msgstr "Node ID"
 
@@ -1225,7 +1213,7 @@ msgstr "Node ID"
 msgid "Node Id"
 msgstr ""
 
-#: src/components/plot/add/PlotAddNFT.tsx:88
+#: src/components/plot/add/PlotAddNFT.tsx:86
 msgid "None"
 msgstr "Kein(e)"
 
@@ -1595,7 +1583,7 @@ msgstr "Pooling"
 #: src/components/farm/FarmFullNodeConnections.tsx:42
 #: src/components/farm/FarmYourHarvesterNetwork.tsx:42
 #: src/components/fullNode/FullNodeAddConnection.tsx:80
-#: src/components/fullNode/FullNodeConnections.tsx:47
+#: src/components/fullNode/FullNodeConnections.tsx:46
 msgid "Port"
 msgstr "Port"
 
@@ -1711,7 +1699,7 @@ msgid "Recover DID wallet"
 msgstr "DID Wallet wiederherstellen"
 
 #: src/components/plot/PlotHeader.tsx:78
-#: src/components/plot/overview/PlotOverviewHero.tsx:52
+#: src/components/plot/overview/PlotOverviewHero.tsx:62
 msgid "Refresh Plots"
 msgstr "Plots aktualisieren"
 
@@ -1813,11 +1801,11 @@ msgstr "Wähle das finale Ziel für den Ordner aus, wo der Plot gespeichert werd
 msgid "Select the temporary destination for the folder where you would like the plot to be stored. We recommend you use a fast drive."
 msgstr "Wähle das temporäre Ziel für den Ordner aus, wo der Plot gespeichert werden soll. Wir empfehlen eine schnelle SSD."
 
-#: src/components/plot/add/PlotAddNFT.tsx:83
+#: src/components/plot/add/PlotAddNFT.tsx:81
 msgid "Select your Plot NFT"
 msgstr "Wähle dein Plot-NFT"
 
-#: src/components/plot/add/PlotAddNFT.tsx:74
+#: src/components/plot/add/PlotAddNFT.tsx:72
 msgid "Select your Plot NFT from the dropdown or create a new one."
 msgstr "Wähle dein Plot-NFT aus der Dropdown-Liste aus oder erstelle ein Neues."
 
@@ -2018,6 +2006,18 @@ msgstr "Synchronisiere <0/>/<1/>"
 #~ msgid "TXTX User Transaction Fees"
 #~ msgstr ""
 
+#: src/electron/main.tsx:419
+msgid "Taco"
+msgstr "Taco"
+
+#: src/electron/main.tsx:358
+msgid "Taco Blockchain Wiki"
+msgstr "Taco Blockchain Wiki"
+
+#: src/components/wallet/standard/WalletStandard.tsx:647
+msgid "Taco Wallet"
+msgstr "Taco Wallet"
+
 #: src/components/pool/PoolInfo.tsx:37
 msgid "Target Puzzle Hash"
 msgstr "Ziel Puzzle Hash"
@@ -2051,11 +2051,11 @@ msgstr "Die Node ist nicht synchronisiert"
 msgid "The node is syncing, which means it is downloading blocks from other nodes, to reach the latest block in the chain"
 msgstr "Der Node wird synchronisiert, d.h. er lädt Blöcke von anderen Nodes herunter, um den neuesten Block in der Kette zu erreichen"
 
-#: src/hooks/usePoolInfo.ts:59
+#: src/hooks/usePoolInfo.ts:57
 msgid "The pool URL \"{normalizedUrl}\" is not working. Is it pool? Error: {0}"
 msgstr "Die Pool-URL \"{normalizedUrl}\" funktioniert nicht. Ist es ein Pool? Fehler: {0}"
 
-#: src/hooks/usePoolInfo.ts:44
+#: src/hooks/usePoolInfo.ts:43
 msgid "The pool URL is not valid. {normalizedUrl}"
 msgstr ""
 
@@ -2206,10 +2206,6 @@ msgstr "Nach"
 msgid "Total Balance"
 msgstr "Gesamtes Guthaben"
 
-#: src/components/farm/card/FarmCardTotalTacoFarmed.tsx:15
-#~ msgid "Total Taco Farmed"
-#~ msgstr ""
-
 #: src/components/fullNode/card/FullNodeCardTotalIterations.tsx:20
 msgid "Total Iterations"
 msgstr "Gesamte Iterationen"
@@ -2225,6 +2221,10 @@ msgstr "Totale Plot Größe:"
 #: src/components/farm/card/FarmCardTotalSizeOfPlots.tsx:12
 msgid "Total Size of Plots"
 msgstr "Gesamtgröße der Plots"
+
+#: src/components/farm/card/FarmCardTotalTacoFarmed.tsx:15
+#~ msgid "Total Taco Farmed"
+#~ msgstr ""
 
 #: src/components/block/Block.jsx:225
 msgid "Total VDF Iterations"
@@ -2378,16 +2378,16 @@ msgstr "Wallet-Status:"
 #~ msgid "WalletItem.ccWallet"
 #~ msgstr ""
 
-#: src/components/wallet/Wallets.tsx:30
-#~ msgid "WalletItem.tacoWallet"
-#~ msgstr ""
-
 #: src/components/wallet/Wallets.tsx:48
 #~ msgid "WalletItem.didWallet"
 #~ msgstr ""
 
 #: src/components/wallet/Wallets.tsx:41
 #~ msgid "WalletItem.rlWallet"
+#~ msgstr ""
+
+#: src/components/wallet/Wallets.tsx:30
+#~ msgid "WalletItem.tacoWallet"
 #~ msgstr ""
 
 #: src/components/wallet/Wallets.tsx:107
@@ -2599,6 +2599,6 @@ msgstr "{currencyCode} Gesamtes Taco gefarmt"
 msgid "{currencyCode} User Transaction Fees"
 msgstr "{currencyCode} Benutzer Transaktionsgebühren"
 
-#: src/components/core/components/Amount/Amount.tsx:82
+#: src/components/core/components/Amount/Amount.tsx:80
 msgid "{mojo, plural, one {mojo} other {mojos}}"
 msgstr "{mojo, plural, one {mojo} other {mojos}}"

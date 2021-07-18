@@ -26,7 +26,7 @@ msgstr "(voliteľné)"
 msgid "*Want to explore Taco’s blocks further? Check out <0>Taco Explorer</0> built by an open source developer."
 msgstr "* Chcete viac preskúmať Taco bloky? Vyskúšajte aplikáciu <0>Taco Explorer</0> vytvorenú open source vývojárom."
 
-#: src/components/plot/add/PlotAddNFT.tsx:125
+#: src/components/plot/add/PlotAddNFT.tsx:123
 msgid "+ Add New Plot NFT"
 msgstr "+ Pridať nové NFT poľa"
 
@@ -63,7 +63,7 @@ msgstr "Akcia"
 
 #: src/components/farm/FarmFullNodeConnections.tsx:67
 #: src/components/farm/FarmYourHarvesterNetwork.tsx:67
-#: src/components/fullNode/FullNodeConnections.tsx:83
+#: src/components/fullNode/FullNodeConnections.tsx:82
 #: src/components/pool/PoolOverview.tsx:69
 msgid "Actions"
 msgstr "Akcie"
@@ -86,8 +86,8 @@ msgstr "Pridať pole do fronty"
 
 #: src/components/farm/overview/FarmOverviewHero.tsx:46
 #: src/components/plot/PlotHeader.tsx:63
-#: src/components/plot/add/PlotAdd.tsx:162
-#: src/components/plot/overview/PlotOverviewHero.tsx:49
+#: src/components/plot/add/PlotAdd.tsx:160
+#: src/components/plot/overview/PlotOverviewHero.tsx:54
 #: src/components/plotNFT/PlotExternalNFTCard.tsx:232
 #: src/components/plotNFT/PlotNFTCard.tsx:271
 msgid "Add a Plot"
@@ -120,7 +120,7 @@ msgstr "Adresa"
 msgid "Address / Puzzle hash"
 msgstr "Adresa"
 
-#: src/components/core/components/Amount/Amount.tsx:98
+#: src/components/core/components/Amount/Amount.tsx:96
 #: src/components/trading/CreateOffer.jsx:196
 #: src/components/trading/TradesTable.tsx:20
 #: src/components/wallet/WalletHistory.tsx:62
@@ -308,18 +308,6 @@ msgstr "Zmeniť združenie"
 msgid "Chat on KeyBase"
 msgstr "Chatovať na KeyBase"
 
-#: src/electron/main.tsx:419
-msgid "Taco"
-msgstr "Taco"
-
-#: src/electron/main.tsx:358
-msgid "Taco Blockchain Wiki"
-msgstr "Taco Blockchain Wiki"
-
-#: src/components/wallet/standard/WalletStandard.tsx:647
-msgid "Taco Wallet"
-msgstr "Taco peňaženka"
-
 #: src/components/plot/add/PlotAddNumberOfPlots.tsx:36
 msgid "Choose Number of Plots"
 msgstr "Vyberte počet polí"
@@ -399,7 +387,7 @@ msgid "Connect"
 msgstr "Pripojiť"
 
 #: src/components/fullNode/FullNodeAddConnection.tsx:68
-#: src/components/fullNode/FullNodeConnections.tsx:113
+#: src/components/fullNode/FullNodeConnections.tsx:112
 msgid "Connect to other peers"
 msgstr "Pripojiť k iným uzlom"
 
@@ -425,11 +413,11 @@ msgstr "Stav pripojenia"
 msgid "Connection Status:"
 msgstr "Stav pripojenia:"
 
-#: src/components/fullNode/FullNodeConnections.tsx:76
+#: src/components/fullNode/FullNodeConnections.tsx:75
 msgid "Connection type"
 msgstr "Typ pripojenia"
 
-#: src/components/fullNode/FullNodeConnections.tsx:110
+#: src/components/fullNode/FullNodeConnections.tsx:109
 msgid "Connections"
 msgstr "Pripojenia"
 
@@ -453,7 +441,7 @@ msgid "Copy to Clipboard"
 msgstr "Skopírovať do schránky"
 
 #: src/components/backup/BackupCreate.tsx:78
-#: src/components/plot/add/PlotAdd.tsx:179
+#: src/components/plot/add/PlotAdd.tsx:177
 #: src/components/plotNFT/select/PlotNFTSelectPool.tsx:175
 #: src/components/wallet/create/createExistingColouredCoin.jsx:133
 #: src/components/wallet/create/createNewColouredCoin.jsx:142
@@ -664,7 +652,7 @@ msgid "Distributed Identity Options"
 msgstr "Možnosti distribuovanej identity"
 
 #: src/components/farm/overview/FarmOverviewHero.tsx:52
-#: src/components/plot/overview/PlotOverviewHero.tsx:59
+#: src/components/plot/overview/PlotOverviewHero.tsx:69
 msgid "Do you have existing plots on this machine? <0>Add Plot Directory</0>"
 msgstr "Máte existujúce ploty na tomto stroji? <0>Pridaj Adresár s Plotmi</0>"
 
@@ -909,7 +897,7 @@ msgstr "Hash hlavičky"
 
 #: src/components/block/Block.jsx:201
 #: src/components/fullNode/FullNode.jsx:81
-#: src/components/fullNode/FullNodeConnections.tsx:80
+#: src/components/fullNode/FullNodeConnections.tsx:79
 msgid "Height"
 msgstr "Poradie"
 
@@ -934,7 +922,7 @@ msgstr "História"
 msgid "Host Name"
 msgstr "Meno hostiteľa"
 
-#: src/components/fullNode/FullNodeConnections.tsx:41
+#: src/components/fullNode/FullNodeConnections.tsx:40
 msgid "IP address"
 msgstr "IP Adresa"
 
@@ -1009,7 +997,7 @@ msgid "Join Pool"
 msgstr "Pripojiť sa k združeniu"
 
 #: src/components/plot/add/PlotAddNFT.tsx:59
-#: src/components/plot/add/PlotAddNFT.tsx:143
+#: src/components/plot/add/PlotAddNFT.tsx:141
 #: src/components/pool/PoolHero.tsx:31
 msgid "Join a Pool"
 msgstr "Pripojiť sa k združeniu"
@@ -1022,7 +1010,7 @@ msgstr "Pripojte sa k združeniu a získajte konzistentné farmárske XTX odmeny
 msgid "Join a pool and get consistent XTX farming rewards. The average returns are the same, but it is much less volatile. Assign plots to a plot NFT. You can easily switch pools without having to re-plot."
 msgstr "Pripojte sa k združeniu a získajte konzistentné farmárske XTX odmeny. Priemerný výnos je rovnaký, je však oveľa menej volatilný. Priraďte polia k NFT poľa. Môžete ľahko prepínať združenia bez nutnosti opakovaného vytvárania polí."
 
-#: src/components/plot/add/PlotAddNFT.tsx:135
+#: src/components/plot/add/PlotAddNFT.tsx:133
 msgid "Join a pool and get more consistent XTX farming rewards. Create a plot NFT and assign your new plots to a group."
 msgstr "Pripojte sa k združeniu a získajte konzistentnejšie farmárske XTX odmeny. Vytvorte NFT poľa a priraďte svoje nové polia do skupiny."
 
@@ -1137,7 +1125,7 @@ msgstr "Spravovať farmárske odmeny"
 msgid "Manage Your Farming Rewards Target Addresses"
 msgstr "Spravovať cieľové adresy farmárskych odmien"
 
-#: src/components/fullNode/FullNodeConnections.tsx:69
+#: src/components/fullNode/FullNodeConnections.tsx:68
 msgid "MiB Up/Down"
 msgstr "MiB Odoslané/Stiahnuté"
 
@@ -1211,7 +1199,7 @@ msgstr "Žiadne súkromné kľúče pre jednu alebo obidve adresy. Bezpečné ib
 
 #: src/components/farm/FarmFullNodeConnections.tsx:32
 #: src/components/farm/FarmYourHarvesterNetwork.tsx:32
-#: src/components/fullNode/FullNodeConnections.tsx:37
+#: src/components/fullNode/FullNodeConnections.tsx:36
 msgid "Node ID"
 msgstr "ID uzla"
 
@@ -1219,7 +1207,7 @@ msgstr "ID uzla"
 msgid "Node Id"
 msgstr ""
 
-#: src/components/plot/add/PlotAddNFT.tsx:88
+#: src/components/plot/add/PlotAddNFT.tsx:86
 msgid "None"
 msgstr "Žiadny"
 
@@ -1587,7 +1575,7 @@ msgstr "Združovanie"
 #: src/components/farm/FarmFullNodeConnections.tsx:42
 #: src/components/farm/FarmYourHarvesterNetwork.tsx:42
 #: src/components/fullNode/FullNodeAddConnection.tsx:80
-#: src/components/fullNode/FullNodeConnections.tsx:47
+#: src/components/fullNode/FullNodeConnections.tsx:46
 msgid "Port"
 msgstr "Port"
 
@@ -1703,7 +1691,7 @@ msgid "Recover DID wallet"
 msgstr "Obnoviť Peňaženku DID"
 
 #: src/components/plot/PlotHeader.tsx:78
-#: src/components/plot/overview/PlotOverviewHero.tsx:52
+#: src/components/plot/overview/PlotOverviewHero.tsx:62
 msgid "Refresh Plots"
 msgstr "Obnoviť polia"
 
@@ -1805,11 +1793,11 @@ msgstr "Vyberte cieľový adresár, do ktorého chcete uložiť pole. Odporúča
 msgid "Select the temporary destination for the folder where you would like the plot to be stored. We recommend you use a fast drive."
 msgstr "Vyberte dočasný adresár, do ktorého chcete uložiť pole. Odporúčame vám použiť rýchle úložisko dát."
 
-#: src/components/plot/add/PlotAddNFT.tsx:83
+#: src/components/plot/add/PlotAddNFT.tsx:81
 msgid "Select your Plot NFT"
 msgstr "Vyberte NFT vášho poľa"
 
-#: src/components/plot/add/PlotAddNFT.tsx:74
+#: src/components/plot/add/PlotAddNFT.tsx:72
 msgid "Select your Plot NFT from the dropdown or create a new one."
 msgstr "Vyberte svoje NFT poľa z rozbaľovacej ponuky alebo vytvorte nové."
 
@@ -2010,6 +1998,18 @@ msgstr "Synchronizácia <0/>/<1/>"
 #~ msgid "TXTX User Transaction Fees"
 #~ msgstr ""
 
+#: src/electron/main.tsx:419
+msgid "Taco"
+msgstr "Taco"
+
+#: src/electron/main.tsx:358
+msgid "Taco Blockchain Wiki"
+msgstr "Taco Blockchain Wiki"
+
+#: src/components/wallet/standard/WalletStandard.tsx:647
+msgid "Taco Wallet"
+msgstr "Taco peňaženka"
+
 #: src/components/pool/PoolInfo.tsx:37
 msgid "Target Puzzle Hash"
 msgstr "Hash hádaniek cieľa"
@@ -2043,11 +2043,11 @@ msgstr "Uzol nie je synchronizovaný"
 msgid "The node is syncing, which means it is downloading blocks from other nodes, to reach the latest block in the chain"
 msgstr "Uzol sa synchronizuje, čo znamená, že sťahuje bloky z iných uzlov, aby sa dostal k najnovšiemu bloku v reťazci"
 
-#: src/hooks/usePoolInfo.ts:59
+#: src/hooks/usePoolInfo.ts:57
 msgid "The pool URL \"{normalizedUrl}\" is not working. Is it pool? Error: {0}"
 msgstr "URL adresa združenia „{normalizedUrl}“ nefunguje. Je to združenie? Chyba: {0}"
 
-#: src/hooks/usePoolInfo.ts:44
+#: src/hooks/usePoolInfo.ts:43
 msgid "The pool URL is not valid. {normalizedUrl}"
 msgstr ""
 
@@ -2198,10 +2198,6 @@ msgstr "Príjemca"
 msgid "Total Balance"
 msgstr "Celkový zostatok"
 
-#: src/components/farm/card/FarmCardTotalTacoFarmed.tsx:15
-#~ msgid "Total Taco Farmed"
-#~ msgstr ""
-
 #: src/components/fullNode/card/FullNodeCardTotalIterations.tsx:20
 msgid "Total Iterations"
 msgstr "Celkový počet iterácií"
@@ -2217,6 +2213,10 @@ msgstr "Celková veľkosť polí:"
 #: src/components/farm/card/FarmCardTotalSizeOfPlots.tsx:12
 msgid "Total Size of Plots"
 msgstr "Celková veľkosť polí"
+
+#: src/components/farm/card/FarmCardTotalTacoFarmed.tsx:15
+#~ msgid "Total Taco Farmed"
+#~ msgstr ""
 
 #: src/components/block/Block.jsx:225
 msgid "Total VDF Iterations"
@@ -2370,16 +2370,16 @@ msgstr "Stav peňaženky:"
 #~ msgid "WalletItem.ccWallet"
 #~ msgstr ""
 
-#: src/components/wallet/Wallets.tsx:30
-#~ msgid "WalletItem.tacoWallet"
-#~ msgstr ""
-
 #: src/components/wallet/Wallets.tsx:48
 #~ msgid "WalletItem.didWallet"
 #~ msgstr ""
 
 #: src/components/wallet/Wallets.tsx:41
 #~ msgid "WalletItem.rlWallet"
+#~ msgstr ""
+
+#: src/components/wallet/Wallets.tsx:30
+#~ msgid "WalletItem.tacoWallet"
 #~ msgstr ""
 
 #: src/components/wallet/Wallets.tsx:107
@@ -2591,6 +2591,6 @@ msgstr "{currencyCode} Celkové množstvo vyfarmárčenej Chii"
 msgid "{currencyCode} User Transaction Fees"
 msgstr "{currencyCode} Užívateľské poplatky za transakcie"
 
-#: src/components/core/components/Amount/Amount.tsx:82
+#: src/components/core/components/Amount/Amount.tsx:80
 msgid "{mojo, plural, one {mojo} other {mojos}}"
 msgstr "{mojo, plural, one {mojo} few {mojos} many {mojos} other {mojos}}"

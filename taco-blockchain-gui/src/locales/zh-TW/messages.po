@@ -26,7 +26,7 @@ msgstr "(選用)"
 msgid "*Want to explore Taco’s blocks further? Check out <0>Taco Explorer</0> built by an open source developer."
 msgstr "＊想更進一步探索 Taco 區塊鍵？看看開源開發者打造的 <0>Taco Explorer</0>"
 
-#: src/components/plot/add/PlotAddNFT.tsx:125
+#: src/components/plot/add/PlotAddNFT.tsx:123
 msgid "+ Add New Plot NFT"
 msgstr "+ 新增新的耕地 NFT"
 
@@ -63,7 +63,7 @@ msgstr "動作"
 
 #: src/components/farm/FarmFullNodeConnections.tsx:67
 #: src/components/farm/FarmYourHarvesterNetwork.tsx:67
-#: src/components/fullNode/FullNodeConnections.tsx:83
+#: src/components/fullNode/FullNodeConnections.tsx:82
 #: src/components/pool/PoolOverview.tsx:69
 msgid "Actions"
 msgstr "動作"
@@ -86,8 +86,8 @@ msgstr "新增耕地至隊列"
 
 #: src/components/farm/overview/FarmOverviewHero.tsx:46
 #: src/components/plot/PlotHeader.tsx:63
-#: src/components/plot/add/PlotAdd.tsx:162
-#: src/components/plot/overview/PlotOverviewHero.tsx:49
+#: src/components/plot/add/PlotAdd.tsx:160
+#: src/components/plot/overview/PlotOverviewHero.tsx:54
 #: src/components/plotNFT/PlotExternalNFTCard.tsx:232
 #: src/components/plotNFT/PlotNFTCard.tsx:271
 msgid "Add a Plot"
@@ -120,7 +120,7 @@ msgstr "位址"
 msgid "Address / Puzzle hash"
 msgstr "位址 / 拼圖雜湊值"
 
-#: src/components/core/components/Amount/Amount.tsx:98
+#: src/components/core/components/Amount/Amount.tsx:96
 #: src/components/trading/CreateOffer.jsx:196
 #: src/components/trading/TradesTable.tsx:20
 #: src/components/wallet/WalletHistory.tsx:62
@@ -308,18 +308,6 @@ msgstr "變更農會"
 msgid "Chat on KeyBase"
 msgstr "在 KeyBase 上閒聊"
 
-#: src/electron/main.tsx:419
-msgid "Taco"
-msgstr "Taco"
-
-#: src/electron/main.tsx:358
-msgid "Taco Blockchain Wiki"
-msgstr "Taco 區塊鏈維基"
-
-#: src/components/wallet/standard/WalletStandard.tsx:647
-msgid "Taco Wallet"
-msgstr "Taco 錢包"
-
 #: src/components/plot/add/PlotAddNumberOfPlots.tsx:36
 msgid "Choose Number of Plots"
 msgstr "選擇耕地數量"
@@ -399,7 +387,7 @@ msgid "Connect"
 msgstr "連線"
 
 #: src/components/fullNode/FullNodeAddConnection.tsx:68
-#: src/components/fullNode/FullNodeConnections.tsx:113
+#: src/components/fullNode/FullNodeConnections.tsx:112
 msgid "Connect to other peers"
 msgstr "連線到其他同儕"
 
@@ -425,11 +413,11 @@ msgstr "連線狀態"
 msgid "Connection Status:"
 msgstr "連線狀態："
 
-#: src/components/fullNode/FullNodeConnections.tsx:76
+#: src/components/fullNode/FullNodeConnections.tsx:75
 msgid "Connection type"
 msgstr "連線類型"
 
-#: src/components/fullNode/FullNodeConnections.tsx:110
+#: src/components/fullNode/FullNodeConnections.tsx:109
 msgid "Connections"
 msgstr "連線"
 
@@ -453,7 +441,7 @@ msgid "Copy to Clipboard"
 msgstr "複製到剪貼板"
 
 #: src/components/backup/BackupCreate.tsx:78
-#: src/components/plot/add/PlotAdd.tsx:179
+#: src/components/plot/add/PlotAdd.tsx:177
 #: src/components/plotNFT/select/PlotNFTSelectPool.tsx:175
 #: src/components/wallet/create/createExistingColouredCoin.jsx:133
 #: src/components/wallet/create/createNewColouredCoin.jsx:142
@@ -664,7 +652,7 @@ msgid "Distributed Identity Options"
 msgstr "分散式識別選項"
 
 #: src/components/farm/overview/FarmOverviewHero.tsx:52
-#: src/components/plot/overview/PlotOverviewHero.tsx:59
+#: src/components/plot/overview/PlotOverviewHero.tsx:69
 msgid "Do you have existing plots on this machine? <0>Add Plot Directory</0>"
 msgstr "你有已存在的耕地在本機上？ <0>增加耕地資料夾</0>"
 
@@ -909,7 +897,7 @@ msgstr "表頭雜湊值"
 
 #: src/components/block/Block.jsx:201
 #: src/components/fullNode/FullNode.jsx:81
-#: src/components/fullNode/FullNodeConnections.tsx:80
+#: src/components/fullNode/FullNodeConnections.tsx:79
 msgid "Height"
 msgstr "高度"
 
@@ -934,7 +922,7 @@ msgstr "歷史"
 msgid "Host Name"
 msgstr "主機名稱"
 
-#: src/components/fullNode/FullNodeConnections.tsx:41
+#: src/components/fullNode/FullNodeConnections.tsx:40
 msgid "IP address"
 msgstr "IP位址"
 
@@ -1009,7 +997,7 @@ msgid "Join Pool"
 msgstr "加入農會"
 
 #: src/components/plot/add/PlotAddNFT.tsx:59
-#: src/components/plot/add/PlotAddNFT.tsx:143
+#: src/components/plot/add/PlotAddNFT.tsx:141
 #: src/components/pool/PoolHero.tsx:31
 msgid "Join a Pool"
 msgstr "加入一個農會"
@@ -1022,7 +1010,7 @@ msgstr "加入農會並獲得持續的 XTX 耕種獎勵。雖然平均報酬一�
 msgid "Join a pool and get consistent XTX farming rewards. The average returns are the same, but it is much less volatile. Assign plots to a plot NFT. You can easily switch pools without having to re-plot."
 msgstr "加入農會並獲得持續的XTX 耕種獎勵。雖然平均報酬一樣但波動較小相對穩定。分配耕地到農場。你可以更輕鬆的轉換農會而不用重新進行耕地。"
 
-#: src/components/plot/add/PlotAddNFT.tsx:135
+#: src/components/plot/add/PlotAddNFT.tsx:133
 msgid "Join a pool and get more consistent XTX farming rewards. Create a plot NFT and assign your new plots to a group."
 msgstr "加入農會以獲得更多持續性的 XTX 耕種獎勵。建立農場並分配您的新耕地到群組。"
 
@@ -1137,7 +1125,7 @@ msgstr "管理耕種獎勵"
 msgid "Manage Your Farming Rewards Target Addresses"
 msgstr "管理你的耕種獎勵目標地址"
 
-#: src/components/fullNode/FullNodeConnections.tsx:69
+#: src/components/fullNode/FullNodeConnections.tsx:68
 msgid "MiB Up/Down"
 msgstr "MiB 上傳/下傳"
 
@@ -1211,7 +1199,7 @@ msgstr "一邊或雙邊地址沒有私鑰。只有你發送獎勵到另一個錢
 
 #: src/components/farm/FarmFullNodeConnections.tsx:32
 #: src/components/farm/FarmYourHarvesterNetwork.tsx:32
-#: src/components/fullNode/FullNodeConnections.tsx:37
+#: src/components/fullNode/FullNodeConnections.tsx:36
 msgid "Node ID"
 msgstr "節點 ID"
 
@@ -1219,7 +1207,7 @@ msgstr "節點 ID"
 msgid "Node Id"
 msgstr ""
 
-#: src/components/plot/add/PlotAddNFT.tsx:88
+#: src/components/plot/add/PlotAddNFT.tsx:86
 msgid "None"
 msgstr "無"
 
@@ -1587,7 +1575,7 @@ msgstr "正在為農會耕種中"
 #: src/components/farm/FarmFullNodeConnections.tsx:42
 #: src/components/farm/FarmYourHarvesterNetwork.tsx:42
 #: src/components/fullNode/FullNodeAddConnection.tsx:80
-#: src/components/fullNode/FullNodeConnections.tsx:47
+#: src/components/fullNode/FullNodeConnections.tsx:46
 msgid "Port"
 msgstr "通訊埠"
 
@@ -1703,7 +1691,7 @@ msgid "Recover DID wallet"
 msgstr "恢復 DID 錢包"
 
 #: src/components/plot/PlotHeader.tsx:78
-#: src/components/plot/overview/PlotOverviewHero.tsx:52
+#: src/components/plot/overview/PlotOverviewHero.tsx:62
 msgid "Refresh Plots"
 msgstr "刷新耕地"
 
@@ -1805,11 +1793,11 @@ msgstr "選擇你想要儲存耕地的最終資料夾。我們建議你使用較
 msgid "Select the temporary destination for the folder where you would like the plot to be stored. We recommend you use a fast drive."
 msgstr "選擇你想要儲存耕地的暫存資料夾。我們建議你使用快速硬碟。"
 
-#: src/components/plot/add/PlotAddNFT.tsx:83
+#: src/components/plot/add/PlotAddNFT.tsx:81
 msgid "Select your Plot NFT"
 msgstr "選擇您的耕地 NFT"
 
-#: src/components/plot/add/PlotAddNFT.tsx:74
+#: src/components/plot/add/PlotAddNFT.tsx:72
 msgid "Select your Plot NFT from the dropdown or create a new one."
 msgstr "在下拉式選單中選擇你的農場或是創建一個新的。"
 
@@ -2010,6 +1998,18 @@ msgstr "同步中 <0/> / <1/>"
 #~ msgid "TXTX User Transaction Fees"
 #~ msgstr ""
 
+#: src/electron/main.tsx:419
+msgid "Taco"
+msgstr "Taco"
+
+#: src/electron/main.tsx:358
+msgid "Taco Blockchain Wiki"
+msgstr "Taco 區塊鏈維基"
+
+#: src/components/wallet/standard/WalletStandard.tsx:647
+msgid "Taco Wallet"
+msgstr "Taco 錢包"
+
 #: src/components/pool/PoolInfo.tsx:37
 msgid "Target Puzzle Hash"
 msgstr "目標拼圖雜湊值"
@@ -2043,11 +2043,11 @@ msgstr "此節點尚未同步"
 msgid "The node is syncing, which means it is downloading blocks from other nodes, to reach the latest block in the chain"
 msgstr "節點同步中，這代表正從其他節點中下載區塊，直到到達區塊鏈的最新區塊"
 
-#: src/hooks/usePoolInfo.ts:59
+#: src/hooks/usePoolInfo.ts:57
 msgid "The pool URL \"{normalizedUrl}\" is not working. Is it pool? Error: {0}"
 msgstr "農會網址：「 {normalizedUrl} 」錯誤。這是農會嗎？錯誤碼： {0}"
 
-#: src/hooks/usePoolInfo.ts:44
+#: src/hooks/usePoolInfo.ts:43
 msgid "The pool URL is not valid. {normalizedUrl}"
 msgstr ""
 
@@ -2198,10 +2198,6 @@ msgstr "到"
 msgid "Total Balance"
 msgstr "總餘額"
 
-#: src/components/farm/card/FarmCardTotalTacoFarmed.tsx:15
-#~ msgid "Total Taco Farmed"
-#~ msgstr ""
-
 #: src/components/fullNode/card/FullNodeCardTotalIterations.tsx:20
 msgid "Total Iterations"
 msgstr "總疊代次數"
@@ -2217,6 +2213,10 @@ msgstr "總耕地大小："
 #: src/components/farm/card/FarmCardTotalSizeOfPlots.tsx:12
 msgid "Total Size of Plots"
 msgstr "總耕地大小"
+
+#: src/components/farm/card/FarmCardTotalTacoFarmed.tsx:15
+#~ msgid "Total Taco Farmed"
+#~ msgstr ""
 
 #: src/components/block/Block.jsx:225
 msgid "Total VDF Iterations"
@@ -2370,16 +2370,16 @@ msgstr "錢包狀態："
 #~ msgid "WalletItem.ccWallet"
 #~ msgstr ""
 
-#: src/components/wallet/Wallets.tsx:30
-#~ msgid "WalletItem.tacoWallet"
-#~ msgstr ""
-
 #: src/components/wallet/Wallets.tsx:48
 #~ msgid "WalletItem.didWallet"
 #~ msgstr ""
 
 #: src/components/wallet/Wallets.tsx:41
 #~ msgid "WalletItem.rlWallet"
+#~ msgstr ""
+
+#: src/components/wallet/Wallets.tsx:30
+#~ msgid "WalletItem.tacoWallet"
 #~ msgstr ""
 
 #: src/components/wallet/Wallets.tsx:107
@@ -2591,6 +2591,6 @@ msgstr "{currencyCode} 已收耕 Taco"
 msgid "{currencyCode} User Transaction Fees"
 msgstr "{currencyCode} 使用者交易費用"
 
-#: src/components/core/components/Amount/Amount.tsx:82
+#: src/components/core/components/Amount/Amount.tsx:80
 msgid "{mojo, plural, one {mojo} other {mojos}}"
 msgstr "{mojo, plural, other {mojos}}"
