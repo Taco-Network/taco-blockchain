@@ -162,7 +162,7 @@ class WSTacoConnection:
             outbound_handshake = make_msg(
                 ProtocolMessageTypes.handshake,
                 Handshake(
-                    network_id,
+                    'taco-' + network_id,
                     protocol_version,
                     taco_full_version_str(),
                     uint16(server_port),
