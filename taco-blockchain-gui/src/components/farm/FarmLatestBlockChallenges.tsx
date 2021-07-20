@@ -70,7 +70,7 @@ export default function FarmLatestBlockChallenges() {
           >
             Taco Explorer
           </Link>{' '}
-          built by an open source developer.
+          built by that one smart guy on discord.
         </Trans>
       </Typography>
     </Card>
