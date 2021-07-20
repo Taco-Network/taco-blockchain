@@ -65,7 +65,7 @@ export default function FarmLatestBlockChallenges() {
           *Want to explore Taco’s blocks further? Check out{' '}
           <Link
             color="primary"
-            href="https://www.tacoexplorer.com/"
+            href="https://taco.posat.io/"
             target="_blank"
           >
             Taco Explorer
