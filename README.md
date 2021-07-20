@@ -2,7 +2,7 @@ Taco is a cryptocurrency forked from Chia and uses the Proof of Space and Time c
 
 Discord Channel: https://discord.gg/xguteVCYHh
 
-Website: https://taconetwork.net
+Website: https://taconetwork.net (coming soon)
 
 Introducer: dns-introducer.taconetwork.net:18620
 
