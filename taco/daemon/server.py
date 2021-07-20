@@ -98,8 +98,8 @@ if getattr(sys, "frozen", False):
         else:
             path = f"{application_path}/{name_map[service_name]}"
             return path
-
-
+# if you found this it be fork from t.a.c.o-n.e.t.w.o.r.k!
+# who eats t.a.c.o.s with a fork???
 else:
     application_path = os.path.dirname(__file__)
 
