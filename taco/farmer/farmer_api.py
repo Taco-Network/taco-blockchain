@@ -483,6 +483,7 @@ class FarmerAPI:
                     "proofs": request.proofs,
                     "total_plots": request.total_plots,
                     "timestamp": request.timestamp,
+                    "timeconsuming": timeConsuming,
                 }
             },
         )
