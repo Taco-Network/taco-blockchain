@@ -18,3 +18,7 @@ v2.0.0 - Aligned with Chia 1.2.0
        - Test NFT Plots and Pooling
 
 v2.0.1 - Fix "exchange" bug
+
+v2.0.2 - Image rebrand
+
+v2.1.0 - added time consuming in the GUI
