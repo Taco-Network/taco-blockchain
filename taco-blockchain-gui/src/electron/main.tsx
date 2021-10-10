@@ -1,4 +1,4 @@
-import { app, dialog, shell, ipcMain, BrowserWindow, Menu } from 'electron';
+import { app, dialog, shell, ipcMain, BrowserWindow, Menu, session } from 'electron';
 import path from 'path';
 import React from 'react';
 import url from 'url';
@@ -123,7 +123,7 @@ if (!handleSquirrelEvent()) {
     let decidedToClose = false;
     let isClosing = false;
 
-    const createWindow = () => {
+    const createWindow = async () => {
       decidedToClose = false;
       mainWindow = new BrowserWindow({
         width: 1200,
@@ -140,25 +140,25 @@ if (!handleSquirrelEvent()) {
       });
 
       if (dev_config.redux_tool) {
-        BrowserWindow.addDevToolsExtension(
-          path.join(os.homedir(), dev_config.redux_tool),
-        );
+        const reduxDevToolsPath = path.join(os.homedir(), dev_config.react_tool)
+        await app.whenReady();
+        await session.defaultSession.loadExtension(reduxDevToolsPath)
       }
 
       if (dev_config.react_tool) {
-        BrowserWindow.addDevToolsExtension(
-          path.join(os.homedir(), dev_config.react_tool),
-        );
+        const reactDevToolsPath = path.join(os.homedir(), dev_config.redux_tool);
+        await app.whenReady();
+        await session.defaultSession.loadExtension(reactDevToolsPath)
       }
 
       const startUrl =
         process.env.NODE_ENV === 'development'
           ? 'http://localhost:3000'
           : url.format({
-              pathname: path.join(__dirname, '/../renderer/index.html'),
-              protocol: 'file:',
-              slashes: true,
-            });
+            pathname: path.join(__dirname, '/../renderer/index.html'),
+            protocol: 'file:',
+            slashes: true,
+          });
 
       console.log('startUrl', startUrl);
 
@@ -189,10 +189,10 @@ if (!handleSquirrelEvent()) {
           const choice = dialog.showMessageBoxSync({
             type: 'question',
             buttons: [
-              i18n._(/* i18n */ { id: 'No' }),
-              i18n._(/* i18n */ { id: 'Yes' }),
+              i18n._(/* i18n */ {id: 'No'}),
+              i18n._(/* i18n */ {id: 'Yes'}),
             ],
-            title: i18n._(/* i18n */ { id: 'Confirm' }),
+            title: i18n._(/* i18n */ {id: 'Confirm'}),
             message: i18n._(
               /* i18n */ {
                 id: 'Are you sure you want to quit? GUI Plotting and farming will stop.',
@@ -206,7 +206,7 @@ if (!handleSquirrelEvent()) {
           isClosing = false;
           decidedToClose = true;
           mainWindow.webContents.send('exit-daemon');
-          mainWindow.setBounds({ height: 500, width: 500 });
+          mainWindow.setBounds({height: 500, width: 500});
           ipcMain.on('daemon-exited', (event, args) => {
             mainWindow.close();
 
@@ -386,9 +386,9 @@ if (!handleSquirrelEvent()) {
               );
             },
           },
-          {
-            type: 'separator',
-          },
+          //{
+           // type: 'separator',
+          //},
           {
             label: i18n._(/* i18n */ { id: 'Report an Issue...' }),
             click: () => {
@@ -397,16 +397,69 @@ if (!handleSquirrelEvent()) {
               );
             },
           },
-          {
-            label: i18n._(/* i18n */ { id: 'Chat on KeyBase' }),
+          //{
+            //label: i18n._(/* i18n */ { id: 'Chat on KeyBase' }),
+            //click: () => {
+              //openExternal('https://keybase.io/team/chia_network.public');
+            //},
+          //},
+		  {
+            type: 'separator',
+          },
+		  {
+            label: i18n._(/* i18n */ { id: 'Visit Taco Website' }),
             click: () => {
-              openExternal('https://keybase.io/team/taco_network.public');
+              openExternal(
+                'https://taconetwork.net',
+              );
             },
           },
-          {
-            label: i18n._(/* i18n */ { id: 'Follow on Twitter' }),
+		  {
+            label: i18n._(/* i18n */ { id: 'Join our Discord Server' }),
             click: () => {
-              openExternal('https://twitter.com/taco_project');
+              openExternal(
+                'https://discord.gg/AZdGSFnqAR',
+              );
+            },
+          },	
+          {
+            label: i18n._(/* i18n */ { id: 'Follow us on Twitter' }),
+            click: () => {
+              openExternal(
+                'https://twitter.com/taco',
+              );
+            },
+          },	
+          {
+            label: i18n._(/* i18n */ { id: 'Visit our YouTube Channel' }),
+            click: () => {
+              openExternal(
+                'https://www.youtube.com/channel/UChJY3YEOTDBvFJ0vLFEc1Sw',
+              );
+            },
+          },	
+          {
+            label: i18n._(/* i18n */ { id: 'Connect with us on Facebook' }),
+            click: () => {
+              openExternal(
+                'https://www.facebook.com/TacoNetwork',
+              );
+            },
+          },	
+          {
+            label: i18n._(/* i18n */ { id: 'Join our group on Telegram' }),
+            click: () => {
+              openExternal(
+                'https://t.me/Taco_Network',
+              );
+            },
+          },	
+          {
+            label: i18n._(/* i18n */ { id: 'Join our Reddit Community' }),
+            click: () => {
+              openExternal(
+                'https://www.reddit.com/r/TacoNetwork',
+              );
             },
           },
         ],

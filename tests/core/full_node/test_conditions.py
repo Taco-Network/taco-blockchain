@@ -3,6 +3,7 @@ These are quick-to-run test that check spends can be added to the blockchain whe
 or that they're failing for the right reason when they're invalid.
 """
 
+import atexit
 import logging
 import time
 
@@ -19,18 +20,26 @@ from taco.consensus.constants import ConsensusConstants
 from taco.types.announcement import Announcement
 from taco.types.blockchain_format.program import Program
 from taco.types.coin_record import CoinRecord
-from taco.types.coin_solution import CoinSolution
+from taco.types.coin_spend import CoinSpend
 from taco.types.condition_opcodes import ConditionOpcode
 from taco.types.full_block import FullBlock
 from taco.types.spend_bundle import SpendBundle
-from tests.block_tools import BlockTools, test_constants
 from taco.util.errors import Err
 from taco.util.ints import uint32
+from tests.block_tools import create_block_tools, test_constants
+from tests.util.keyring import TempKeyring
 
 from .ram_db import create_ram_blockchain
 
 
-bt = BlockTools(constants=test_constants)
+def cleanup_keyring(keyring: TempKeyring):
+    keyring.cleanup()
+
+
+temp_keyring = TempKeyring()
+keychain = temp_keyring.get_keychain()
+atexit.register(cleanup_keyring, temp_keyring)  # Attempt to cleanup the temp keychain
+bt = create_block_tools(constants=test_constants, keychain=keychain)
 
 
 log = logging.getLogger(__name__)
@@ -67,7 +76,7 @@ async def check_spend_bundle_validity(
     try:
         connection, blockchain = await create_ram_blockchain(constants)
         for block in blocks:
-            received_block_result, err, fork_height = await blockchain.receive_block(block)
+            received_block_result, err, fork_height, coin_changes = await blockchain.receive_block(block)
             assert err is None
 
         additional_blocks = bt.get_consecutive_blocks(
@@ -78,7 +87,7 @@ async def check_spend_bundle_validity(
         )
         newest_block = additional_blocks[-1]
 
-        received_block_result, err, fork_height = await blockchain.receive_block(newest_block)
+        received_block_result, err, fork_height, coin_changes = await blockchain.receive_block(newest_block)
 
         if fork_height:
             coins_added = await blockchain.coin_store.get_coins_added_at_height(uint32(fork_height + 1))
@@ -112,8 +121,8 @@ async def check_conditions(
     blocks = initial_blocks()
     coin = list(blocks[spend_reward_index].get_included_reward_coins())[0]
 
-    coin_solution = CoinSolution(coin, EASY_PUZZLE, condition_solution)
-    spend_bundle = SpendBundle([coin_solution], G2Element())
+    coin_spend = CoinSpend(coin, EASY_PUZZLE, condition_solution)
+    spend_bundle = SpendBundle([coin_spend], G2Element())
 
     # now let's try to create a block with the spend bundle and ensure that it doesn't validate
 

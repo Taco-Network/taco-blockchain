@@ -6,7 +6,7 @@ import aiosqlite
 from taco.consensus.block_record import BlockRecord
 from taco.types.blockchain_format.sized_bytes import bytes32
 from taco.types.blockchain_format.sub_epoch_summary import SubEpochSummary
-from taco.types.coin_solution import CoinSolution
+from taco.types.coin_spend import CoinSpend
 from taco.types.header_block import HeaderBlock
 from taco.util.db_wrapper import DBWrapper
 from taco.util.ints import uint32, uint64
@@ -18,7 +18,7 @@ from taco.wallet.block_record import HeaderBlockRecord
 @dataclass(frozen=True)
 @streamable
 class AdditionalCoinSpends(Streamable):
-    coin_spends_list: List[CoinSolution]
+    coin_spends_list: List[CoinSpend]
 
 
 class WalletBlockStore:
@@ -36,9 +36,6 @@ class WalletBlockStore:
 
         self.db_wrapper = db_wrapper
         self.db = db_wrapper.db
-        await self.db.execute("pragma journal_mode=wal")
-        await self.db.execute("pragma synchronous=2")
-
         await self.db.execute(
             "CREATE TABLE IF NOT EXISTS header_blocks(header_hash text PRIMARY KEY, height int,"
             " timestamp int, block blob)"
@@ -79,7 +76,7 @@ class WalletBlockStore:
         self,
         header_block_record: HeaderBlockRecord,
         block_record: BlockRecord,
-        additional_coin_spends: List[CoinSolution],
+        additional_coin_spends: List[CoinSpend],
     ):
         """
         Adds a block record to the database. This block record is assumed to be connected
@@ -157,7 +154,7 @@ class WalletBlockStore:
         else:
             return None
 
-    async def get_additional_coin_spends(self, header_hash: bytes32) -> Optional[List[CoinSolution]]:
+    async def get_additional_coin_spends(self, header_hash: bytes32) -> Optional[List[CoinSpend]]:
         cursor = await self.db.execute(
             "SELECT spends_list_blob from additional_coin_spends WHERE header_hash=?", (header_hash.hex(),)
         )

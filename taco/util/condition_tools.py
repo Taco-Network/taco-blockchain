@@ -20,19 +20,14 @@ def parse_sexp_to_condition(
     sexp: Program,
 ) -> Tuple[Optional[Err], Optional[ConditionWithArgs]]:
     """
-    Takes a chialisp sexp and returns a ConditionWithArgs.
+    Takes a TacoLisp sexp and returns a ConditionWithArgs.
     If it fails, returns an Error
     """
     as_atoms = sexp.as_atom_list()
     if len(as_atoms) < 1:
         return Err.INVALID_CONDITION, None
     opcode = as_atoms[0]
-    try:
-        opcode = ConditionOpcode(opcode)
-    except ValueError:
-        # TODO: this remapping is bad, and should probably not happen
-        # it's simple enough to just store the opcode as a byte
-        opcode = ConditionOpcode.UNKNOWN
+    opcode = ConditionOpcode(opcode)
     return None, ConditionWithArgs(opcode, as_atoms[1:])
 
 
@@ -40,7 +35,7 @@ def parse_sexp_to_conditions(
     sexp: Program,
 ) -> Tuple[Optional[Err], Optional[List[ConditionWithArgs]]]:
     """
-    Takes a chialisp sexp (list) and returns the list of ConditionWithArgss
+    Takes a TacoLisp sexp (list) and returns the list of ConditionWithArgss
     If it fails, returns as Error
     """
     results: List[ConditionWithArgs] = []
@@ -126,32 +121,6 @@ def puzzle_announcements_for_conditions_dict(
         assert len(message) <= 1024
         announcement = Announcement(input_coin.puzzle_hash, message)
         output_announcements.add(announcement)
-    return output_announcements
-
-
-def coin_announcements_names_for_npc(npc_list) -> Set[bytes32]:
-    output_announcements: Set[bytes32] = set()
-    for npc in npc_list:
-        for condition, cvp_list in npc.conditions:
-            if condition == ConditionOpcode.CREATE_COIN_ANNOUNCEMENT:
-                for cvp in cvp_list:
-                    message = cvp.vars[0]
-                    assert len(message) <= 1024
-                    announcement = Announcement(npc.coin_name, message)
-                    output_announcements.add(announcement.name())
-    return output_announcements
-
-
-def puzzle_announcements_names_for_npc(npc_list) -> Set[bytes32]:
-    output_announcements: Set[bytes32] = set()
-    for npc in npc_list:
-        for condition, cvp_list in npc.conditions:
-            if condition == ConditionOpcode.CREATE_PUZZLE_ANNOUNCEMENT:
-                for cvp in cvp_list:
-                    message = cvp.vars[0]
-                    assert len(message) <= 1024
-                    announcement = Announcement(npc.puzzle_hash, message)
-                    output_announcements.add(announcement.name())
     return output_announcements
 
 

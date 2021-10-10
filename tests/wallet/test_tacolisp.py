@@ -17,7 +17,7 @@ from taco.wallet.chialisp import (
 )
 
 
-class Testchialisp:
+class TestChialisp:
     def test_sexp(self):
         assert sexp() == "()"
         assert sexp(1) == "(1)"

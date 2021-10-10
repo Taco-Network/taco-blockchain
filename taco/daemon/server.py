@@ -16,13 +16,23 @@ from typing import Any, Dict, List, Optional, TextIO, Tuple, cast
 
 from websockets import ConnectionClosedOK, WebSocketException, WebSocketServerProtocol, serve
 
-from taco.cmds.init_funcs import taco_init
+from taco.cmds.init_funcs import check_keys, taco_init
+from taco.cmds.passphrase_funcs import default_passphrase, using_default_passphrase
+from taco.daemon.keychain_server import KeychainServer, keychain_commands
 from taco.daemon.windows_signal import kill
 from taco.server.server import ssl_context_for_root, ssl_context_for_server
 from taco.ssl.create_ssl import get_mozilla_ca_crt
 from taco.util.taco_logging import initialize_logging
 from taco.util.config import load_config
 from taco.util.json_util import dict_to_json_str
+from taco.util.keychain import (
+    Keychain,
+    KeyringCurrentPassphraseIsInvalid,
+    KeyringRequiresMigration,
+    passphrase_requirements,
+    supports_keyring_passphrase,
+    supports_os_passphrase_storage,
+)
 from taco.util.path import mkdir
 from taco.util.service_groups import validate_service
 from taco.util.setproctitle import setproctitle
@@ -52,7 +62,7 @@ async def fetch(url: str):
     async with ClientSession() as session:
         try:
             mozilla_root = get_mozilla_ca_crt()
-            ssl_context = ssl_context_for_root(mozilla_root)
+            ssl_context = ssl_context_for_root(mozilla_root, log=log)
             response = await session.get(url, ssl=ssl_context)
             if not response.ok:
                 log.warning("Response not OK.")
@@ -98,8 +108,8 @@ if getattr(sys, "frozen", False):
         else:
             path = f"{application_path}/{name_map[service_name]}"
             return path
-# if you found this it be fork from t.a.c.o-n.e.t.w.o.r.k!
-# who eats t.a.c.o.s with a fork???
+
+
 else:
     application_path = os.path.dirname(__file__)
 
@@ -113,7 +123,15 @@ async def ping() -> Dict[str, Any]:
 
 
 class WebSocketServer:
-    def __init__(self, root_path: Path, ca_crt_path: Path, ca_key_path: Path, crt_path: Path, key_path: Path):
+    def __init__(
+        self,
+        root_path: Path,
+        ca_crt_path: Path,
+        ca_key_path: Path,
+        crt_path: Path,
+        key_path: Path,
+        run_check_keys_on_unlock: bool = False,
+    ):
         self.root_path = root_path
         self.log = log
         self.services: Dict = dict()
@@ -124,9 +142,12 @@ class WebSocketServer:
         self.net_config = load_config(root_path, "config.yaml")
         self.self_hostname = self.net_config["self_hostname"]
         self.daemon_port = self.net_config["daemon_port"]
+        self.daemon_max_message_size = self.net_config.get("daemon_max_message_size", 50 * 1000 * 1000)
         self.websocket_server = None
-        self.ssl_context = ssl_context_for_server(ca_crt_path, ca_key_path, crt_path, key_path)
+        self.ssl_context = ssl_context_for_server(ca_crt_path, ca_key_path, crt_path, key_path, log=self.log)
         self.shut_down = False
+        self.keychain_server = KeychainServer()
+        self.run_check_keys_on_unlock = run_check_keys_on_unlock
 
     async def start(self):
         self.log.info("Starting Daemon Server")
@@ -144,7 +165,7 @@ class WebSocketServer:
             self.safe_handle,
             self.self_hostname,
             self.daemon_port,
-            max_size=50 * 1000 * 1000,
+            max_size=self.daemon_max_message_size,
             ping_interval=500,
             ping_timeout=300,
             ssl=self.ssl_context,
@@ -270,6 +291,9 @@ class WebSocketServer:
         ]
         if len(data) == 0 and command in commands_with_data:
             response = {"success": False, "error": f'{command} requires "data"'}
+        # Keychain commands should be handled by KeychainServer
+        elif command in keychain_commands and supports_keyring_passphrase():
+            response = await self.keychain_server.handle_command(command, data)
         elif command == "ping":
             response = await ping()
         elif command == "start_service":
@@ -282,6 +306,22 @@ class WebSocketServer:
             response = await self.stop_service(cast(Dict[str, Any], data))
         elif command == "is_running":
             response = await self.is_running(cast(Dict[str, Any], data))
+        elif command == "is_keyring_locked":
+            response = await self.is_keyring_locked()
+        elif command == "keyring_status":
+            response = await self.keyring_status()
+        elif command == "unlock_keyring":
+            response = await self.unlock_keyring(cast(Dict[str, Any], data))
+        elif command == "validate_keyring_passphrase":
+            response = await self.validate_keyring_passphrase(cast(Dict[str, Any], data))
+        elif command == "migrate_keyring":
+            response = await self.migrate_keyring(cast(Dict[str, Any], data))
+        elif command == "set_keyring_passphrase":
+            response = await self.set_keyring_passphrase(cast(Dict[str, Any], data))
+        elif command == "remove_keyring_passphrase":
+            response = await self.remove_keyring_passphrase(cast(Dict[str, Any], data))
+        elif command == "notify_keyring_migration_completed":
+            response = await self.notify_keyring_migration_completed(cast(Dict[str, Any], data))
         elif command == "exit":
             response = await self.stop()
         elif command == "register_service":
@@ -295,9 +335,238 @@ class WebSocketServer:
         full_response = format_response(message, response)
         return full_response, [websocket]
 
+    async def is_keyring_locked(self) -> Dict[str, Any]:
+        locked: bool = Keychain.is_keyring_locked()
+        response: Dict[str, Any] = {"success": True, "is_keyring_locked": locked}
+        return response
+
+    async def keyring_status(self) -> Dict[str, Any]:
+        passphrase_support_enabled: bool = supports_keyring_passphrase()
+        can_save_passphrase: bool = supports_os_passphrase_storage()
+        user_passphrase_is_set: bool = Keychain.has_master_passphrase() and not using_default_passphrase()
+        locked: bool = Keychain.is_keyring_locked()
+        needs_migration: bool = Keychain.needs_migration()
+        requirements: Dict[str, Any] = passphrase_requirements()
+        response: Dict[str, Any] = {
+            "success": True,
+            "is_keyring_locked": locked,
+            "passphrase_support_enabled": passphrase_support_enabled,
+            "can_save_passphrase": can_save_passphrase,
+            "user_passphrase_is_set": user_passphrase_is_set,
+            "needs_migration": needs_migration,
+            "passphrase_requirements": requirements,
+        }
+        return response
+
+    async def unlock_keyring(self, request: Dict[str, Any]) -> Dict[str, Any]:
+        success: bool = False
+        error: Optional[str] = None
+        key: Optional[str] = request.get("key", None)
+        if type(key) is not str:
+            return {"success": False, "error": "missing key"}
+
+        try:
+            if Keychain.master_passphrase_is_valid(key, force_reload=True):
+                Keychain.set_cached_master_passphrase(key)
+                success = True
+                # Inform the GUI of keyring status changes
+                self.keyring_status_changed(await self.keyring_status(), "wallet_ui")
+            else:
+                error = "bad passphrase"
+        except Exception as e:
+            tb = traceback.format_exc()
+            self.log.error(f"Keyring passphrase validation failed: {e} {tb}")
+            error = "validation exception"
+
+        if success and self.run_check_keys_on_unlock:
+            try:
+                self.log.info("Running check_keys now that the keyring is unlocked")
+                check_keys(self.root_path)
+                self.run_check_keys_on_unlock = False
+            except Exception as e:
+                tb = traceback.format_exc()
+                self.log.error(f"check_keys failed after unlocking keyring: {e} {tb}")
+
+        response: Dict[str, Any] = {"success": success, "error": error}
+        return response
+
+    async def validate_keyring_passphrase(self, request: Dict[str, Any]) -> Dict[str, Any]:
+        success: bool = False
+        error: Optional[str] = None
+        key: Optional[str] = request.get("key", None)
+        if type(key) is not str:
+            return {"success": False, "error": "missing key"}
+
+        try:
+            success = Keychain.master_passphrase_is_valid(key, force_reload=True)
+        except Exception as e:
+            tb = traceback.format_exc()
+            self.log.error(f"Keyring passphrase validation failed: {e} {tb}")
+            error = "validation exception"
+
+        response: Dict[str, Any] = {"success": success, "error": error}
+        return response
+
+    async def migrate_keyring(self, request: Dict[str, Any]) -> Dict[str, Any]:
+        if Keychain.needs_migration() is False:
+            # If the keyring has already been migrated, we'll raise an error to the client.
+            # The reason for raising an error is because the migration request has side-
+            # effects beyond copying keys from the legacy keyring to the new keyring. The
+            # request may have set a passphrase and indicated that keys should be cleaned
+            # from the legacy keyring. If we were to return early and indicate success,
+            # the client and user's expectations may not match reality (were my keys
+            # deleted from the legacy keyring? was my passphrase set?).
+            return {"success": False, "error": "migration not needed"}
+
+        success: bool = False
+        error: Optional[str] = None
+        passphrase: Optional[str] = request.get("passphrase", None)
+        cleanup_legacy_keyring: bool = request.get("cleanup_legacy_keyring", False)
+
+        if passphrase is not None and type(passphrase) is not str:
+            return {"success": False, "error": 'expected string value for "passphrase"'}
+
+        if not Keychain.passphrase_meets_requirements(passphrase):
+            return {"success": False, "error": "passphrase doesn't satisfy requirements"}
+
+        if type(cleanup_legacy_keyring) is not bool:
+            return {"success": False, "error": 'expected bool value for "cleanup_legacy_keyring"'}
+
+        try:
+            Keychain.migrate_legacy_keyring(passphrase=passphrase, cleanup_legacy_keyring=cleanup_legacy_keyring)
+            success = True
+            # Inform the GUI of keyring status changes
+            self.keyring_status_changed(await self.keyring_status(), "wallet_ui")
+        except Exception as e:
+            tb = traceback.format_exc()
+            self.log.error(f"Legacy keyring migration failed: {e} {tb}")
+            error = f"keyring migration failed: {e}"
+
+        response: Dict[str, Any] = {"success": success, "error": error}
+        return response
+
+    async def set_keyring_passphrase(self, request: Dict[str, Any]) -> Dict[str, Any]:
+        success: bool = False
+        error: Optional[str] = None
+        current_passphrase: Optional[str] = None
+        new_passphrase: Optional[str] = None
+
+        if using_default_passphrase():
+            current_passphrase = default_passphrase()
+
+        if Keychain.has_master_passphrase() and not current_passphrase:
+            current_passphrase = request.get("current_passphrase", None)
+            if type(current_passphrase) is not str:
+                return {"success": False, "error": "missing current_passphrase"}
+
+        new_passphrase = request.get("new_passphrase", None)
+        if type(new_passphrase) is not str:
+            return {"success": False, "error": "missing new_passphrase"}
+
+        if not Keychain.passphrase_meets_requirements(new_passphrase):
+            return {"success": False, "error": "passphrase doesn't satisfy requirements"}
+
+        try:
+            assert new_passphrase is not None  # mypy, I love you
+            Keychain.set_master_passphrase(current_passphrase, new_passphrase, allow_migration=False)
+        except KeyringRequiresMigration:
+            error = "keyring requires migration"
+        except KeyringCurrentPassphraseIsInvalid:
+            error = "current passphrase is invalid"
+        except Exception as e:
+            tb = traceback.format_exc()
+            self.log.error(f"Failed to set keyring passphrase: {e} {tb}")
+        else:
+            success = True
+            # Inform the GUI of keyring status changes
+            self.keyring_status_changed(await self.keyring_status(), "wallet_ui")
+
+        response: Dict[str, Any] = {"success": success, "error": error}
+        return response
+
+    async def remove_keyring_passphrase(self, request: Dict[str, Any]) -> Dict[str, Any]:
+        success: bool = False
+        error: Optional[str] = None
+        current_passphrase: Optional[str] = None
+
+        if not Keychain.has_master_passphrase():
+            return {"success": False, "error": "passphrase not set"}
+
+        current_passphrase = request.get("current_passphrase", None)
+        if type(current_passphrase) is not str:
+            return {"success": False, "error": "missing current_passphrase"}
+
+        try:
+            Keychain.remove_master_passphrase(current_passphrase)
+        except KeyringCurrentPassphraseIsInvalid:
+            error = "current passphrase is invalid"
+        except Exception as e:
+            tb = traceback.format_exc()
+            self.log.error(f"Failed to remove keyring passphrase: {e} {tb}")
+        else:
+            success = True
+            # Inform the GUI of keyring status changes
+            self.keyring_status_changed(await self.keyring_status(), "wallet_ui")
+
+        response: Dict[str, Any] = {"success": success, "error": error}
+        return response
+
+    async def notify_keyring_migration_completed(self, request: Dict[str, Any]) -> Dict[str, Any]:
+        success: bool = False
+        error: Optional[str] = None
+        key: Optional[str] = request.get("key", None)
+
+        if type(key) is not str:
+            return {"success": False, "error": "missing key"}
+
+        Keychain.handle_migration_completed()
+
+        try:
+            if Keychain.master_passphrase_is_valid(key, force_reload=True):
+                Keychain.set_cached_master_passphrase(key)
+                success = True
+                # Inform the GUI of keyring status changes
+                self.keyring_status_changed(await self.keyring_status(), "wallet_ui")
+            else:
+                error = "bad passphrase"
+        except Exception as e:
+            tb = traceback.format_exc()
+            self.log.error(f"Keyring passphrase validation failed: {e} {tb}")
+            error = "validation exception"
+
+        response: Dict[str, Any] = {"success": success, "error": error}
+        return response
+
     def get_status(self) -> Dict[str, Any]:
         response = {"success": True, "genesis_initialized": True}
         return response
+
+    async def _keyring_status_changed(self, keyring_status: Dict[str, Any], destination: str):
+        """
+        Attempt to communicate with the GUI to inform it of any keyring status changes
+        (e.g. keyring becomes unlocked or migration completes)
+        """
+        websockets = self.connections.get("wallet_ui", None)
+
+        if websockets is None:
+            return None
+
+        if keyring_status is None:
+            return None
+
+        response = create_payload("keyring_status_changed", keyring_status, "daemon", destination)
+
+        for websocket in websockets:
+            try:
+                await websocket.send(response)
+            except Exception as e:
+                tb = traceback.format_exc()
+                self.log.error(f"Unexpected exception trying to send to websocket: {e} {tb}")
+                websockets.remove(websocket)
+                await websocket.close()
+
+    def keyring_status_changed(self, keyring_status: Dict[str, Any], destination: str):
+        asyncio.create_task(self._keyring_status_changed(keyring_status, destination))
 
     def plot_queue_to_payload(self, plot_queue_item, send_full_log: bool) -> Dict[str, Any]:
         error = plot_queue_item.get("error")
@@ -486,6 +755,11 @@ class WebSocketServer:
 
             service_name = config["service_name"]
             command_args = config["command_args"]
+
+            # Set the -D/--connect_to_daemon flag to signify that the child should connect
+            # to the daemon to access the keychain
+            command_args.append("-D")
+
             self.log.debug(f"command_args before launch_plotter are {command_args}")
             self.log.debug(f"self.root_path before launch_plotter is {self.root_path}")
             process, pid_path = launch_plotter(self.root_path, service_name, command_args, id)
@@ -508,7 +782,7 @@ class WebSocketServer:
             self.state_changed(service_plotter, self.prepare_plot_state_message(PlotEvent.STATE_CHANGED, id))
 
         except (subprocess.SubprocessError, IOError):
-            log.exception(f"problem starting {service_name}")
+            log.exception(f"problem starting {service_name}")  # lgtm [py/clear-text-logging-sensitive-data]
             error = Exception("Start plotting failed")
             config["state"] = PlotState.FINISHED
             config["error"] = error
@@ -538,8 +812,10 @@ class WebSocketServer:
             }
             return response
 
+        ids: List[str] = []
         for k in range(count):
             id = str(uuid.uuid4())
+            ids.append(id)
             config = {
                 "id": id,
                 "size": size,
@@ -560,7 +836,7 @@ class WebSocketServer:
             # notify GUI about new plot queue item
             self.state_changed(service_plotter, self.prepare_plot_state_message(PlotEvent.STATE_CHANGED, id))
 
-            # only first item can start when user selected serial plotting
+            # only the first item can start when user selected serial plotting
             can_start_serial_plotting = k == 0 and self._is_serial_plotting_running(queue) is False
 
             if parallel is True or can_start_serial_plotting:
@@ -572,6 +848,7 @@ class WebSocketServer:
 
         response = {
             "success": True,
+            "ids": ids,
             "service_name": service_name,
         }
 
@@ -775,7 +1052,7 @@ def launch_plotter(root_path: Path, service_name: str, service_array: List[str],
     else:
         mkdir(plotter_path.parent)
     outfile = open(plotter_path.resolve(), "w")
-    log.info(f"Service array: {service_array}")
+    log.info(f"Service array: {service_array}")  # lgtm [py/clear-text-logging-sensitive-data]
     process = subprocess.Popen(
         service_array,
         shell=False,
@@ -812,6 +1089,12 @@ def launch_service(root_path: Path, service_command) -> Tuple[subprocess.Popen, 
     service_array = service_command.split()
     service_executable = executable_for_service(service_array[0])
     service_array[0] = service_executable
+
+    if service_command == "taco_full_node_simulator":
+        # Set the -D/--connect_to_daemon flag to signify that the child should connect
+        # to the daemon to access the keychain
+        service_array.append("-D")
+
     startupinfo = None
     if os.name == "nt":
         startupinfo = subprocess.STARTUPINFO()  # type: ignore
@@ -974,8 +1257,10 @@ def singleton(lockfile: Path, text: str = "semaphore") -> Optional[TextIO]:
     return f
 
 
-async def async_run_daemon(root_path: Path) -> int:
-    taco_init(root_path)
+async def async_run_daemon(root_path: Path, wait_for_unlock: bool = False) -> int:
+    # When wait_for_unlock is true, we want to skip the check_keys() call in taco_init
+    # since it might be necessary to wait for the GUI to unlock the keyring first.
+    taco_init(root_path, should_check_keys=(not wait_for_unlock))
     config = load_config(root_path, "config.yaml")
     setproctitle("taco_daemon")
     initialize_logging("daemon", config["logging"], root_path)
@@ -1002,23 +1287,29 @@ async def async_run_daemon(root_path: Path) -> int:
 
     # TODO: clean this up, ensuring lockfile isn't removed until the listen port is open
     create_server_for_daemon(root_path)
-    ws_server = WebSocketServer(root_path, ca_crt_path, ca_key_path, crt_path, key_path)
+    ws_server = WebSocketServer(
+        root_path, ca_crt_path, ca_key_path, crt_path, key_path, run_check_keys_on_unlock=wait_for_unlock
+    )
     await ws_server.start()
     assert ws_server.websocket_server is not None
     await ws_server.websocket_server.wait_closed()
     log.info("Daemon WebSocketServer closed")
+    # sys.stdout.close()
     return 0
 
 
-def run_daemon(root_path: Path) -> int:
-    return asyncio.get_event_loop().run_until_complete(async_run_daemon(root_path))
+def run_daemon(root_path: Path, wait_for_unlock: bool = False) -> int:
+    result = asyncio.get_event_loop().run_until_complete(async_run_daemon(root_path, wait_for_unlock))
+    return result
 
 
-def main() -> int:
+def main(argv) -> int:
     from taco.util.default_root import DEFAULT_ROOT_PATH
+    from taco.util.keychain import Keychain
 
-    return run_daemon(DEFAULT_ROOT_PATH)
+    wait_for_unlock = "--wait-for-unlock" in argv and Keychain.is_keyring_locked()
+    return run_daemon(DEFAULT_ROOT_PATH, wait_for_unlock)
 
 
 if __name__ == "__main__":
-    main()
+    main(sys.argv[1:])

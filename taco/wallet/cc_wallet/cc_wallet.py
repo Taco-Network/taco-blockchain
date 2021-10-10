@@ -15,7 +15,7 @@ from taco.protocols.wallet_protocol import PuzzleSolutionResponse
 from taco.types.blockchain_format.coin import Coin
 from taco.types.blockchain_format.program import Program
 from taco.types.blockchain_format.sized_bytes import bytes32
-from taco.types.coin_solution import CoinSolution
+from taco.types.coin_spend import CoinSpend
 from taco.types.generator_types import BlockGenerator
 from taco.types.spend_bundle import SpendBundle
 from taco.util.byte_types import hexstr_to_bytes
@@ -74,7 +74,10 @@ class CCWallet:
         self.base_inner_puzzle_hash = None
         self.standard_wallet = wallet
         self.log = logging.getLogger(__name__)
-
+        std_wallet_id = self.standard_wallet.wallet_id
+        bal = await wallet_state_manager.get_confirmed_balance_for_wallet(std_wallet_id, None)
+        if amount > bal:
+            raise ValueError("Not enough balance")
         self.wallet_state_manager = wallet_state_manager
 
         self.cc_info = CCInfo(None, [])
@@ -90,6 +93,9 @@ class CCWallet:
         except Exception:
             await wallet_state_manager.user_store.delete_wallet(self.id())
             raise
+        if spend_bundle is None:
+            await wallet_state_manager.user_store.delete_wallet(self.id())
+            raise ValueError("Failed to create spend.")
 
         await self.wallet_state_manager.add_new_wallet(self, self.id())
 
@@ -221,7 +227,7 @@ class CCWallet:
         removal_amount = 0
 
         for record in unconfirmed_tx:
-            if record.type is TransactionType.INCOMING_TX:
+            if TransactionType(record.type) is TransactionType.INCOMING_TX:
                 addition_amount += record.amount
             else:
                 removal_amount += record.amount
@@ -730,7 +736,7 @@ class CCWallet:
             sigs = sigs + await self.get_sigs(innerpuz, innersol, coin.name())
             lineage_proof = await self.get_lineage_proof_for_coin(coin)
             puzzle_reveal = cc_puzzle_for_inner_puzzle(CC_MOD, self.cc_info.my_genesis_checker, innerpuz)
-            # Use coin info to create solution and add coin and solution to list of CoinSolutions
+            # Use coin info to create solution and add coin and solution to list of CoinSpends
             solution = [
                 innersol,
                 coin.as_list(),
@@ -741,7 +747,7 @@ class CCWallet:
                 None,
                 None,
             ]
-            list_of_solutions.append(CoinSolution(coin, puzzle_reveal, Program.to(solution)))
+            list_of_solutions.append(CoinSpend(coin, puzzle_reveal, Program.to(solution)))
 
         aggsig = AugSchemeMPL.aggregate(sigs)
         return SpendBundle(list_of_solutions, aggsig)

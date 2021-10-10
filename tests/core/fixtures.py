@@ -10,27 +10,34 @@ from taco.consensus.blockchain import Blockchain
 from taco.consensus.constants import ConsensusConstants
 from taco.full_node.block_store import BlockStore
 from taco.full_node.coin_store import CoinStore
+from taco.full_node.hint_store import HintStore
 from taco.types.full_block import FullBlock
 from taco.util.db_wrapper import DBWrapper
 from taco.util.path import mkdir
 from tests.setup_nodes import bt, test_constants
 
 
+blockchain_db_counter: int = 0
+
+
 async def create_blockchain(constants: ConsensusConstants):
-    db_path = Path("blockchain_test.db")
+    global blockchain_db_counter
+    db_path = Path(f"blockchain_test-{blockchain_db_counter}.db")
     if db_path.exists():
         db_path.unlink()
+    blockchain_db_counter += 1
     connection = await aiosqlite.connect(db_path)
     wrapper = DBWrapper(connection)
     coin_store = await CoinStore.create(wrapper)
     store = await BlockStore.create(wrapper)
-    bc1 = await Blockchain.create(coin_store, store, constants)
+    hint_store = await HintStore.create(wrapper)
+    bc1 = await Blockchain.create(coin_store, store, constants, hint_store)
     assert bc1.get_peak() is None
     return bc1, connection, db_path
 
 
 @pytest.fixture(scope="function")
-async def empty_blockchain():
+async def empty_blockchain(request):
     """
     Provides a list of 10 valid blocks, as well as a blockchain with 9 blocks added to it.
     """

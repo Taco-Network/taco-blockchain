@@ -1,4 +1,20 @@
 #!/bin/bash
+
+# Check current Taco SSL version to prevent update on old SSL
+if [ -e ../.taco/mainnet/config/ssl/ca/taco_ca.crt ]; then
+	TACO_SSL_SERIAL=$(openssl x509 -noout -in ../.taco/mainnet/config/ssl/ca/taco_ca.crt -serial)
+	if [ $TACO_SSL_SERIAL = "serial=5C8A71239328650EB9FEF85CEC32BF779CA6A0C5" ]; then
+		echo ""
+		echo "WARNING:"
+		echo "Old version of Taco Blockchain SSL has been detected."
+		echo "Please visit https://taconetwork.net/sslupdate/ for further instructions."
+		echo ""
+		echo "Exiting installer..."
+		echo ""
+		exit 1
+	fi
+fi
+
 set -e
 UBUNTU=false
 DEBIAN=false
@@ -82,9 +98,9 @@ fi
 find_python() {
 	set +e
 	unset BEST_VERSION
-	for V in 37 3.7 38 3.8 39 3.9 3; do
+	for V in 39 3.9 38 3.8 37 3.7 3; do
 		if which python$V >/dev/null; then
-			if [ x"$BEST_VERSION" = x ]; then
+			if [ "$BEST_VERSION" = "" ]; then
 				BEST_VERSION=$V
 			fi
 		fi
@@ -93,7 +109,7 @@ find_python() {
 	set -e
 }
 
-if [ x"$INSTALL_PYTHON_VERSION" = x ]; then
+if [ "$INSTALL_PYTHON_VERSION" = "" ]; then
 	INSTALL_PYTHON_VERSION=$(find_python)
 fi
 
@@ -116,13 +132,14 @@ python -m pip install --upgrade pip
 python -m pip install wheel
 #if [ "$INSTALL_PYTHON_VERSION" = "3.8" ]; then
 # This remains in case there is a diversion of binary wheels
-python -m pip install --extra-index-url https://pypi.chia.net/simple/ miniupnpc==2.1
+python -m pip install --extra-index-url https://pypi.chia.net/simple/ miniupnpc==2.2.2
 python -m pip install -e . --extra-index-url https://pypi.chia.net/simple/
 
-echo ""
+
 echo "Taco blockchain install.sh complete."
-echo "For assistance join us on Discord in the #testnet chat channel:"
-echo "https://discord.gg/TgJyxsEFFc"
+echo ""
+echo "Visit our Website to learn more about Taco:"
+echo "https://taconetwork.net"
 echo ""
 echo "Try the Quick Start Guide to running taco-blockchain:"
 echo "https://github.com/Taco-Network/taco-blockchain/wiki/Quick-Start-Guide"

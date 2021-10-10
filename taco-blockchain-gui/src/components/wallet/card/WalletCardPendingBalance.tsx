@@ -3,7 +3,7 @@ import { Trans } from '@lingui/macro';
 import FarmCard from '../../farm/card/FarmCard';
 import useWallet from '../../../hooks/useWallet';
 import useCurrencyCode from '../../../hooks/useCurrencyCode';
-import { mojo_to_taco_string } from '../../../util/taco';
+import { byte_to_taco_string } from '../../../util/taco';
 
 type Props = {
   wallet_id: number;
@@ -15,7 +15,7 @@ export default function WalletCardPendingBalance(props: Props) {
   const { wallet, loading } = useWallet(wallet_id);
   const currencyCode = useCurrencyCode();
 
-  const value = wallet?.wallet_balance?.pending_balance;
+  const value = wallet?.wallet_balance?.balance_pending;
 
   return (
     <FarmCard
@@ -31,7 +31,7 @@ export default function WalletCardPendingBalance(props: Props) {
       }
       value={
         <span>
-          {mojo_to_taco_string(value)} {currencyCode}
+          {byte_to_taco_string(value)} {currencyCode}
         </span>
       }
     />

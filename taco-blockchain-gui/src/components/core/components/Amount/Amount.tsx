@@ -9,7 +9,7 @@ import {
 } from '@material-ui/core';
 import { useWatch, useFormContext } from 'react-hook-form';
 import TextField, { TextFieldProps } from '../TextField';
-import { taco_to_mojo } from '../../../../util/taco';
+import { taco_to_byte } from '../../../../util/taco';
 import useCurrencyCode from '../../../../hooks/useCurrencyCode';
 import FormatLargeNumber from '../FormatLargeNumber';
 import Flex from '../Flex';
@@ -40,7 +40,7 @@ function NumberFormatCustom(props: NumberFormatCustomProps) {
 }
 
 export type AmountProps = TextFieldProps & {
-  children?: (props: { mojo: number; value: string | undefined }) => ReactNode;
+  children?: (props: { byte: number; value: string | undefined }) => ReactNode;
   name?: string;
 };
 
@@ -54,7 +54,7 @@ export default function Amount(props: AmountProps) {
     name,
   });
 
-  const mojo = taco_to_mojo(value);
+  const byte = taco_to_byte(value);
 
   return (
     <FormControl variant={variant} fullWidth={fullWidth}>
@@ -71,23 +71,26 @@ export default function Amount(props: AmountProps) {
         }}
         {...rest}
       />
-      {!!mojo && (
-        <FormHelperText>
+
+        <FormHelperText component='div' >
           <Flex alignItems="center" gap={2}>
             <Flex flexGrow={1} gap={1}>
-              <FormatLargeNumber value={mojo} />
-              <Box>
-                <Plural value={mojo} one="mojo" other="mojos" />
-              </Box>
+              {!!byte && (
+                <>
+                  <FormatLargeNumber value={byte} />
+                  <Box>
+                    <Plural value={byte} one="byte" other="bytes" />
+                  </Box>
+                </>
+              )}
             </Flex>
             {children &&
               children({
-                mojo,
+                byte,
                 value,
               })}
           </Flex>
         </FormHelperText>
-      )}
     </FormControl>
   );
 }

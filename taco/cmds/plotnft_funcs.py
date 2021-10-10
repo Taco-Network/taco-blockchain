@@ -1,3 +1,5 @@
+from collections import Counter
+
 import aiohttp
 import asyncio
 import functools
@@ -13,6 +15,8 @@ from taco.protocols.pool_protocol import POOL_PROTOCOL_VERSION
 from taco.rpc.farmer_rpc_client import FarmerRpcClient
 from taco.rpc.wallet_rpc_client import WalletRpcClient
 from taco.types.blockchain_format.sized_bytes import bytes32
+from taco.server.server import ssl_context_for_root
+from taco.ssl.create_ssl import get_mozilla_ca_crt
 from taco.util.bech32m import encode_puzzle_hash
 from taco.util.byte_types import hexstr_to_bytes
 from taco.util.config import load_config
@@ -25,7 +29,7 @@ from taco.wallet.util.wallet_types import WalletType
 async def create_pool_args(pool_url: str) -> Dict:
     try:
         async with aiohttp.ClientSession() as session:
-            async with session.get(f"{pool_url}/pool_info") as response:
+            async with session.get(f"{pool_url}/pool_info", ssl=ssl_context_for_root(get_mozilla_ca_crt())) as response:
                 if response.ok:
                     json_dict = json.loads(await response.text())
                 else:
@@ -104,7 +108,7 @@ async def pprint_pool_wallet_state(
     pool_wallet_info: PoolWalletInfo,
     address_prefix: str,
     pool_state_dict: Dict,
-    unconfirmed_transactions: List[TransactionRecord],
+    plot_counts: Counter,
 ):
     if pool_wallet_info.current.state == PoolSingletonState.LEAVING_POOL and pool_wallet_info.target is None:
         expected_leave_height = pool_wallet_info.singleton_block_height + pool_wallet_info.current.relative_lock_height
@@ -117,10 +121,11 @@ async def pprint_pool_wallet_state(
         "Target address (not for plotting): "
         f"{encode_puzzle_hash(pool_wallet_info.current.target_puzzle_hash, address_prefix)}"
     )
+    print(f"Number of plots: {plot_counts[pool_wallet_info.p2_singleton_puzzle_hash]}")
     print(f"Owner public key: {pool_wallet_info.current.owner_pubkey}")
 
     print(
-        f"P2 singleton address (pool contract address for plotting): "
+        f"Pool contract address (use ONLY for plotting - do not send money to this address): "
         f"{encode_puzzle_hash(pool_wallet_info.p2_singleton_puzzle_hash, address_prefix)}"
     )
     if pool_wallet_info.target is not None:
@@ -135,8 +140,19 @@ async def pprint_pool_wallet_state(
     if pool_wallet_info.current.state == PoolSingletonState.FARMING_TO_POOL:
         print(f"Current pool URL: {pool_wallet_info.current.pool_url}")
         if pool_wallet_info.launcher_id in pool_state_dict:
+            pool_state = pool_state_dict[pool_wallet_info.launcher_id]
             print(f"Current difficulty: {pool_state_dict[pool_wallet_info.launcher_id]['current_difficulty']}")
             print(f"Points balance: {pool_state_dict[pool_wallet_info.launcher_id]['current_points']}")
+            points_found_24h = [points for timestamp, points in pool_state["points_found_24h"]]
+            points_acknowledged_24h = [points for timestamp, points in pool_state["points_acknowledged_24h"]]
+            summed_points_found_24h = sum(points_found_24h)
+            summed_points_acknowledged_24h = sum(points_acknowledged_24h)
+            if summed_points_found_24h == 0:
+                success_pct = 0.0
+            else:
+                success_pct = summed_points_acknowledged_24h / summed_points_found_24h
+            print(f"Points found (24h): {summed_points_found_24h}")
+            print(f"Percent Successful Points (24h): {success_pct:.2%}")
         print(f"Relative lock height: {pool_wallet_info.current.relative_lock_height} blocks")
         payout_instructions: str = pool_state_dict[pool_wallet_info.launcher_id]["pool_config"]["payout_instructions"]
         try:
@@ -159,8 +175,15 @@ async def show(args: dict, wallet_client: WalletRpcClient, fingerprint: int) -> 
     address_prefix = config["network_overrides"]["config"][config["selected_network"]]["address_prefix"]
     summaries_response = await wallet_client.get_wallets()
     wallet_id_passed_in = args.get("id", None)
+    plot_counts: Counter = Counter()
     try:
         pool_state_list: List = (await farmer_client.get_pool_state())["pool_state"]
+        harvesters = await farmer_client.get_harvesters()
+        for d in harvesters["harvesters"]:
+            for plot in d["plots"]:
+                if plot.get("pool_contract_puzzle_hash", None) is not None:
+                    # Non pooled plots will have a None pool_contract_puzzle_hash
+                    plot_counts[hexstr_to_bytes(plot["pool_contract_puzzle_hash"])] += 1
     except Exception as e:
         if isinstance(e, aiohttp.ClientConnectorError):
             print(
@@ -182,14 +205,14 @@ async def show(args: dict, wallet_client: WalletRpcClient, fingerprint: int) -> 
             if summary["id"] == wallet_id_passed_in and typ != WalletType.POOLING_WALLET:
                 print(f"Wallet with id: {wallet_id_passed_in} is not a pooling wallet. Please provide a different id.")
                 return
-        pool_wallet_info, unconfirmed_transactions = await wallet_client.pw_status(wallet_id_passed_in)
+        pool_wallet_info, _ = await wallet_client.pw_status(wallet_id_passed_in)
         await pprint_pool_wallet_state(
             wallet_client,
             wallet_id_passed_in,
             pool_wallet_info,
             address_prefix,
             pool_state_dict,
-            unconfirmed_transactions,
+            plot_counts,
         )
     else:
         print(f"Wallet height: {await wallet_client.get_height_info()}")
@@ -199,14 +222,14 @@ async def show(args: dict, wallet_client: WalletRpcClient, fingerprint: int) -> 
             typ = WalletType(int(summary["type"]))
             if typ == WalletType.POOLING_WALLET:
                 print(f"Wallet id {wallet_id}: ")
-                pool_wallet_info, unconfirmed_transactions = await wallet_client.pw_status(wallet_id)
+                pool_wallet_info, _ = await wallet_client.pw_status(wallet_id)
                 await pprint_pool_wallet_state(
                     wallet_client,
                     wallet_id,
                     pool_wallet_info,
                     address_prefix,
                     pool_state_dict,
-                    unconfirmed_transactions,
+                    plot_counts,
                 )
                 print("")
     farmer_client.close()
@@ -275,7 +298,7 @@ async def join_pool(args: dict, wallet_client: WalletRpcClient, fingerprint: int
     prompt = not args.get("yes", False)
     try:
         async with aiohttp.ClientSession() as session:
-            async with session.get(f"{pool_url}/pool_info") as response:
+            async with session.get(f"{pool_url}/pool_info", ssl=ssl_context_for_root(get_mozilla_ca_crt())) as response:
                 if response.ok:
                     json_dict = json.loads(await response.text())
                 else:

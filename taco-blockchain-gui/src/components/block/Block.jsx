@@ -13,6 +13,7 @@ import { Trans } from '@lingui/macro';
 import { useParams, useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import {
+  Back,
   Card,
   FormatLargeNumber,
   Link,
@@ -27,7 +28,7 @@ import {
   sha256,
 } from '../../util/utils';
 import { getBlockRecord, getBlock } from '../../modules/fullnodeMessages';
-import { mojo_to_taco } from '../../util/taco';
+import { byte_to_taco } from '../../util/taco';
 import {
   calculatePoolReward,
   calculateBaseFarmerReward,
@@ -171,13 +172,13 @@ export default function Block() {
       ? blockRecord.weight - prevBlockRecord.weight
       : blockRecord?.weight ?? 0;
 
-  const poolReward = mojo_to_taco(calculatePoolReward(blockRecord.height));
-  const baseFarmerReward = mojo_to_taco(
+  const poolReward = byte_to_taco(calculatePoolReward(blockRecord.height));
+  const baseFarmerReward = byte_to_taco(
     calculateBaseFarmerReward(blockRecord.height),
   );
 
   const tacoFees = blockRecord.fees
-    ? mojo_to_taco(BigInt(blockRecord.fees))
+    ? byte_to_taco(BigInt(blockRecord.fees))
     : '';
 
   const rows = [
@@ -332,11 +333,11 @@ export default function Block() {
     <LayoutMain title={<Trans>Block</Trans>}>
       <Card
         title={
-          <BlockTitle>
+          <Back variant="h5">
             <Trans>
               Block at height {blockRecord.height} in the Taco blockchain
             </Trans>
-          </BlockTitle>
+          </Back>
         }
         action={
           <Flex gap={1}>

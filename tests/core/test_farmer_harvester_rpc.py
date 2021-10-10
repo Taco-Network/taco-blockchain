@@ -1,13 +1,18 @@
 # flake8: noqa: E501
 import logging
+from os import unlink
+from pathlib import Path
 from secrets import token_bytes
+from shutil import copy, move
+import time
 
 import pytest
 from blspy import AugSchemeMPL
 from chiapos import DiskPlotter
 
 from taco.consensus.coinbase import create_puzzlehash_for_pk
-from taco.plotting.plot_tools import stream_plot_info_ph, stream_plot_info_pk
+from taco.plotting.util import stream_plot_info_ph, stream_plot_info_pk, PlotRefreshResult
+from taco.plotting.manager import PlotManager
 from taco.protocols import farmer_protocol
 from taco.rpc.farmer_rpc_api import FarmerRpcApi
 from taco.rpc.farmer_rpc_client import FarmerRpcClient
@@ -166,30 +171,227 @@ class TestRpc:
             assert len(res_2["plots"]) == num_plots
 
             # Test farmer get_harvesters
-            await farmer_rpc_api.service.update_cached_harvesters()
-            farmer_res = await client.get_harvesters()
-            assert len(list(farmer_res["harvesters"])) == 1
-            assert len(list(farmer_res["harvesters"][0]["plots"])) == num_plots
+            async def test_get_harvesters():
+                farmer_res = await client.get_harvesters()
+                if len(list(farmer_res["harvesters"])) != 1:
+                    return False
+                if len(list(farmer_res["harvesters"][0]["plots"])) != num_plots:
+                    return False
+                return True
 
-            assert len(await client_2.get_plot_directories()) == 1
+            await time_out_assert(30, test_get_harvesters)
 
-            await client_2.add_plot_directory(str(plot_dir))
-            await client_2.add_plot_directory(str(plot_dir_sub))
+            expected_result: PlotRefreshResult = PlotRefreshResult()
 
-            assert len(await client_2.get_plot_directories()) == 3
+            def test_refresh_callback(refresh_result: PlotRefreshResult):
+                assert refresh_result.loaded_plots == expected_result.loaded_plots
+                assert refresh_result.removed_plots == expected_result.removed_plots
+                assert refresh_result.processed_files == expected_result.processed_files
+                assert refresh_result.remaining_files == expected_result.remaining_files
 
-            res_2 = await client_2.get_plots()
-            assert len(res_2["plots"]) == num_plots + 2
+            harvester.plot_manager.set_refresh_callback(test_refresh_callback)
 
-            await client_2.delete_plot(str(plot_dir / filename))
-            await client_2.delete_plot(str(plot_dir / filename_2))
-            await client_2.refresh_plots()
-            res_3 = await client_2.get_plots()
+            async def test_case(
+                trigger, expect_loaded, expect_removed, expect_processed, expected_directories, expect_total_plots
+            ):
+                expected_result.loaded_plots = expect_loaded
+                expected_result.removed_plots = expect_removed
+                expected_result.processed_files = expect_processed
+                await trigger
+                harvester.plot_manager.trigger_refresh()
+                assert len(await client_2.get_plot_directories()) == expected_directories
+                await time_out_assert(5, harvester.plot_manager.needs_refresh, value=False)
+                result = await client_2.get_plots()
+                assert len(result["plots"]) == expect_total_plots
+                assert len(harvester.plot_manager.cache) == expect_total_plots
+                assert len(harvester.plot_manager.failed_to_open_filenames) == 0
 
-            assert len(res_3["plots"]) == num_plots + 1
+            # Add plot_dir with two new plots
+            await test_case(
+                client_2.add_plot_directory(str(plot_dir)),
+                expect_loaded=2,
+                expect_removed=0,
+                expect_processed=2,
+                expected_directories=2,
+                expect_total_plots=num_plots + 2,
+            )
+            # Add plot_dir_sub with one duplicate
+            await test_case(
+                client_2.add_plot_directory(str(plot_dir_sub)),
+                expect_loaded=0,
+                expect_removed=0,
+                expect_processed=1,
+                expected_directories=3,
+                expect_total_plots=num_plots + 2,
+            )
+            # Delete one plot
+            await test_case(
+                client_2.delete_plot(str(plot_dir / filename)),
+                expect_loaded=0,
+                expect_removed=1,
+                expect_processed=0,
+                expected_directories=3,
+                expect_total_plots=num_plots + 1,
+            )
+            # Remove directory with the duplicate
+            await test_case(
+                client_2.remove_plot_directory(str(plot_dir_sub)),
+                expect_loaded=0,
+                expect_removed=1,
+                expect_processed=0,
+                expected_directories=2,
+                expect_total_plots=num_plots + 1,
+            )
+            # Re-add the directory with the duplicate for other tests
+            await test_case(
+                client_2.add_plot_directory(str(plot_dir_sub)),
+                expect_loaded=0,
+                expect_removed=0,
+                expect_processed=1,
+                expected_directories=3,
+                expect_total_plots=num_plots + 1,
+            )
+            # Remove the directory which has the duplicated plot loaded. This removes the duplicated plot from plot_dir
+            # and in the same run loads the plot from plot_dir_sub which is not longer seen as duplicate.
+            await test_case(
+                client_2.remove_plot_directory(str(plot_dir)),
+                expect_loaded=1,
+                expect_removed=1,
+                expect_processed=1,
+                expected_directories=2,
+                expect_total_plots=num_plots + 1,
+            )
+            # Re-add the directory now the plot seen as duplicate is from plot_dir, not from plot_dir_sub like before
+            await test_case(
+                client_2.add_plot_directory(str(plot_dir)),
+                expect_loaded=0,
+                expect_removed=0,
+                expect_processed=1,
+                expected_directories=3,
+                expect_total_plots=num_plots + 1,
+            )
+            # Remove the duplicated plot
+            await test_case(
+                client_2.delete_plot(str(plot_dir / filename_2)),
+                expect_loaded=0,
+                expect_removed=1,
+                expect_processed=0,
+                expected_directories=3,
+                expect_total_plots=num_plots + 1,
+            )
+            # Remove the directory with the loaded plot which is not longer a duplicate
+            await test_case(
+                client_2.remove_plot_directory(str(plot_dir_sub)),
+                expect_loaded=0,
+                expect_removed=1,
+                expect_processed=0,
+                expected_directories=2,
+                expect_total_plots=num_plots,
+            )
+            # Remove the directory which contains all other plots
+            await test_case(
+                client_2.remove_plot_directory(str(get_plot_dir())),
+                expect_loaded=0,
+                expect_removed=20,
+                expect_processed=0,
+                expected_directories=1,
+                expect_total_plots=0,
+            )
+            # Recover the plots to test caching
+            # First make sure cache gets written if required and new plots are loaded
+            await test_case(
+                client_2.add_plot_directory(str(get_plot_dir())),
+                expect_loaded=20,
+                expect_removed=0,
+                expect_processed=20,
+                expected_directories=2,
+                expect_total_plots=20,
+            )
+            assert harvester.plot_manager.cache.path().exists()
+            unlink(harvester.plot_manager.cache.path())
+            # Should not write the cache again on shutdown because it didn't change
+            assert not harvester.plot_manager.cache.path().exists()
+            harvester.plot_manager.stop_refreshing()
+            assert not harvester.plot_manager.cache.path().exists()
+            # Manually trigger `save_cache` and make sure it creates a new cache file
+            harvester.plot_manager.cache.save()
+            assert harvester.plot_manager.cache.path().exists()
 
-            await client_2.remove_plot_directory(str(plot_dir))
-            assert len(await client_2.get_plot_directories()) == 2
+            expected_result.loaded_plots = 20
+            expected_result.removed_plots = 0
+            expected_result.processed_files = 20
+            expected_result.remaining_files = 0
+            plot_manager: PlotManager = PlotManager(harvester.root_path, test_refresh_callback)
+            plot_manager.start_refreshing()
+            assert len(harvester.plot_manager.cache) == len(plot_manager.cache)
+            await time_out_assert(5, plot_manager.needs_refresh, value=False)
+            for path, plot_info in harvester.plot_manager.plots.items():
+                assert path in plot_manager.plots
+                assert plot_manager.plots[path].prover.get_filename() == plot_info.prover.get_filename()
+                assert plot_manager.plots[path].prover.get_id() == plot_info.prover.get_id()
+                assert plot_manager.plots[path].prover.get_memo() == plot_info.prover.get_memo()
+                assert plot_manager.plots[path].prover.get_size() == plot_info.prover.get_size()
+                assert plot_manager.plots[path].pool_public_key == plot_info.pool_public_key
+                assert plot_manager.plots[path].pool_contract_puzzle_hash == plot_info.pool_contract_puzzle_hash
+                assert plot_manager.plots[path].plot_public_key == plot_info.plot_public_key
+                assert plot_manager.plots[path].file_size == plot_info.file_size
+                assert plot_manager.plots[path].time_modified == plot_info.time_modified
+
+            assert harvester.plot_manager.plot_filename_paths == plot_manager.plot_filename_paths
+            assert harvester.plot_manager.failed_to_open_filenames == plot_manager.failed_to_open_filenames
+            assert harvester.plot_manager.no_key_filenames == plot_manager.no_key_filenames
+            plot_manager.stop_refreshing()
+            # Modify the content of the plot_manager.dat
+            with open(harvester.plot_manager.cache.path(), "r+b") as file:
+                file.write(b"\xff\xff")  # Sets Cache.version to 65535
+            # Make sure it just loads the plots normally if it fails to load the cache
+            plot_manager = PlotManager(harvester.root_path, test_refresh_callback)
+            plot_manager.cache.load()
+            assert len(plot_manager.cache) == 0
+            plot_manager.set_public_keys(
+                harvester.plot_manager.farmer_public_keys, harvester.plot_manager.pool_public_keys
+            )
+            expected_result.loaded_plots = 20
+            expected_result.removed_plots = 0
+            expected_result.processed_files = 20
+            expected_result.remaining_files = 0
+            plot_manager.start_refreshing()
+            await time_out_assert(5, plot_manager.needs_refresh, value=False)
+            assert len(plot_manager.plots) == len(harvester.plot_manager.plots)
+            plot_manager.stop_refreshing()
+
+            # Test re-trying if processing a plot failed
+            # First save the plot
+            retry_test_plot = Path(plot_dir_sub / filename_2).resolve()
+            retry_test_plot_save = Path(plot_dir_sub / "save").resolve()
+            copy(retry_test_plot, retry_test_plot_save)
+            # Invalidate the plot
+            with open(plot_dir_sub / filename_2, "r+b") as file:
+                file.write(bytes(100))
+            # Add it and validate it fails to load
+            await harvester.add_plot_directory(str(plot_dir_sub))
+            expected_result.loaded_plots = 0
+            expected_result.removed_plots = 0
+            expected_result.processed_files = 1
+            expected_result.remaining_files = 0
+            harvester.plot_manager.start_refreshing()
+            await time_out_assert(5, harvester.plot_manager.needs_refresh, value=False)
+            assert retry_test_plot in harvester.plot_manager.failed_to_open_filenames
+            # Make sure the file stays in `failed_to_open_filenames` and doesn't get loaded or processed in the next
+            # update round
+            expected_result.loaded_plots = 0
+            expected_result.processed_files = 0
+            harvester.plot_manager.trigger_refresh()
+            await time_out_assert(5, harvester.plot_manager.needs_refresh, value=False)
+            assert retry_test_plot in harvester.plot_manager.failed_to_open_filenames
+            # Now decrease the re-try timeout, restore the valid plot file and make sure it properly loads now
+            harvester.plot_manager.refresh_parameter.retry_invalid_seconds = 0
+            move(retry_test_plot_save, retry_test_plot)
+            expected_result.loaded_plots = 1
+            expected_result.processed_files = 1
+            harvester.plot_manager.trigger_refresh()
+            await time_out_assert(5, harvester.plot_manager.needs_refresh, value=False)
+            assert retry_test_plot not in harvester.plot_manager.failed_to_open_filenames
 
             targets_1 = await client.get_reward_targets(False)
             assert "have_pool_sk" not in targets_1
@@ -232,7 +434,7 @@ class TestRpc:
                 await client.set_reward_targets(None, replaced_char)
 
             assert len((await client.get_pool_state())["pool_state"]) == 0
-            all_sks = farmer_api.farmer.keychain.get_all_private_keys()
+            all_sks = farmer_api.farmer.local_keychain.get_all_private_keys()
             auth_sk = master_sk_to_pooling_authentication_sk(all_sks[0][0], 2, 1)
             pool_list = [
                 {
@@ -259,6 +461,24 @@ class TestRpc:
             await farmer_api.farmer.update_pool_state()
             pool_state = (await client.get_pool_state())["pool_state"]
             assert pool_state[0]["pool_config"]["payout_instructions"] == "1234vy"
+
+            now = time.time()
+            # Big arbitrary numbers used to be unlikely to accidentally collide.
+            before_24h = (now - (25 * 60 * 60), 29984713)
+            since_24h = (now - (23 * 60 * 60), 93049817)
+            for p2_singleton_puzzle_hash, pool_dict in farmer_api.farmer.pool_state.items():
+                for key in ["points_found_24h", "points_acknowledged_24h"]:
+                    pool_dict[key].insert(0, since_24h)
+                    pool_dict[key].insert(0, before_24h)
+
+            sp = farmer_protocol.NewSignagePoint(
+                std_hash(b"1"), std_hash(b"2"), std_hash(b"3"), uint64(1), uint64(1000000), uint8(2)
+            )
+            await farmer_api.new_signage_point(sp)
+            client_pool_state = await client.get_pool_state()
+            for pool_dict in client_pool_state["pool_state"]:
+                for key in ["points_found_24h", "points_acknowledged_24h"]:
+                    assert pool_dict[key][0] == list(since_24h)
 
         finally:
             # Checks that the RPC manages to stop the node

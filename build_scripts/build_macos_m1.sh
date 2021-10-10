@@ -25,15 +25,7 @@ sudo rm -rf dist
 mkdir dist
 
 echo "Install pyinstaller and build bootloaders for M1"
-#pip install pyinstaller==4.3
-# Once there is a 4.4, we can clone that tag and build that
-# M1 support isn't in a tag yet.
-# Alternatively, if the m1 bootloaders are distributed with pip in the future, can just use those
-git clone https://github.com/pyinstaller/pyinstaller.git
-cd pyinstaller/bootloader
-python ./waf all
-pip install ..
-cd ../..
+pip install pyinstaller==4.5
 
 echo "Create executables with pyinstaller"
 SPEC_FILE=$(python -c 'import taco; print(taco.PYINSTALLER_SPEC_PATH)')
@@ -57,10 +49,19 @@ if [ "$LAST_EXIT_CODE" -ne 0 ]; then
 	exit $LAST_EXIT_CODE
 fi
 
+# sets the version for taco-blockchain in package.json
+brew install jq
+cp package.json package.json.orig
+jq --arg VER "$TACO_INSTALLER_VERSION" '.version=$VER' package.json > temp.json && mv temp.json package.json
+
 electron-packager . Taco --asar.unpack="**/daemon/**" --platform=darwin \
 --icon=src/assets/img/Taco.icns --overwrite --app-bundle-id=net.taco.blockchain \
 --appVersion=$TACO_INSTALLER_VERSION
 LAST_EXIT_CODE=$?
+
+# reset the package.json to the original
+mv package.json.orig package.json
+
 if [ "$LAST_EXIT_CODE" -ne 0 ]; then
 	echo >&2 "electron-packager failed!"
 	exit $LAST_EXIT_CODE

@@ -32,14 +32,9 @@ jobs:
     - name: Update Mozilla cert.pem Nightly
       if: startsWith(matrix.os, 'ubuntu')
       run: |
-        curl --remote-name --time-cond cacert.pem https://curl.se/ca/cacert.pem
+        curl --remote-name https://curl.se/ca/cacert.pem
         git status
         DATE="$(date)"
         export DATE
-        if [ "$(git diff-index --quiet HEAD)" ]; then
-          echo "cacert.pem needs to be updated" &&
-          git add -a &&
-          git commit -m "cacert.pem updated $DATE" &&
-          git push origin main
-        fi
+        ( git commit cacert.pem -m "cacert.pem updated $DATE" && git push origin main ) || true
         git status

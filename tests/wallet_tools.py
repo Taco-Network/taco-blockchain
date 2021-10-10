@@ -1,4 +1,4 @@
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple, Any
 
 from blspy import AugSchemeMPL, G2Element, PrivateKey
 
@@ -8,12 +8,12 @@ from taco.types.announcement import Announcement
 from taco.types.blockchain_format.coin import Coin
 from taco.types.blockchain_format.program import Program
 from taco.types.blockchain_format.sized_bytes import bytes32
-from taco.types.coin_solution import CoinSolution
+from taco.types.coin_spend import CoinSpend
 from taco.types.condition_opcodes import ConditionOpcode
 from taco.types.condition_with_args import ConditionWithArgs
 from taco.types.spend_bundle import SpendBundle
 from taco.util.clvm import int_from_bytes, int_to_bytes
-from taco.util.condition_tools import conditions_by_opcode, conditions_for_solution, pkm_pairs_for_conditions_dict
+from taco.util.condition_tools import conditions_by_opcode, conditions_for_solution
 from taco.util.ints import uint32, uint64
 from taco.wallet.derive_keys import master_sk_to_wallet_sk
 from taco.wallet.puzzles.p2_delegated_puzzle_or_hidden_puzzle import (
@@ -86,7 +86,13 @@ class WalletTool:
 
         for con_list in condition_dic.values():
             for cvp in con_list:
-                ret.append([cvp.opcode.value] + cvp.vars)
+                if cvp.opcode == ConditionOpcode.CREATE_COIN and len(cvp.vars) > 2:
+                    formatted: List[Any] = []
+                    formatted.extend(cvp.vars)
+                    formatted[2] = cvp.vars[2:]
+                    ret.append([cvp.opcode.value] + formatted)
+                else:
+                    ret.append([cvp.opcode.value] + cvp.vars)
         return solution_for_conditions(Program.to(ret))
 
     def generate_unsigned_transaction(
@@ -98,7 +104,7 @@ class WalletTool:
         fee: int = 0,
         secret_key: Optional[PrivateKey] = None,
         additional_outputs: Optional[List[Tuple[bytes32, int]]] = None,
-    ) -> List[CoinSolution]:
+    ) -> List[CoinSpend]:
         spends = []
 
         spend_value = sum([c.amount for c in coins])
@@ -143,32 +149,37 @@ class WalletTool:
                     ConditionWithArgs(ConditionOpcode.ASSERT_COIN_ANNOUNCEMENT, [primary_announcement_hash])
                 )
                 main_solution = self.make_solution(condition_dic)
-                spends.append(CoinSolution(coin, puzzle, main_solution))
+                spends.append(CoinSpend(coin, puzzle, main_solution))
             else:
-                spends.append(CoinSolution(coin, puzzle, self.make_solution(secondary_coins_cond_dic)))
+                spends.append(CoinSpend(coin, puzzle, self.make_solution(secondary_coins_cond_dic)))
         return spends
 
-    def sign_transaction(self, coin_solutions: List[CoinSolution]) -> SpendBundle:
+    def sign_transaction(self, coin_spends: List[CoinSpend]) -> SpendBundle:
         signatures = []
         solution: Program
         puzzle: Program
-        for coin_solution in coin_solutions:  # type: ignore # noqa
-            secret_key = self.get_private_key_for_puzzle_hash(coin_solution.coin.puzzle_hash)
+        for coin_spend in coin_spends:  # type: ignore # noqa
+            secret_key = self.get_private_key_for_puzzle_hash(coin_spend.coin.puzzle_hash)
             synthetic_secret_key = calculate_synthetic_secret_key(secret_key, DEFAULT_HIDDEN_PUZZLE_HASH)
             err, con, cost = conditions_for_solution(
-                coin_solution.puzzle_reveal, coin_solution.solution, self.constants.MAX_BLOCK_COST_CLVM
+                coin_spend.puzzle_reveal, coin_spend.solution, self.constants.MAX_BLOCK_COST_CLVM
             )
             if not con:
                 raise ValueError(err)
             conditions_dict = conditions_by_opcode(con)
 
-            for _, msg in pkm_pairs_for_conditions_dict(
-                conditions_dict, bytes(coin_solution.coin.name()), self.constants.AGG_SIG_ME_ADDITIONAL_DATA
-            ):
+            for cwa in conditions_dict.get(ConditionOpcode.AGG_SIG_UNSAFE, []):
+                msg = cwa.vars[1]
                 signature = AugSchemeMPL.sign(synthetic_secret_key, msg)
                 signatures.append(signature)
+
+            for cwa in conditions_dict.get(ConditionOpcode.AGG_SIG_ME, []):
+                msg = cwa.vars[1] + bytes(coin_spend.coin.name()) + self.constants.AGG_SIG_ME_ADDITIONAL_DATA
+                signature = AugSchemeMPL.sign(synthetic_secret_key, msg)
+                signatures.append(signature)
+
         aggsig = AugSchemeMPL.aggregate(signatures)
-        spend_bundle = SpendBundle(coin_solutions, aggsig)
+        spend_bundle = SpendBundle(coin_spends, aggsig)
         return spend_bundle
 
     def generate_signed_transaction(

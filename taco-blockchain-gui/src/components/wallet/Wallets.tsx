@@ -1,101 +1,33 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Trans } from '@lingui/macro';
-// import styled from 'styled-components';
 import {
   Box,
-  /*
-  List,
-  Divider,
-  ListItem,
-  ListItemText,
-  */
   Typography,
+  Tabs,
+  Tab,
+  Container,
 } from '@material-ui/core';
+import styled from 'styled-components';
 // import { useRouteMatch, useHistory } from 'react-router';
 import { /*useDispatch, */ useSelector } from 'react-redux';
 import { FormatLargeNumber } from '@taco/core';
 import StandardWallet from './standard/WalletStandard';
-/*
-import {
-  changeWalletMenu,
-  standardWallet,
-  CCWallet,
-  RLWallet,
-  DIDWallet,
-} from '../../modules/walletMenu';
-*/
+import { CreateWalletView } from './create/WalletCreate';
+import ColouredWallet from './coloured/WalletColoured';
+import RateLimitedWallet from './rateLimited/WalletRateLimited';
+import DistributedWallet from './did/WalletDID';
 import type { RootState } from '../../modules/rootReducer';
 import WalletType from '../../constants/WalletType';
 import LayoutMain from '../layout/LayoutMain';
+import config from '../../config/config';
+import { Switch, Route, useHistory, useRouteMatch, useParams } from 'react-router-dom';
 
-/*
-const WalletItem = (props: any) => {
-  const dispatch = useDispatch();
-  const history = useHistory();
-  const { wallet_id } = props;
+const { multipleWallets } = config;
 
-  const wallet = useSelector((state: RootState) =>
-    state.wallet_state.wallets?.find((item) => item.id === wallet_id),
-  );
-
-  if (!wallet) {
-    return null;
-  }
-
-  let { name = '' } = wallet;
-  const { id, type } = wallet;
-
-  let mainLabel = <></>;
-  if (type === WalletType.STANDARD_WALLET) {
-    mainLabel = <Trans>Taco Wallet</Trans>;
-    name = 'Taco';
-  } else if (type === WalletType.COLOURED_COIN) {
-    mainLabel = <Trans>CC Wallet</Trans>;
-  } else if (type === WalletType.RATE_LIMITED) {
-    mainLabel = <Trans>RL Wallet</Trans>;
-  } else if (wtype === WalletType.DISTRIBUTED_ID) {
-    mainLabel = <Trans>DID Wallet</Trans>;
-  }
-
-  function presentWallet() {
-    if (type === WalletType.STANDARD_WALLET) {
-      dispatch(changeWalletMenu(standardWallet, id));
-    } else if (type === WalletType.COLOURED_COIN) {
-      dispatch(changeWalletMenu(CCWallet, id));
-    } else if (type === WalletType.RATE_LIMITED) {
-      dispatch(changeWalletMenu(RLWallet, id));
-    } else if (type === WalletType.DISTRIBUTED_ID) {
-      dispatch(changeWalletMenu(DIDWallet, id));
-    }
-
-    history.push('/dashboard/wallets');
-  }
-
-  return (
-    <ListItem button onClick={presentWallet}>
-      <ListItemText primary={mainLabel} secondary={name} />
-    </ListItem>
-  );
-};
-
-const CreateWallet = () => {
-  const history = useHistory();
-
-  function presentCreateWallet() {
-    history.push('/dashboard/wallets/create');
-  }
-
-  return (
-    <div>
-      <Divider />
-      <ListItem button onClick={presentCreateWallet}>
-        <ListItemText primary={<Trans>Add Wallet</Trans>} />
-      </ListItem>
-      <Divider />
-    </div>
-  );
-};
-*/
+const StyledTabs = styled(Tabs)`
+  flex-grow: 1;
+  box-shadow: inset 0 -1px 0 ${({ theme }) => theme.palette.type === 'dark' ? '#222222' : '#DBDBDB'};
+`;
 
 export function StatusCard() {
   const syncing = useSelector(
@@ -151,83 +83,85 @@ export function StatusCard() {
   );
 }
 
+function TabPanel(props) {
+  const { children, value, selected } = props;
+
+  if (value === selected) {
+    return children;
+  }
+
+  return null;
+}
+
 export default function Wallets() {
-  // const { path } = useRouteMatch();
+  const history = useHistory();
+  const { walletId } = useParams();
+  const { path } = useRouteMatch();
   const wallets = useSelector((state: RootState) => state.wallet_state.wallets);
-  const id = useSelector((state: RootState) => state.wallet_menu.id);
-  const wallet = wallets?.find((wallet) => wallet && wallet.id === id);
-  /*
-  const visibleWallets = useMemo(() => {
-    return (
-      wallets?.filter((wallet) => wallet.type !== WalletType.POOLING_WALLET) ??
-      []
-    );
-  }, [wallets]);
-  */
   const loading = !wallets;
+
+  function handleChange(_, newValue) {
+    history.push(`/dashboard/wallets/${newValue}`);
+  }
+
+  // redirect to default "standard wallet" when no wallet was selected
+  useEffect(() => {
+    if (!walletId && wallets) {
+      history.push('/dashboard/wallets/1');
+    }
+  }, [wallets, walletId]);
 
   return (
     <LayoutMain
       loading={loading}
       loadingTitle={<Trans>Loading list of wallets</Trans>}
       title={<Trans>Wallets</Trans>}
+      bodyHeader={multipleWallets ? (
+        <Container maxWidth="lg">
+          <StyledTabs
+            value={walletId || '1'}
+            onChange={handleChange}
+            indicatorColor="primary"
+            textColor="primary"
+            scrollButtons="auto"
+            variant="scrollable"
+          >
+            {wallets?.map((wallet) => (
+              <Tab label={wallet.name} value={String(wallet.id)} key={wallet.id} />
+            ))}
+            <Tab value="create" label={<Trans>+ Add Wallet</Trans>} />
+          </StyledTabs>
+        </Container>
+      ) : undefined}
     >
-      {!!wallet && wallet.type === WalletType.STANDARD_WALLET && (
-        <StandardWallet wallet_id={id} />
+      {multipleWallets ? (
+        <Switch>
+          {wallets?.map((wallet) => (
+            <Route path={`${path}/${wallet.id}`} key={wallet.id}>
+              {wallet.type === WalletType.STANDARD_WALLET && (
+                <StandardWallet wallet_id={wallet.id} />
+              )}
+
+              {wallet.type === WalletType.COLOURED_COIN && (
+                <ColouredWallet wallet_id={wallet.id} />
+              )}
+
+              {wallet.type === WalletType.RATE_LIMITED && (
+                <RateLimitedWallet wallet_id={wallet.id} />
+              )}
+
+              {wallet.type === WalletType.DISTRIBUTED_ID && (
+                <DistributedWallet walletId={wallet.id} />
+              )}
+            </Route>
+          ))}
+          <Route path={`/dashboard/wallets/create`}>
+            <CreateWalletView />
+          </Route>
+        </Switch>
+      ) : (
+        <StandardWallet wallet_id={1} showTitle />
       )}
     </LayoutMain>
   );
-  /*
-
-  return (
-    <LayoutSidebar
-      title={<Trans>Wallets</Trans>}
-      sidebar={
-        <Flex flexDirection="column" height="100%" overflow="hidden">
-          <Divider />
-          <StatusCard />
-          <Divider />
-          <Flex flexGrow={1} overflow="auto">
-            <StyledList disablePadding>
-              {visibleWallets.map((wallet) => (
-                <span key={wallet.id}>
-                  <WalletItem wallet_id={wallet.id} key={wallet.id} />
-                  <Divider />
-                </span>
-              ))}
-            </StyledList>
-          </Flex>
-          {localTest && (
-            <CreateWallet />
-          )}
-        </Flex>
-      }
-    >
-      <Grid container spacing={3}>
-        <Grid item xs={12}>
-          <Switch>
-            <Route path={path} exact>
-              {!!wallet && wallet.type === WalletType.STANDARD_WALLET && (
-                <StandardWallet wallet_id={id} />
-              )}
-              {!!wallet && wallet.type === WalletType.COLOURED_COIN && (
-                <ColouredWallet wallet_id={id} />
-              )}
-              {!!wallet && wallet.type === WalletType.RATE_LIMITED && (
-                <RateLimitedWallet wallet_id={id} />
-              )}
-              {!!wallet && wallet.type === WalletType.DISTRIBUTED_ID && (
-                // @ts-ignore
-                <DistributedWallet wallet_id={id} />
-              )}
-            </Route>
-            <Route path={`${path}/create`} exact>
-              <CreateWalletView />
-            </Route>
-          </Switch>
-        </Grid>
-      </Grid>
-    </LayoutSidebar>
-  );
-  */
 }

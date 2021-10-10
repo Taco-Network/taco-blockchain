@@ -1,12 +1,12 @@
 const units = {
   taco: 1,
-  mojo: 1 / 1e12,
+  byte: 1 / 1e12,
   colouredcoin: 1 / 1e9,
 };
 
 const aliases = {
   taco: ['ch', 'taco', 'Taco'],
-  mojo: ['mj', 'mojo'],
+  byte: ['mj', 'byte'],
   colouredcoin: ['cc', 'colouredcoin'],
 };
 
@@ -15,7 +15,7 @@ const display = {
     format: '{amount} CH',
     fractionDigits: 12,
   },
-  mojo: {
+  byte: {
     format: '{amount} MJ',
     fractionDigits: 0,
   },

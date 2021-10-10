@@ -21,8 +21,8 @@ import {
   rename_cc_wallet,
 } from '../../../modules/message';
 import {
-  mojo_to_colouredcoin_string,
-  colouredcoin_to_mojo,
+  byte_to_colouredcoin_string,
+  colouredcoin_to_byte,
 } from '../../../util/taco';
 import { openDialog } from '../../../modules/dialog';
 import { get_transaction_result } from '../../../util/transaction_result';
@@ -290,14 +290,14 @@ function BalanceCardSubSection(props: BalanceCardSubSectionProps) {
         </Box>
         <Box>
           <Typography variant="subtitle1">
-            {mojo_to_colouredcoin_string(props.balance)} {cc_unit}
+            {byte_to_colouredcoin_string(props.balance)} {cc_unit}
           </Typography>
         </Box>
       </Box>
     </Grid>
   );
 }
-
+// comment
 function get_cc_unit(name: string): string {
   let cc_unit = name;
   if (cc_unit.length > 10) {
@@ -346,9 +346,9 @@ function BalanceCard(props: BalanceCardProps) {
   const balancebox_unit = ` ${cc_unit}`;
   const balancebox_hline =
     "<tr><td colspan='2' style='text-align:center'><hr width='50%'></td></tr>";
-  const balance_ptotal_taco = mojo_to_colouredcoin_string(balance_ptotal);
-  const balance_pending_taco = mojo_to_colouredcoin_string(balance_pending);
-  const balance_change_taco = mojo_to_colouredcoin_string(balance_change);
+  const balance_ptotal_taco = byte_to_colouredcoin_string(balance_ptotal);
+  const balance_pending_taco = byte_to_colouredcoin_string(balance_pending);
+  const balance_change_taco = byte_to_colouredcoin_string(balance_change);
   const acc_content =
     balancebox_1 +
     balancebox_2 +
@@ -486,8 +486,8 @@ function SendCard(props: SendCardProps) {
       return;
     }
 
-    const amount = colouredcoin_to_mojo(amount_input.value);
-    const fee = colouredcoin_to_mojo(fee_input.value);
+    const amount = colouredcoin_to_byte(amount_input.value);
+    const fee = colouredcoin_to_byte(fee_input.value);
 
     if (address.includes('taco_addr') || address.includes('colour_desc')) {
       dispatch(
