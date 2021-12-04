@@ -1,5 +1,5 @@
 #
-# THIS FILE IS GENERATED. SEE https://github.com/BTCgreen-Network/taco-blockchain/tree/main/tests#readme
+# THIS FILE IS GENERATED. SEE https://github.com/Taco-Network/taco-blockchain/tree/main/tests#readme
 #
 name: MacOS core-full_node-full_sync Tests
 
@@ -66,7 +66,7 @@ jobs:
     - name: Checkout test blocks and plots
       uses: actions/checkout@v2
       with:
-        repository: 'BTCgreen-Network/test-cache'
+        repository: 'Taco-Network/test-cache'
         path: '.taco'
         ref: '0.27.0'
         fetch-depth: 1
@@ -102,5 +102,5 @@ jobs:
         . ./activate
         ./venv/bin/py.test tests/core/full_node/full_sync/test_full_sync.py -s -v --durations 0
 #
-# THIS FILE IS GENERATED. SEE https://github.com/BTCgreen-Network/taco-blockchain/tree/main/tests#readme
+# THIS FILE IS GENERATED. SEE https://github.com/Taco-Network/taco-blockchain/tree/main/tests#readme
 #

@@ -1,5 +1,5 @@
 #
-# THIS FILE IS GENERATED. SEE https://github.com/BTCgreen-Network/taco-blockchain/tree/main/tests#readme
+# THIS FILE IS GENERATED. SEE https://github.com/Taco-Network/taco-blockchain/tree/main/tests#readme
 #
 name: Ubuntu clvm Test
 
@@ -63,7 +63,7 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-pip-
 
-# Omitted checking out blocks and plots repo BTCgreen-Network/test-cache
+# Omitted checking out blocks and plots repo Taco-Network/test-cache
 
     - name: Link home directory
       run: |
@@ -99,5 +99,5 @@ jobs:
 
 
 #
-# THIS FILE IS GENERATED. SEE https://github.com/BTCgreen-Network/taco-blockchain/tree/main/tests#readme
+# THIS FILE IS GENERATED. SEE https://github.com/Taco-Network/taco-blockchain/tree/main/tests#readme
 #

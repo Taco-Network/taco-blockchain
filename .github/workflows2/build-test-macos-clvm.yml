@@ -1,5 +1,5 @@
 #
-# THIS FILE IS GENERATED. SEE https://github.com/BTCgreen-Network/taco-blockchain/tree/main/tests#readme
+# THIS FILE IS GENERATED. SEE https://github.com/Taco-Network/taco-blockchain/tree/main/tests#readme
 #
 name: MacOS clvm Tests
 
@@ -63,7 +63,7 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-pip-
 
-# Omitted checking out blocks and plots repo BTCgreen-Network/test-cache
+# Omitted checking out blocks and plots repo Taco-Network/test-cache
 
     - name: Link home directory
       run: |
@@ -92,5 +92,5 @@ jobs:
         . ./activate
         ./venv/bin/py.test tests/clvm/test_tacolisp_deserialization.py tests/clvm/test_clvm_compilation.py tests/clvm/test_program.py tests/clvm/test_puzzles.py tests/clvm/test_serialized_program.py tests/clvm/test_singletons.py tests/clvm/test_spend_sim.py -s -v --durations 0 -n auto
 #
-# THIS FILE IS GENERATED. SEE https://github.com/BTCgreen-Network/taco-blockchain/tree/main/tests#readme
+# THIS FILE IS GENERATED. SEE https://github.com/Taco-Network/taco-blockchain/tree/main/tests#readme
 #

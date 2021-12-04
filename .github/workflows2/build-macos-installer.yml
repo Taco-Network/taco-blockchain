@@ -95,7 +95,7 @@ jobs:
         result-encoding: string
         script: |
           const releases = await github.repos.listReleases({
-            owner: 'BTCgreen-Network',
+            owner: 'Taco-Network',
             repo: 'taco-plotter-madmax',
           });
           return releases.data[0].tag_name;
@@ -103,8 +103,8 @@ jobs:
     - name: Get latest madmax plotter
       run: |
         mkdir "$GITHUB_WORKSPACE/madmax"
-        wget -O "$GITHUB_WORKSPACE/madmax/taco_plot" https://github.com/BTCgreen-Network/taco-plotter-madmax/releases/download/${{ steps.latest-madmax.outputs.result }}/taco_plot-${{ steps.latest-madmax.outputs.result }}-macos-intel
-        wget -O "$GITHUB_WORKSPACE/madmax/taco_plot_k34" https://github.com/BTCgreen-Network/taco-plotter-madmax/releases/download/${{ steps.latest-madmax.outputs.result }}/taco_plot_k34-${{ steps.latest-madmax.outputs.result }}-macos-intel
+        wget -O "$GITHUB_WORKSPACE/madmax/taco_plot" https://github.com/Taco-Network/taco-plotter-madmax/releases/download/${{ steps.latest-madmax.outputs.result }}/taco_plot-${{ steps.latest-madmax.outputs.result }}-macos-intel
+        wget -O "$GITHUB_WORKSPACE/madmax/taco_plot_k34" https://github.com/Taco-Network/taco-plotter-madmax/releases/download/${{ steps.latest-madmax.outputs.result }}/taco_plot_k34-${{ steps.latest-madmax.outputs.result }}-macos-intel
         chmod +x "$GITHUB_WORKSPACE/madmax/taco_plot"
         chmod +x "$GITHUB_WORKSPACE/madmax/taco_plot_k34"
 

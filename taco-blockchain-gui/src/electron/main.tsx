@@ -367,7 +367,7 @@ if (!handleSquirrelEvent()) {
             label: i18n._(/* i18n */ { id: 'Taco Blockchain Wiki' }),
             click: () => {
               openExternal(
-                'https://github.com/BTCgreen-Network/taco-blockchain/wiki',
+                'https://github.com/Taco-Network/taco-blockchain/wiki',
               );
             },
           },
@@ -375,7 +375,7 @@ if (!handleSquirrelEvent()) {
             label: i18n._(/* i18n */ { id: 'Frequently Asked Questions' }),
             click: () => {
               openExternal(
-                'https://github.com/BTCgreen-Network/taco-blockchain/wiki/FAQ',
+                'https://github.com/Taco-Network/taco-blockchain/wiki/FAQ',
               );
             },
           },
@@ -383,7 +383,7 @@ if (!handleSquirrelEvent()) {
             label: i18n._(/* i18n */ { id: 'Release Notes' }),
             click: () => {
               openExternal(
-                'https://github.com/BTCgreen-Network/taco-blockchain/releases',
+                'https://github.com/Taco-Network/taco-blockchain/releases',
               );
             },
           },
@@ -391,7 +391,7 @@ if (!handleSquirrelEvent()) {
             label: i18n._(/* i18n */ { id: 'Contribute on GitHub' }),
             click: () => {
               openExternal(
-                'https://github.com/BTCgreen-Network/taco-blockchain/blob/master/CONTRIBUTING.md',
+                'https://github.com/Taco-Network/taco-blockchain/blob/master/CONTRIBUTING.md',
               );
             },
           },
@@ -402,7 +402,7 @@ if (!handleSquirrelEvent()) {
             label: i18n._(/* i18n */ { id: 'Report an Issue...' }),
             click: () => {
               openExternal(
-                'https://github.com/BTCgreen-Network/taco-blockchain/issues',
+                'https://github.com/Taco-Network/taco-blockchain/issues',
               );
             },
           },

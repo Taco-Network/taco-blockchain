@@ -144,7 +144,7 @@ export default function About(props: Props) {
         </VersionsTable>
 
         <BugReport
-          href="https://github.com/BTCgreen-Network/taco-blockchain/issues"
+          href="https://github.com/Taco-Network/taco-blockchain/issues"
           target="_blank"
         >
           Report an issue

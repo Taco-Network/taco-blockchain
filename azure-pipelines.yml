@@ -54,11 +54,11 @@ steps:
     displayName: Create installer version number
 
   - script: |
-      MADMAX_VERSION=$(curl --silent "https://api.github.com/repos/BTCgreen-Network/taco-plotter-madmax/releases/latest" | jq -r '.tag_name')
+      MADMAX_VERSION=$(curl --silent "https://api.github.com/repos/Taco-Network/taco-plotter-madmax/releases/latest" | jq -r '.tag_name')
 
       mkdir "$(System.DefaultWorkingDirectory)/madmax"
-      wget -O "$(System.DefaultWorkingDirectory)/madmax/taco_plot" https://github.com/BTCgreen-Network/taco-plotter-madmax/releases/download/${MADMAX_VERSION}/taco_plot-${MADMAX_VERSION}-macos-intel
-      wget -O "$(System.DefaultWorkingDirectory)/madmax/taco_plot_k34" https://github.com/BTCgreen-Network/taco-plotter-madmax/releases/download/${MADMAX_VERSION}/taco_plot_k34-${MADMAX_VERSION}-macos-intel
+      wget -O "$(System.DefaultWorkingDirectory)/madmax/taco_plot" https://github.com/Taco-Network/taco-plotter-madmax/releases/download/${MADMAX_VERSION}/taco_plot-${MADMAX_VERSION}-macos-intel
+      wget -O "$(System.DefaultWorkingDirectory)/madmax/taco_plot_k34" https://github.com/Taco-Network/taco-plotter-madmax/releases/download/${MADMAX_VERSION}/taco_plot_k34-${MADMAX_VERSION}-macos-intel
       chmod +x "$(System.DefaultWorkingDirectory)/madmax/taco_plot"
       chmod +x "$(System.DefaultWorkingDirectory)/madmax/taco_plot_k34"
     displayName: "Get latest madmax release"

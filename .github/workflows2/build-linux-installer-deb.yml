@@ -99,7 +99,7 @@ jobs:
         result-encoding: string
         script: |
           const releases = await github.repos.listReleases({
-            owner: 'BTCgreen-Network',
+            owner: 'Taco-Network',
             repo: 'taco-plotter-madmax',
           });
           return releases.data[0].tag_name;
@@ -107,8 +107,8 @@ jobs:
     - name: Get latest madmax plotter
       run: |
         mkdir "$GITHUB_WORKSPACE/madmax"
-        wget -O "$GITHUB_WORKSPACE/madmax/taco_plot" https://github.com/BTCgreen-Network/taco-plotter-madmax/releases/download/${{ steps.latest-madmax.outputs.result }}/taco_plot-${{ steps.latest-madmax.outputs.result }}-x86-64
-        wget -O "$GITHUB_WORKSPACE/madmax/taco_plot_k34" https://github.com/BTCgreen-Network/taco-plotter-madmax/releases/download/${{ steps.latest-madmax.outputs.result }}/taco_plot_k34-${{ steps.latest-madmax.outputs.result }}-x86-64
+        wget -O "$GITHUB_WORKSPACE/madmax/taco_plot" https://github.com/Taco-Network/taco-plotter-madmax/releases/download/${{ steps.latest-madmax.outputs.result }}/taco_plot-${{ steps.latest-madmax.outputs.result }}-x86-64
+        wget -O "$GITHUB_WORKSPACE/madmax/taco_plot_k34" https://github.com/Taco-Network/taco-plotter-madmax/releases/download/${{ steps.latest-madmax.outputs.result }}/taco_plot_k34-${{ steps.latest-madmax.outputs.result }}-x86-64
         chmod +x "$GITHUB_WORKSPACE/madmax/taco_plot"
         chmod +x "$GITHUB_WORKSPACE/madmax/taco_plot_k34"
 
@@ -120,7 +120,7 @@ jobs:
         result-encoding: string
         script: |
           const releases = await github.repos.listReleases({
-            owner: 'BTCgreen-Network',
+            owner: 'Taco-Network',
             repo: 'bladebit',
           });
           return releases.data[0].tag_name;
@@ -128,7 +128,7 @@ jobs:
     - name: Get latest bladebit plotter
       run: |
         mkdir "$GITHUB_WORKSPACE/bladebit"
-        wget -O /tmp/bladebit.tar.gz https://github.com/BTCgreen-Network/bladebit/releases/download/${{ steps.latest-bladebit.outputs.result }}/bladebit-${{ steps.latest-bladebit.outputs.result }}-ubuntu-x86-64.tar.gz
+        wget -O /tmp/bladebit.tar.gz https://github.com/Taco-Network/bladebit/releases/download/${{ steps.latest-bladebit.outputs.result }}/bladebit-${{ steps.latest-bladebit.outputs.result }}-ubuntu-x86-64.tar.gz
         tar -xvzf /tmp/bladebit.tar.gz -C $GITHUB_WORKSPACE/bladebit
         chmod +x "$GITHUB_WORKSPACE/bladebit/bladebit"
 

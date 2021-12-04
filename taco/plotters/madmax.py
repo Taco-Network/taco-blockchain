@@ -109,7 +109,7 @@ def install_madmax(plotters_root_path: Path):
             [
                 "git",
                 "clone",
-                "https://github.com/BTCgreen-Network/taco-plotter-madmax.git",
+                "https://github.com/Taco-Network/taco-plotter-madmax.git",
                 MADMAX_PLOTTER_DIR,
             ],
             "Could not clone madmax git repository",
