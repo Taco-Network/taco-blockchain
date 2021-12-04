@@ -5,7 +5,7 @@ import WalletGraph from '../WalletGraph';
 import FarmCard from '../../farm/card/FarmCard';
 import useWallet from '../../../hooks/useWallet';
 import useCurrencyCode from '../../../hooks/useCurrencyCode';
-import { byte_to_taco_string } from '../../../util/taco';
+import { mojo_to_taco_string } from '../../../util/taco';
 
 const StyledGraphContainer = styled.div`
   margin-left: -1rem;
@@ -39,7 +39,7 @@ export default function WalletCardTotalBalance(props: Props) {
       }
       value={
         <>
-          {byte_to_taco_string(value)} {currencyCode}
+          {mojo_to_taco_string(value)} {currencyCode}
         </>
       }
       description={

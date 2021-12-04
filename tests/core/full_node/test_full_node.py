@@ -13,7 +13,7 @@ from taco.consensus.pot_iterations import is_overflow_block
 from taco.full_node.bundle_tools import detect_potential_template_generator
 from taco.full_node.full_node_api import FullNodeAPI
 from taco.full_node.signage_point import SignagePoint
-from taco.protocols import full_node_protocol as fnp, full_node_protocol
+from taco.protocols import full_node_protocol as fnp, full_node_protocol, wallet_protocol
 from taco.protocols import timelord_protocol
 from taco.protocols.full_node_protocol import RespondTransaction
 from taco.protocols.protocol_message_types import ProtocolMessageTypes
@@ -38,7 +38,6 @@ from taco.util.ints import uint8, uint16, uint32, uint64
 from taco.util.recursive_replace import recursive_replace
 from taco.util.vdf_prover import get_vdf_info_and_proof
 from tests.wallet_tools import WalletTool
-from tests.core.fixtures import empty_blockchain  # noqa: F401
 from taco.wallet.cc_wallet.cc_wallet import CCWallet
 from taco.wallet.transaction_record import TransactionRecord
 
@@ -47,7 +46,6 @@ from tests.core.full_node.test_coin_store import get_future_reward_coins
 from tests.core.full_node.test_mempool_performance import wallet_height_at_least
 from tests.core.make_block_generator import make_spend_bundle
 from tests.core.node_height import node_height_at_least
-from tests.core.fixtures import empty_blockchain  # noqa: F401
 from tests.setup_nodes import bt, self_hostname, setup_simulators_and_wallets, test_constants
 from tests.time_out_assert import time_out_assert, time_out_assert_custom_interval, time_out_messages
 
@@ -764,13 +762,15 @@ class TestFullNodeProtocol:
                 uint32(0),
                 block.reward_chain_block.get_unfinished().get_hash(),
             )
-            asyncio.create_task(full_node_1.new_peak(new_peak, dummy_peer))
+            task_1 = asyncio.create_task(full_node_1.new_peak(new_peak, dummy_peer))
             await time_out_assert(10, time_out_messages(incoming_queue, "request_block", 1))
+            task_1.cancel()
 
             await full_node_1.full_node.respond_block(fnp.RespondBlock(block), peer)
             # Ignores, already have
-            asyncio.create_task(full_node_1.new_peak(new_peak, dummy_peer))
+            task_2 = asyncio.create_task(full_node_1.new_peak(new_peak, dummy_peer))
             await time_out_assert(10, time_out_messages(incoming_queue, "request_block", 0))
+            task_2.cancel()
 
         # Ignores low weight
         new_peak = fnp.NewPeak(
@@ -842,7 +842,7 @@ class TestFullNodeProtocol:
             )
             assert spend_bundle is not None
             cost_result = await full_node_1.full_node.mempool_manager.pre_validate_spendbundle(
-                spend_bundle, spend_bundle.name()
+                spend_bundle, None, spend_bundle.name()
             )
             log.info(f"Cost result: {cost_result.clvm_cost}")
 
@@ -888,9 +888,9 @@ class TestFullNodeProtocol:
             spend_bundle = wallet_receiver.generate_signed_transaction(
                 uint64(500), receiver_puzzlehash, coin_record.coin, fee=fee
             )
-            respond_transaction = fnp.RespondTransaction(spend_bundle)
+            respond_transaction = wallet_protocol.SendTransaction(spend_bundle)
 
-            await full_node_1.respond_transaction(respond_transaction, peer)
+            await full_node_1.send_transaction(respond_transaction)
 
             request = fnp.RequestTransaction(spend_bundle.get_hash())
             req = await full_node_1.request_transaction(request)
@@ -1331,7 +1331,7 @@ class TestFullNodeProtocol:
         await time_out_assert(20, caught_up_slots)
 
     @pytest.mark.asyncio
-    async def test_new_signage_point_caching(self, wallet_nodes, empty_blockchain):
+    async def test_new_signage_point_xtxhing(self, wallet_nodes, empty_blockchain):
         full_node_1, full_node_2, server_1, server_2, wallet_a, wallet_receiver = wallet_nodes
         blocks = await full_node_1.get_all_full_blocks()
 

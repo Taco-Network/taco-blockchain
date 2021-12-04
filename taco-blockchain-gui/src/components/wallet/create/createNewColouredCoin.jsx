@@ -20,7 +20,7 @@ import {
 } from '../../../modules/createWallet';
 import { useStyles } from './WalletCreate';
 import { create_cc_action } from '../../../modules/message';
-import { taco_to_byte } from '../../../util/taco';
+import { taco_to_mojo } from '../../../util/taco';
 import { openDialog } from '../../../modules/dialog';
 
 export const customStyles = makeStyles((theme) => ({
@@ -83,8 +83,8 @@ export const CreateNewCCWallet = () => {
       return;
     }
     dispatch(createState(true, true));
-    const amount = taco_to_byte(amount_input.value);
-    const fee = taco_to_byte(fee_input.value);
+    const amount = taco_to_mojo(amount_input.value);
+    const fee = taco_to_mojo(fee_input.value);
     dispatch(create_cc_action(amount, fee));
   }
 

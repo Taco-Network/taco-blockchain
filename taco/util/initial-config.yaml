@@ -19,34 +19,79 @@ network_overrides: &network_overrides
     mainnet:
       NETWORK_TYPE: 0
       GENESIS_CHALLENGE: 2aed672adcd351b98e860a7b3d78de0a5e2af16c22df88e66e1919eb1e611f8e
+      GENESIS_PRE_FARM_POOL_PUZZLE_HASH:  "5593755c5604a1651c85700d2db91a2fa4d978fcd9d5bb9aa948fbf4d0093193"
+      GENESIS_PRE_FARM_FARMER_PUZZLE_HASH: "5593755c5604a1651c85700d2db91a2fa4d978fcd9d5bb9aa948fbf4d0093193"
+    testnet0:
+      MIN_PLOT_SIZE: 18
+      GENESIS_CHALLENGE: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+      NETWORK_TYPE: 1
       GENESIS_PRE_FARM_POOL_PUZZLE_HASH: "5593755c5604a1651c85700d2db91a2fa4d978fcd9d5bb9aa948fbf4d0093193"
       GENESIS_PRE_FARM_FARMER_PUZZLE_HASH: "5593755c5604a1651c85700d2db91a2fa4d978fcd9d5bb9aa948fbf4d0093193"
-    testnet1:
-      MIN_PLOT_SIZE: 18
-      GENESIS_CHALLENGE: 9613e9ffe2797bf93ff722b5950022471f6ea625e512bd8b1299e4332512be30
-      NETWORK_TYPE: 1
-      GENESIS_PRE_FARM_POOL_PUZZLE_HASH: "8bc5671150311938a9f90bfee18ddecc29b65378a40bd5246ef96b4a7ec03c14"
-      GENESIS_PRE_FARM_FARMER_PUZZLE_HASH: "8bc5671150311938a9f90bfee18ddecc29b65378a40bd5246ef96b4a7ec03c14"
     testnet2:
       MIN_PLOT_SIZE: 18
       GENESIS_CHALLENGE: ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad
       NETWORK_TYPE: 1
       DIFFICULTY_CONSTANT_FACTOR: 10052721566054
-      GENESIS_PRE_FARM_POOL_PUZZLE_HASH: "d23da14695a188ae5708dd152263c4db883eb27edeb936178d4d988b8f3ce5fc"
-      GENESIS_PRE_FARM_FARMER_PUZZLE_HASH: "3d8765d3a597ec1d99663f6c9816d915b9f68613ac94009884c4addaefcce6af"
+      GENESIS_PRE_FARM_POOL_PUZZLE_HASH: "5593755c5604a1651c85700d2db91a2fa4d978fcd9d5bb9aa948fbf4d0093193"
+      GENESIS_PRE_FARM_FARMER_PUZZLE_HASH: "5593755c5604a1651c85700d2db91a2fa4d978fcd9d5bb9aa948fbf4d0093193"
+    testnet3:
+      DIFFICULTY_CONSTANT_FACTOR: 10052721566054
+      GENESIS_CHALLENGE: ca7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015af
+      GENESIS_PRE_FARM_FARMER_PUZZLE_HASH: 5593755c5604a1651c85700d2db91a2fa4d978fcd9d5bb9aa948fbf4d0093193
+      GENESIS_PRE_FARM_POOL_PUZZLE_HASH: 5593755c5604a1651c85700d2db91a2fa4d978fcd9d5bb9aa948fbf4d0093193
+      MIN_PLOT_SIZE: 18
+      NETWORK_TYPE: 1
+      MEMPOOL_BLOCK_BUFFER: 10
+    testnet4:
+      DIFFICULTY_CONSTANT_FACTOR: 10052721566054
+      GENESIS_CHALLENGE: dd7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015af
+      GENESIS_PRE_FARM_FARMER_PUZZLE_HASH: 5593755c5604a1651c85700d2db91a2fa4d978fcd9d5bb9aa948fbf4d0093193
+      GENESIS_PRE_FARM_POOL_PUZZLE_HASH: 5593755c5604a1651c85700d2db91a2fa4d978fcd9d5bb9aa948fbf4d0093193
+      MIN_PLOT_SIZE: 18
+      NETWORK_TYPE: 1
+      MEMPOOL_BLOCK_BUFFER: 10
+      EPOCH_BLOCKS: 768
+      DIFFICULTY_STARTING: 30
+    testnet5:
+      DIFFICULTY_CONSTANT_FACTOR: 10052721566054
+      GENESIS_CHALLENGE: ee7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015af
+      GENESIS_PRE_FARM_FARMER_PUZZLE_HASH: 5593755c5604a1651c85700d2db91a2fa4d978fcd9d5bb9aa948fbf4d0093193
+      GENESIS_PRE_FARM_POOL_PUZZLE_HASH: 5593755c5604a1651c85700d2db91a2fa4d978fcd9d5bb9aa948fbf4d0093193
+      MIN_PLOT_SIZE: 18
+      NETWORK_TYPE: 1
+      MEMPOOL_BLOCK_BUFFER: 10
+      EPOCH_BLOCKS: 768
+      DIFFICULTY_STARTING: 30
+    testnet7:
+      DIFFICULTY_CONSTANT_FACTOR: 10052721566054
+      GENESIS_CHALLENGE: 117816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015af
+      GENESIS_PRE_FARM_FARMER_PUZZLE_HASH: 5593755c5604a1651c85700d2db91a2fa4d978fcd9d5bb9aa948fbf4d0093193
+      GENESIS_PRE_FARM_POOL_PUZZLE_HASH: 5593755c5604a1651c85700d2db91a2fa4d978fcd9d5bb9aa948fbf4d0093193
+      MIN_PLOT_SIZE: 18
+      NETWORK_TYPE: 1
+      MEMPOOL_BLOCK_BUFFER: 50
+      EPOCH_BLOCKS: 768
+      DIFFICULTY_STARTING: 30
   config:
     mainnet:
       address_prefix: "xtx"
       default_full_node_port: 18620
+    testnet0:
+      address_prefix: "txtx"
     testnet1:
       address_prefix: "txtx"
-      default_full_node_port: 38444
     testnet2:
       address_prefix: "txtx"
-      default_full_node_port: 48444
+    testnet3:
+      address_prefix: "txtx"
+    testnet4:
+      address_prefix: "txtx"
+    testnet7:
+      address_prefix: "txtx"
+      default_full_node_port: 511444
 
 selected_network: &selected_network "mainnet"
-ALERTS_URL: https://download.taconetwork.net/notify/mainnet_alert.txt
+ALERTS_URL: https://download.taco.com/notify/mainnet_alert.txt
 TACO_ALERTS_PUBKEY: 89b7fd87cb56e926ecefb879a29aae308be01f31980569f6a75a69d2a9a69daefd71fb778d865f7c50d6c967e3025937
 
 # public ssl ca is included in source code
@@ -87,10 +132,10 @@ harvester:
   rpc_port: 18737
   num_threads: 30
   plots_refresh_parameter:
-    interval_seconds: 120 # The interval in seconds to refresh the plot file manager
-    retry_invalid_seconds: 1200 # How long to wait before re-trying plots which failed to load
+    interval_seconds: 1200 # The interval in seconds to refresh the plot file manager
+    retry_invalid_seconds: 2400 # How long to wait before re-trying plots which failed to load
     batch_size: 300 # How many plot files the harvester processes before it waits batch_sleep_milliseconds
-    batch_sleep_milliseconds: 1 # Milliseconds the harvester sleeps between batch processing
+    batch_sleep_milliseconds: 2 # Milliseconds the harvester sleeps between batch processing
 
 
   # If True use parallel reads in chiapos
@@ -181,7 +226,7 @@ timelord:
       host: *self_hostname
       port: 18620
   # Maximum number of seconds allowed for a client to reconnect to the server.
-  max_connection_time: 60
+  max_connection_time: 300
   # The ip and port where the TCP clients will connect.
   vdf_server:
     host: *self_hostname
@@ -215,6 +260,18 @@ timelord:
 full_node:
   # The full node server (if run) will run on this port
   port: 18620
+
+  # controls the sync-to-disk behavior of the database connection. Can be one of:
+  # "on"    enables syncing to disk, minimizes risk of corrupting the DB in
+  #         power-loss, disk failure or kernel panics
+  # "full"  enables extra syncing to disk for additional safety from
+  #         power-failures and kernel panics
+  # "off"   disables syncing, lightens disk load and improves performance.
+  #         increases risk of corrupting DB in power-loss, disk failure or
+  #         kernel panics
+  # "auto"  on/off is decided based on a heuristic of how likely a failure is on
+  #         the particular system we're running on. Defaults to "full".
+  db_sync: auto
 
   # Run multiple nodes with different databases by changing the database_path
   database_path: db/blockchain_v1_CHALLENGE.sqlite
@@ -275,7 +332,7 @@ full_node:
   # List of trusted DNS seeders to bootstrap from.
   # If you modify this, please change the hardcode as well from FullNode.set_server()
   dns_servers:
-    - "dns-introducer.taconetwork.net"
+    - "dns-introducer.taco.com"
   farmer_peer:
       host: *self_hostname
       port: 18623
@@ -283,7 +340,7 @@ full_node:
       host: *self_hostname
       port: 18622
   introducer_peer:
-      host: introducer.taconetwork.net  # Taco introducer IPv4/IPv6
+      host: introducer.taco.com  # Taco AWS introducer IPv4/IPv6
       port: 18620
   wallet_peer:
     host: *self_hostname
@@ -340,6 +397,9 @@ wallet:
 
   enable_profiler: False
 
+  # see description for full_node.db_sync
+  db_sync: auto
+
   # The minimum height that we care about for our transactions. Set to zero
   # If we are restoring from private key and don't know the height.
   starting_height: 0
@@ -367,7 +427,7 @@ wallet:
   recent_peer_threshold: 6000
 
   introducer_peer:
-    host: introducer.taconetwork.net # Taco introducer IPv4/IPv6
+    host: introducer.taco.com # Taco AWS introducer IPv4/IPv6
     port: 18620
 
   ssl:

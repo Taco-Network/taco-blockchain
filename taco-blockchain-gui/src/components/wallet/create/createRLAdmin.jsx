@@ -20,7 +20,7 @@ import {
 } from '../../../modules/createWallet';
 import { useStyles } from './WalletCreate';
 import { create_rl_admin_action } from '../../../modules/message';
-import { taco_to_byte } from '../../../util/taco';
+import { taco_to_mojo } from '../../../util/taco';
 import { openDialog } from '../../../modules/dialog';
 
 export const customStyles = makeStyles((theme) => ({
@@ -156,12 +156,12 @@ export const CreateRLAdminWallet = () => {
     dispatch(createState(true, true));
     const interval = interval_input.value;
     const interval_value = Number.parseInt(Number(interval));
-    const tacoper = taco_to_byte(tacoper_input.value);
+    const tacoper = taco_to_mojo(tacoper_input.value);
     const tacoper_value = Number.parseInt(Number(tacoper));
     const userpubkey = userpubkey_input.value;
-    const amount = taco_to_byte(amount_input.value);
+    const amount = taco_to_mojo(amount_input.value);
     const amount_value = Number.parseInt(Number(amount));
-    // var fee = taco_to_byte(fee_input.value);
+    // var fee = taco_to_mojo(fee_input.value);
     // TODO(lipa): send fee to server
     // const fee_value = parseInt(Number(fee));
     dispatch(

@@ -1,24 +1,17 @@
 Taco is a cryptocurrency forked from Chia and uses the Proof of Space and Time consensus algorithm
 
-Discord Channel: https://discord.gg/xguteVCYHh
+Discord Channel: https://discord.gg/PCyTa4CNx4
 
-Website: https://taconetwork.net (coming soon)
+Website: https://taco.com (coming soon)
 
-Introducer: dns-introducer.taconetwork.net:18620
+Initial 1.0.0 release!
+Per usual should'nt have any issues.
+Full node port: 18620
 
-Changelog:
-v1.0.0 - Initial Release
 
-v1.1.0 - Prefarm removed
-       - Difficulty fixed
-
-v1.1.16 - Restarted chain because of unstable Difficulty
-
-v2.0.0 - Aligned with Chia 1.2.0
-       - Test NFT Plots and Pooling
-
-v2.0.1 - Fix "exchange" bug
-
-v2.0.2 - Image rebrand
-
-v2.1.0 - added time consuming in the GUI
+EARLY ADOPTERS GET MORE TACO!!!!
+The way Taco was designed was to get alot of coins farmed early on and then significantly drop very early on in the blockchains life cycle.
+At height 168192 the block rewards will drop from 100,000 XTX to 20,000 XTX.
+Early adopters get the privlage of getting a lot of coins :)
+As of today (11/22/2021) each block of 100,000 XTX is selling for roughly 25cents on https://forks.green
+Have fun everyone, and i wish everybody good luck in finding Taco blocks!

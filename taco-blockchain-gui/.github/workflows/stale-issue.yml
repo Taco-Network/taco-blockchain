@@ -8,7 +8,7 @@ jobs:
   stale:
     runs-on: ubuntu-latest
     steps:
-      - uses: taco-network/stale@main
+      - uses: btcgreen-network/stale@main
         with:
           operations-per-run: 10000
           ascending: true

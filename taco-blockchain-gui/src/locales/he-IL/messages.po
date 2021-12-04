@@ -15,7 +15,7 @@ msgstr ""
 "X-Crowdin-Project: taco-blockchain\n"
 "X-Crowdin-Project-ID: 440660\n"
 "X-Crowdin-Language: he\n"
-"X-Crowdin-File: /[Taco-Network.taco-blockchain-gui] main/src/locales/en-US/messages.po\n"
+"X-Crowdin-File: /[BTCgreen-Network.taco-blockchain-gui] main/src/locales/en-US/messages.po\n"
 "X-Crowdin-File-ID: 118\n"
 
 #: src/components/plot/add/PlotAddNFT.tsx:62
@@ -1925,7 +1925,7 @@ msgid "Select Wallet Type"
 msgstr "בחר סוג ארנק"
 
 #: src/components/plot/add/PlotAddSelectFinalDirectory.tsx:25
-msgid "Select the final destination for the folder where you would like the plot to be stored. We recommend you use a large slow hard drive (like external XTX)."
+msgid "Select the final destination for the folder where you would like the plot to be stored. We recommend you use a large slow hard drive (like external HDD)."
 msgstr "בחר את הספרייה הסופית בה את/ה רוצה לאחסן את הפלוטים שלך. אנו ממליצים להשתמש בכונן קשיח בנפח גדול ואיטי (כמו כונן קשיח חיצוני)."
 
 #: src/components/plot/add/PlotAddSelectTemporaryDirectory.tsx:41
@@ -2753,6 +2753,6 @@ msgid "{currencyCode} User Transaction Fees"
 msgstr "{currencyCode} עמלות עסקה למשתמש"
 
 #: src/components/core/components/Amount/Amount.tsx:82
-msgid "{byte, plural, one {byte} other {bytes}}"
-msgstr "{byte, plural, one {byte} other {bytes}}"
+msgid "{mojo, plural, one {mojo} other {mojos}}"
+msgstr "{mojo, plural, one {mojo} other {mojos}}"
 

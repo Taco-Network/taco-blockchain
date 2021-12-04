@@ -123,13 +123,13 @@ def wallet_coin_unit(typ: WalletType, address_prefix: str) -> Tuple[str, int]:
         return "", units["colouredcoin"]
     if typ in [WalletType.STANDARD_WALLET, WalletType.POOLING_WALLET, WalletType.MULTI_SIG, WalletType.RATE_LIMITED]:
         return address_prefix, units["taco"]
-    return "", units["byte"]
+    return "", units["mojo"]
 
 
 def print_balance(amount: int, scale: int, address_prefix: str) -> str:
     ret = f"{amount/scale} {address_prefix} "
     if scale > 1:
-        ret += f"({amount} byte)"
+        ret += f"({amount} mojo)"
     return ret
 
 
@@ -193,7 +193,7 @@ async def get_wallet(wallet_client: WalletRpcClient, fingerprint: int = None) ->
             use_cloud = True
             if "backup_path" in log_in_response:
                 path = log_in_response["backup_path"]
-                print(f"Backup file from backup.taconetwork.net downloaded and written to: {path}")
+                print(f"Backup file from backup.taco.com downloaded and written to: {path}")
                 val = input("Do you want to use this file to restore from backup? (Y/N) ")
                 if val.lower() == "y":
                     log_in_response = await wallet_client.log_in_and_restore(fingerprint, path)

@@ -6,8 +6,6 @@ from concurrent.futures.process import ProcessPoolExecutor
 from enum import Enum
 from typing import Dict, List, Optional, Set, Tuple, Union
 
-from taco.util.default_root import DEFAULT_ROOT_PATH
-from taco.util.config import load_config
 from clvm.casts import int_from_bytes
 
 from taco.consensus.block_body_validation import validate_block_body
@@ -19,7 +17,11 @@ from taco.consensus.cost_calculator import NPCResult
 from taco.consensus.difficulty_adjustment import get_next_sub_slot_iters_and_difficulty
 from taco.consensus.find_fork_point import find_fork_point_in_chain
 from taco.consensus.full_block_to_block_record import block_to_block_record
-from taco.consensus.multiprocess_validation import PreValidationResult, pre_validate_blocks_multiprocessing
+from taco.consensus.multiprocess_validation import (
+    PreValidationResult,
+    pre_validate_blocks_multiprocessing,
+    _run_generator,
+)
 from taco.full_node.block_store import BlockStore
 from taco.full_node.coin_store import CoinStore
 from taco.full_node.hint_store import HintStore
@@ -37,10 +39,12 @@ from taco.types.header_block import HeaderBlock
 from taco.types.unfinished_block import UnfinishedBlock
 from taco.types.unfinished_header_block import UnfinishedHeaderBlock
 from taco.types.weight_proof import SubEpochChallengeSegment
-from taco.util.errors import Err
+from taco.util.errors import Err, ConsensusError
 from taco.util.generator_tools import get_block_header, tx_removals_and_additions
 from taco.util.ints import uint16, uint32, uint64, uint128
 from taco.util.streamable import recurse_jsonify
+from taco.util.default_root import DEFAULT_ROOT_PATH
+from taco.util.config import load_config
 
 log = logging.getLogger(__name__)
 
@@ -566,7 +570,7 @@ class Blockchain(BlockchainInterface):
         return list(reversed(recent_rc))
 
     async def validate_unfinished_block(
-        self, block: UnfinishedBlock, skip_overflow_ss_validation=True
+        self, block: UnfinishedBlock, npc_result: Optional[NPCResult], skip_overflow_ss_validation=True
     ) -> PreValidationResult:
         if (
             not self.contains_block(block.prev_header_hash)
@@ -606,21 +610,6 @@ class Blockchain(BlockchainInterface):
             else self.block_record(block.prev_header_hash).height
         )
 
-        npc_result = None
-        if block.transactions_generator is not None:
-            assert block.transactions_info is not None
-            try:
-                block_generator: Optional[BlockGenerator] = await self.get_block_generator(block)
-            except ValueError:
-                return PreValidationResult(uint16(Err.GENERATOR_REF_HAS_NO_GENERATOR.value), None, None)
-            if block_generator is None:
-                return PreValidationResult(uint16(Err.GENERATOR_REF_HAS_NO_GENERATOR.value), None, None)
-            npc_result = get_name_puzzle_conditions(
-                block_generator,
-                min(self.constants.MAX_BLOCK_COST_CLVM, block.transactions_info.cost),
-                cost_per_byte=self.constants.COST_PER_BYTE,
-                safe_mode=False,
-            )
         error_code, cost_result = await validate_block_body(
             self.constants,
             self,
@@ -632,6 +621,7 @@ class Blockchain(BlockchainInterface):
             npc_result,
             None,
             self.get_block_generator,
+            False,
         )
 
         if error_code is not None:
@@ -658,6 +648,21 @@ class Blockchain(BlockchainInterface):
             batch_size,
             wp_summaries,
         )
+
+    async def run_generator(self, unfinished_block: bytes, generator: BlockGenerator) -> NPCResult:
+        task = asyncio.get_running_loop().run_in_executor(
+            self.pool,
+            _run_generator,
+            self.constants_json,
+            unfinished_block,
+            bytes(generator),
+        )
+        error, npc_result_bytes = await task
+        if error is not None:
+            raise ConsensusError(error)
+        if npc_result_bytes is None:
+            raise ConsensusError(Err.UNKNOWN)
+        return NPCResult.from_bytes(npc_result_bytes)
 
     def contains_block(self, header_hash: bytes32) -> bool:
         """
@@ -734,11 +739,10 @@ class Blockchain(BlockchainInterface):
         if len(self.__block_records) < self.constants.BLOCKS_CACHE_SIZE:
             return None
 
-        peak = self.get_peak()
-        assert peak is not None
-        if peak.height - self.constants.BLOCKS_CACHE_SIZE < 0:
+        assert self._peak_height is not None
+        if self._peak_height - self.constants.BLOCKS_CACHE_SIZE < 0:
             return None
-        self.clean_block_record(peak.height - self.constants.BLOCKS_CACHE_SIZE)
+        self.clean_block_record(self._peak_height - self.constants.BLOCKS_CACHE_SIZE)
 
     async def get_block_records_in_range(self, start: int, stop: int) -> Dict[bytes32, BlockRecord]:
         return await self.block_store.get_block_records_in_range(start, stop)

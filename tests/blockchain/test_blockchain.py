@@ -27,6 +27,7 @@ from taco.types.condition_opcodes import ConditionOpcode
 from taco.types.condition_with_args import ConditionWithArgs
 from taco.types.end_of_slot_bundle import EndOfSubSlotBundle
 from taco.types.full_block import FullBlock
+from taco.types.generator_types import BlockGenerator
 from taco.types.spend_bundle import SpendBundle
 from taco.types.unfinished_block import UnfinishedBlock
 from tests.block_tools import create_block_tools_async, get_vdf_info_and_proof
@@ -36,13 +37,8 @@ from taco.util.ints import uint8, uint64, uint32
 from taco.util.merkle_set import MerkleSet
 from taco.util.recursive_replace import recursive_replace
 from tests.wallet_tools import WalletTool
-from tests.core.fixtures import default_400_blocks  # noqa: F401; noqa: F401
-from tests.core.fixtures import default_1000_blocks  # noqa: F401
-from tests.core.fixtures import default_10000_blocks  # noqa: F401
-from tests.core.fixtures import default_10000_blocks_compact  # noqa: F401
-from tests.core.fixtures import empty_blockchain  # noqa: F401
-from tests.core.fixtures import create_blockchain
 from tests.setup_nodes import bt, test_constants
+from tests.util.blockchain import create_blockchain
 from tests.util.keyring import TempKeyring
 from taco.wallet.puzzles.p2_delegated_puzzle_or_hidden_puzzle import (
     DEFAULT_HIDDEN_PUZZLE_HASH,
@@ -216,7 +212,13 @@ class TestBlockHeaderValidation:
             block.transactions_generator,
             [],
         )
-        validate_res = await blockchain.validate_unfinished_block(unf, False)
+        npc_result = None
+        if unf.transactions_generator is not None:
+            block_generator: BlockGenerator = await blockchain.get_block_generator(unf)
+            block_bytes = bytes(unf)
+            npc_result = await blockchain.run_generator(block_bytes, block_generator)
+
+        validate_res = await blockchain.validate_unfinished_block(unf, npc_result, False)
         err = validate_res.error
         assert err is None
         result, err, _, _ = await blockchain.receive_block(block)
@@ -233,7 +235,12 @@ class TestBlockHeaderValidation:
             block.transactions_generator,
             [],
         )
-        validate_res = await blockchain.validate_unfinished_block(unf, False)
+        npc_result = None
+        if unf.transactions_generator is not None:
+            block_generator: BlockGenerator = await blockchain.get_block_generator(unf)
+            block_bytes = bytes(unf)
+            npc_result = await blockchain.run_generator(block_bytes, block_generator)
+        validate_res = await blockchain.validate_unfinished_block(unf, npc_result, False)
         assert validate_res.error is None
 
     @pytest.mark.asyncio
@@ -316,7 +323,14 @@ class TestBlockHeaderValidation:
                     block.transactions_generator,
                     [],
                 )
-                validate_res = await blockchain.validate_unfinished_block(unf, skip_overflow_ss_validation=True)
+                npc_result = None
+                if block.transactions_generator is not None:
+                    block_generator: BlockGenerator = await blockchain.get_block_generator(unf)
+                    block_bytes = bytes(unf)
+                    npc_result = await blockchain.run_generator(block_bytes, block_generator)
+                validate_res = await blockchain.validate_unfinished_block(
+                    unf, npc_result, skip_overflow_ss_validation=True
+                )
                 assert validate_res.error is None
                 return None
 
@@ -2480,7 +2494,7 @@ class TestBodyValidation:
 
         spend = list(blocks[-1].get_included_reward_coins())[0]
         print("spend=", spend)
-        # this create coin will spend all of the coin, so the 10 bytes below
+        # this create coin will spend all of the coin, so the 10 mojos below
         # will be "minted".
         output = ConditionWithArgs(ConditionOpcode.CREATE_COIN, [bt.pool_ph, int_to_bytes(spend.amount)])
         condition_dict = {ConditionOpcode.CREATE_COIN: [output]}

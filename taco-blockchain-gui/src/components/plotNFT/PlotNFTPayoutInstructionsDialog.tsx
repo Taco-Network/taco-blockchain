@@ -69,8 +69,13 @@ export default function PlotNFTPayoutInstructionsDialog(props: Props) {
     }
   }
 
+  function handleDialogClose(event: any, reason: any) {
+    if (reason !== 'backdropClick' || reason !== 'EscapeKeyDown') {
+      onClose();
+    }}
+
   return (
-    <Dialog disableBackdropClick disableEscapeKeyDown maxWidth="md" open={open}>
+    <Dialog onClose={handleDialogClose} maxWidth="md" open={open}>
       <Form methods={methods} onSubmit={handleSubmit}>
         <DialogTitle>
           <Trans>Edit Payout Instructions</Trans>
@@ -108,7 +113,7 @@ export default function PlotNFTPayoutInstructionsDialog(props: Props) {
                   </Trans>{' '}
                   <Link
                     target="_blank"
-                    href="https://github.com/Taco-Network/pool-reference/blob/main/SPECIFICATION.md#payloadpayout_instructions"
+                    href="https://github.com/BTCgreen-Network/pool-reference/blob/main/SPECIFICATION.md#payloadpayout_instructions"
                     noWrap
                   >
                     <Trans>Learn More</Trans>

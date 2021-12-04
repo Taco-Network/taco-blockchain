@@ -6,7 +6,7 @@ if ([Environment]::Is64BitOperatingSystem -eq $false)
     Exit 1
 }
 
-if ((Get-Item "$env:windir\System32\msvcp140.dll").Exists -eq $false)
+if (-not (Get-Item -ErrorAction SilentlyContinue "$env:windir\System32\msvcp140.dll").Exists)
 {
     Write-Output "Unable to find Visual C++ Runtime DLLs"
     Write-Output ""
@@ -42,13 +42,10 @@ if ([version]$pythonVersion -lt [version]"3.7.0")
 Write-Output "Python version is:" $pythonVersion
 
 py -m venv venv
-.\venv\Scripts\Activate.ps1
 
-py -m pip install pip --upgrade
-pip install --upgrade setuptools
-pip install --upgrade wheel
-pip install --extra-index-url https://pypi.chia.net/simple/ miniupnpc==2.2.2
-pip install --editable . --extra-index-url https://pypi.chia.net/simple/
+venv\scripts\python -m pip install --upgrade pip setuptools wheel
+venv\scripts\pip install --extra-index-url https://pypi.chia.net/simple/ miniupnpc==2.2.2
+venv\scripts\pip install --editable . --extra-index-url https://pypi.chia.net/simple/
 
 Write-Output ""
 Write-Output "Taco blockchain .\Install.ps1 complete."
@@ -56,7 +53,7 @@ Write-Output "For assistance join us on Keybase in the #support chat channel:"
 Write-Output "https://keybase.io/team/taco_network.public"
 Write-Output ""
 Write-Output "Try the Quick Start Guide to running taco-blockchain:"
-Write-Output "https://github.com/Taco-Network/taco-blockchain/wiki/Quick-Start-Guide"
+Write-Output "https://github.com/BTCgreen-Network/taco-blockchain/wiki/Quick-Start-Guide"
 Write-Output ""
 Write-Output "To install the GUI type '.\Install-gui.ps1' after '.\venv\scripts\Activate.ps1'."
 Write-Output ""

@@ -19,7 +19,7 @@ import {
   CREATE_CC_WALLET_OPTIONS,
 } from '../../../modules/createWallet';
 import { useStyles } from './WalletCreate';
-import { taco_to_byte } from '../../../util/taco';
+import { taco_to_mojo } from '../../../util/taco';
 import { create_cc_for_colour_action } from '../../../modules/message';
 import { openDialog } from '../../../modules/dialog';
 
@@ -75,7 +75,7 @@ export const CreateExistingCCWallet = () => {
     }
     dispatch(createState(true, true));
     const colour = colour_string.value;
-    const fee = taco_to_byte(fee_input.value);
+    const fee = taco_to_mojo(fee_input.value);
     dispatch(create_cc_for_colour_action(colour, fee));
   }
 

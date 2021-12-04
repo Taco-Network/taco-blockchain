@@ -8,6 +8,7 @@ from pkg_resources import get_distribution
 from PyInstaller.utils.hooks import collect_submodules, copy_metadata
 
 THIS_IS_WINDOWS = platform.system().lower().startswith("win")
+THIS_IS_MAC = platform.system().lower().startswith("darwin")
 
 ROOT = pathlib.Path(importlib.import_module("taco").__file__).absolute().parent.parent
 
@@ -69,8 +70,24 @@ hiddenimports = []
 hiddenimports.extend(entry_points)
 hiddenimports.extend(keyring_imports)
 
-binaries = []
+binaries = [
+    (
+        f"{ROOT}/madmax/taco_plot",
+        "madmax"
+    ),
+    (
+        f"{ROOT}/madmax/taco_plot_k34",
+        "madmax"
+    )
+]
 
+if not THIS_IS_MAC:
+    binaries.extend([
+        (
+            f"{ROOT}/bladebit/bladebit",
+            "bladebit"
+        )
+    ])
 
 if THIS_IS_WINDOWS:
     hiddenimports.extend(["win32timezone", "win32cred", "pywintypes", "win32ctypes.pywin32"])

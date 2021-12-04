@@ -3,7 +3,7 @@ import { Trans } from '@lingui/macro';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../../../modules/rootReducer';
 import FarmCard from './FarmCard';
-import { byte_to_taco } from '../../../util/taco';
+import { mojo_to_taco } from '../../../util/taco';
 import useCurrencyCode from '../../../hooks/useCurrencyCode';
 
 export default function FarmCardTotalTacoFarmed() {
@@ -20,7 +20,7 @@ export default function FarmCardTotalTacoFarmed() {
   const totalTacoFarmed = useMemo(() => {
     if (farmedAmount !== undefined) {
       const val = BigInt(farmedAmount.toString());
-      return byte_to_taco(val);
+      return mojo_to_taco(val);
     }
   }, [farmedAmount]);
 

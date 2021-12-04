@@ -1,6 +1,6 @@
 import pytest
 
-from taco.wallet.chialisp import (
+from taco.wallet.tacolisp import (
     apply,
     args,
     cons,
@@ -17,7 +17,7 @@ from taco.wallet.chialisp import (
 )
 
 
-class TestChialisp:
+class TestTacolisp:
     def test_sexp(self):
         assert sexp() == "()"
         assert sexp(1) == "(1)"

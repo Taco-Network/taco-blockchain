@@ -8,8 +8,8 @@ from taco.util.bech32m import decode_puzzle_hash, encode_puzzle_hash
 from taco.util.condition_tools import parse_sexp_to_conditions
 from taco.util.ints import uint32
 
-address1 = "xtx1tm2fmappqenrj3c9ngej8k33pujvspxxea6zpu7p4sx0lvle62es9ae95j"  # Taco Network Inc Reserves Account-1
-address2 = "xtx1tm2fmappqenrj3c9ngej8k33pujvspxxea6zpu7p4sx0lvle62es9ae95j"  # Taco Network Inc Reserves Account-1
+address1 = "txtx15gx26ndmacfaqlq8m0yajeggzceu7cvmaz4df0hahkukes695rss6lej7h"  # Gene wallet (m/12381/8444/2/42):
+address2 = "txtx1c2cguswhvmdyz9hr3q6hak2h6p9dw4rz82g4707k2xy2sarv705qcce4pn"  # Mariano address (m/12381/8444/2/0)
 
 ph1 = decode_puzzle_hash(address1)
 ph2 = decode_puzzle_hash(address2)

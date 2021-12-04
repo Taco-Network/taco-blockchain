@@ -83,32 +83,32 @@ taco_formatter.setFiat = (currency, rate, display = null) => {
   units.setUnit(currency, 1 / rate, display);
 };
 
-export const byte_to_taco = (byte) => {
-  return taco_formatter(Number.parseInt(byte), 'byte').to('taco').value();
+export const mojo_to_taco = (mojo) => {
+  return taco_formatter(Number.parseInt(mojo), 'mojo').to('taco').value();
 };
 
-export const taco_to_byte = (taco) => {
+export const taco_to_mojo = (taco) => {
   return taco_formatter(Number.parseFloat(Number(taco)), 'taco')
-    .to('byte')
+    .to('mojo')
     .value();
 };
 
-export const byte_to_taco_string = (byte) => {
-  return taco_formatter(Number(byte), 'byte').to('taco').toString();
+export const mojo_to_taco_string = (mojo) => {
+  return taco_formatter(Number(mojo), 'mojo').to('taco').toString();
 };
 
-export const byte_to_colouredcoin = (byte) => {
-  return taco_formatter(Number.parseInt(byte), 'byte')
+export const mojo_to_colouredcoin = (mojo) => {
+  return taco_formatter(Number.parseInt(mojo), 'mojo')
     .to('colouredcoin')
     .value();
 };
 
-export const colouredcoin_to_byte = (colouredcoin) => {
+export const colouredcoin_to_mojo = (colouredcoin) => {
   return taco_formatter(Number.parseFloat(Number(colouredcoin)), 'colouredcoin')
-    .to('byte')
+    .to('mojo')
     .value();
 };
 
-export const byte_to_colouredcoin_string = (byte) => {
-  return taco_formatter(Number(byte), 'byte').to('colouredcoin').toString();
+export const mojo_to_colouredcoin_string = (mojo) => {
+  return taco_formatter(Number(mojo), 'mojo').to('colouredcoin').toString();
 };

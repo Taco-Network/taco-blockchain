@@ -42,7 +42,7 @@ import {
   send_transaction,
   farm_block,
 } from '../../../modules/message';
-import { /* byte_to_taco_string, */ taco_to_byte } from '../../../util/taco';
+import { /* mojo_to_taco_string, */ taco_to_mojo } from '../../../util/taco';
 import { openDialog } from '../../../modules/dialog';
 import { get_transaction_result } from '../../../util/transaction_result';
 import config from '../../../config/config';
@@ -238,7 +238,7 @@ function BalanceCardSubSection(props: BalanceCardSubSectionProps) {
         </Box>
         <Box>
           <Typography variant="subtitle1">
-            {byte_to_taco_string(props.balance)} {currencyCode}
+            {mojo_to_taco_string(props.balance)} {currencyCode}
           </Typography>
         </Box>
       </Box>
@@ -463,8 +463,8 @@ function SendCard(props: SendCardProps) {
       address = address.slice(2);
     }
 
-    const amountValue = Number.parseFloat(taco_to_byte(amount));
-    const feeValue = Number.parseFloat(taco_to_byte(fee));
+    const amountValue = Number.parseFloat(taco_to_mojo(amount));
+    const feeValue = Number.parseFloat(taco_to_mojo(fee));
 
     dispatch(send_transaction(wallet_id, amountValue, feeValue, address));
 

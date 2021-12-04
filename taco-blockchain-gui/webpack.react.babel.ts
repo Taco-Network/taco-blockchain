@@ -52,17 +52,25 @@ export default {
   target: 'electron-renderer',
   stats: 'errors-only',
   devServer: DEV ? {
-    contentBase: path.join(__dirname, '../dist/renderer'),
+    client: {
+      overlay: false,
+    },
+    static: {
+      directory: path.join(__dirname, '../dist/renderer'),
+    },
     historyApiFallback: true,
     compress: true,
     hot: true,
     port: PORT,
-    publicPath: '/',
+    devMiddleware: {
+      publicPath: '/',
+    },
   } : undefined,
   output: {
     path: path.resolve(__dirname, './build/renderer'),
     filename: 'js/[name].js',
     publicPath: './',
+    hashFunction: "sha256",
   },
   resolve: {
     extensions: ['.wasm', '.mjs', '.ts', '.tsx', '.js', '.jsx', '.json'],

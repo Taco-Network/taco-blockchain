@@ -15,9 +15,10 @@ from taco.util.keychain import supports_keyring_passphrase
     is_flag=True,
     help="Attempt to fix SSL certificate/key file permissions",
 )
+@click.option("--testnet", is_flag=True, help="Configure this taco install to connect to the testnet")
 @click.option("--set-passphrase", "-s", is_flag=True, help="Protect your keyring with a passphrase")
 @click.pass_context
-def init_cmd(ctx: click.Context, create_certs: str, fix_ssl_permissions: bool, **kwargs):
+def init_cmd(ctx: click.Context, create_certs: str, fix_ssl_permissions: bool, testnet: bool, **kwargs):
     """
     Create a new configuration or migrate from previous versions to current
 
@@ -28,7 +29,7 @@ def init_cmd(ctx: click.Context, create_certs: str, fix_ssl_permissions: bool, *
     - Run `taco init -c [directory]` on your remote harvester,
       where [directory] is the the copy of your Farming Machine CA directory
     - Get more details on remote harvester on Taco wiki:
-      https://github.com/Taco-Network/taco-blockchain/wiki/Farming-on-many-machines
+      https://github.com/BTCgreen-Network/taco-blockchain/wiki/Farming-on-many-machines
     """
     from pathlib import Path
     from .init_funcs import init
@@ -38,7 +39,7 @@ def init_cmd(ctx: click.Context, create_certs: str, fix_ssl_permissions: bool, *
     if set_passphrase:
         initialize_passphrase()
 
-    init(Path(create_certs) if create_certs is not None else None, ctx.obj["root_path"], fix_ssl_permissions)
+    init(Path(create_certs) if create_certs is not None else None, ctx.obj["root_path"], fix_ssl_permissions, testnet)
 
 
 if not supports_keyring_passphrase():

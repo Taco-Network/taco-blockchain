@@ -17,7 +17,7 @@ import Grid from '@material-ui/core/Grid';
 import HelpIcon from '@material-ui/icons/Help';
 import { unix_to_short_date } from '../../util/utils';
 import { presetOverview, presentTrade } from '../../modules/trade';
-import { byte_to_taco_string } from '../../util/taco';
+import { mojo_to_taco_string } from '../../util/taco';
 import {
   get_all_trades,
   cancel_trade_with_spend_action,
@@ -301,7 +301,7 @@ const OfferRow = (props) => {
       </Box>
       <Box flexGrow={1}>{side}</Box>
       <Box flexGrow={1} style={{ textAlign: 'right' }}>
-        {byte_to_taco_string(amount)}
+        {mojo_to_taco_string(amount)}
       </Box>
     </Box>
   );

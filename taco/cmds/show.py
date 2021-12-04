@@ -107,8 +107,8 @@ async def show_async(
             connections = await client.get_connections()
             print("Connections:")
             print(
-                "Type          IP                    Ports       NodeID      Last Connect"
-                 + "      MiB Up|Dwn      SB Height  Hash"    
+                "Type      IP                                     Ports       NodeID      Last Connect"
+                + "      MiB Up|Dwn"
             )
             for con in connections:
                 last_connect_tuple = struct_time(localtime(con["last_message_time"]))
@@ -129,17 +129,17 @@ async def show_async(
                     if peak_height is None:
                         peak_height = 0
                     con_str = (
-                        f"{NodeType(con['type']).name:13} {host:20} "
+                        f"{NodeType(con['type']).name:9} {host:38} "
                         f"{con['peer_port']:5}/{con['peer_server_port']:<5}"
                         f" {con['node_id'].hex()[:8]}... "
                         f"{last_connect}  "
                         f"{mb_up:7.1f}|{mb_down:<7.1f}"
-                                                                              
-                        f"{peak_height:8.0f}     {peak_hash[2:10]}..."
+                        f"\n                                                 "
+                        f"-SB Height: {peak_height:8.0f}    -Hash: {peak_hash[2:10]}..."
                     )
                 else:
                     con_str = (
-                        f"{NodeType(con['type']).name:13} {host:20} "
+                        f"{NodeType(con['type']).name:9} {host:38} "
                         f"{con['peer_port']:5}/{con['peer_server_port']:<5}"
                         f" {con['node_id'].hex()[:8]}... "
                         f"{last_connect}  "
@@ -154,7 +154,7 @@ async def show_async(
             print(node_stop, "Node stopped")
         if add_connection:
             if ":" not in add_connection:
-                print("Enter a valid IP and port in the following format: 10.5.4.3:18620")
+                print("Enter a valid IP and port in the following format: 10.5.4.3:8000")
             else:
                 ip, port = (
                     ":".join(add_connection.split(":")[:-1]),

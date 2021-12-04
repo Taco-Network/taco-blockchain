@@ -26,8 +26,10 @@ const cols = [
     title: <Trans>Proofs Found</Trans>,
   },
   {
-    field: 'timeconsuming',
-    title: <Trans>Time Consuming(ms)</Trans>,
+    field(row: Row) {
+      return `${row.timeconsuming} ms`
+    },
+    title: <Trans>Plot Response Time</Trans>,
   },
   {
     field(row: Row) {
@@ -55,7 +57,7 @@ export default function FarmLastAttemptedProof() {
           challenge.{' '}
           <Link
             target="_blank"
-            href="https://github.com/Taco-Network/taco-blockchain/wiki/FAQ#what-is-the-plot-filter-and-why-didnt-my-plot-pass-it"
+            href="https://github.com/BTCgreen-Network/taco-blockchain/wiki/FAQ#what-is-the-plot-filter-and-why-didnt-my-plot-pass-it"
           >
             Learn more
           </Link>

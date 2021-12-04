@@ -2,7 +2,6 @@ import collections
 import logging
 from typing import Dict, List, Optional, Set, Tuple, Union, Callable
 
-from blspy import G1Element
 from chiabip158 import PyBIP158
 from clvm.casts import int_from_bytes
 
@@ -28,9 +27,7 @@ from taco.types.generator_types import BlockGenerator
 from taco.types.name_puzzle_condition import NPC
 from taco.types.unfinished_block import UnfinishedBlock
 from taco.util import cached_bls
-from taco.util.condition_tools import (
-    pkm_pairs_for_conditions_dict,
-)
+from taco.util.condition_tools import pkm_pairs
 from taco.util.errors import Err
 from taco.util.generator_tools import (
     additions_for_npc,
@@ -53,6 +50,7 @@ async def validate_block_body(
     npc_result: Optional[NPCResult],
     fork_point_with_peak: Optional[uint32],
     get_block_generator: Callable,
+    validate_signature=True,
 ) -> Tuple[Optional[Err], Optional[NPCResult]]:
     """
     This assumes the header block has been completely validated.
@@ -435,9 +433,6 @@ async def validate_block_body(
             return Err.WRONG_PUZZLE_HASH, None
 
     # 21. Verify conditions
-    # create hash_key list for aggsig check
-    pairs_pks: List[G1Element] = []
-    pairs_msgs: List[bytes] = []
     for npc in npc_list:
         assert height is not None
         unspent = removal_coin_records[npc.coin_name]
@@ -449,11 +444,9 @@ async def validate_block_body(
         )
         if error:
             return error, None
-        for pk, m in pkm_pairs_for_conditions_dict(
-            npc.condition_dict, npc.coin_name, constants.AGG_SIG_ME_ADDITIONAL_DATA
-        ):
-            pairs_pks.append(pk)
-            pairs_msgs.append(m)
+
+    # create hash_key list for aggsig check
+    pairs_pks, pairs_msgs = pkm_pairs(npc_list, constants.AGG_SIG_ME_ADDITIONAL_DATA)
 
     # 22. Verify aggregated signature
     # TODO: move this to pre_validate_blocks_multiprocessing so we can sync faster
@@ -462,13 +455,14 @@ async def validate_block_body(
 
     # The pairing cache is not useful while syncing as each pairing is seen
     # only once, so the extra effort of populating it is not justified.
-    # However, we force caching of pairings just for unfinished blocks
+    # However, we force xtxhing of pairings just for unfinished blocks
     # as the cache is likely to be useful when validating the corresponding
     # finished blocks later.
-    force_cache: bool = isinstance(block, UnfinishedBlock)
-    if not cached_bls.aggregate_verify(
-        pairs_pks, pairs_msgs, block.transactions_info.aggregated_signature, force_cache
-    ):
-        return Err.BAD_AGGREGATE_SIGNATURE, None
+    if validate_signature:
+        force_cache: bool = isinstance(block, UnfinishedBlock)
+        if not cached_bls.aggregate_verify(
+            pairs_pks, pairs_msgs, block.transactions_info.aggregated_signature, force_cache
+        ):
+            return Err.BAD_AGGREGATE_SIGNATURE, None
 
     return None, npc_result

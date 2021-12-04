@@ -43,7 +43,7 @@ export default function LocaleToggle(props: Props) {
     handleClose();
 
     openExternal(
-      'https://github.com/Taco-Network/taco-blockchain-gui/tree/main/src/locales/README.md',
+      'https://github.com/BTCgreen-Network/taco-blockchain-gui/tree/main/src/locales/README.md',
     );
   }
 

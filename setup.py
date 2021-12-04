@@ -1,12 +1,13 @@
 from setuptools import setup
 
 dependencies = [
+    "multidict==5.1.0",  # Avoid 5.2.0 due to Avast
     "blspy==1.0.6",  # Signature library
     "chiavdf==1.0.3",  # timelord and vdf verification
     "chiabip158==1.0",  # bip158-style wallet filters
-    "chiapos==1.0.4",  # proof of space
+    "chiapos==1.0.6",  # proof of space
     "clvm==0.9.7",
-    "clvm_rs==0.1.14",
+    "clvm_rs==0.1.15",
     "clvm_tools==0.4.3",
     "aiohttp==3.7.4",  # HTTP server for full node rpc
     "aiosqlite==0.17.0",  # asyncio wrapper for sqlite, to store blocks
@@ -25,8 +26,8 @@ dependencies = [
     "sortedcontainers==2.4.0",  # For maintaining sorted mempools
     "websockets==8.1.0",  # For use in wallet RPC and electron UI
     "click==7.1.2",  # For the CLI
-    "dnspython==2.1.0",  # Query DNS seeds
-    "watchdog==2.1.3",  # Filesystem event watching - watches keyring.yaml
+    "dnspythonchia==2.2.0",  # Query DNS seeds
+    "watchdog==2.1.6",  # Filesystem event watching - watches keyring.yaml
 ]
 
 upnp_dependencies = [
@@ -46,10 +47,8 @@ dev_dependencies = [
 
 kwargs = dict(
     name="taco-blockchain",
-    author="Mariano Sorgente",
-    author_email="mariano@taconetwork.net",
     description="Taco blockchain full node, farmer, timelord, and wallet.",
-    url="https://taconetwork.net/",
+    url="https://taco.com/",
     license="Apache License",
     python_requires=">=3.7, <4",
     keywords="taco blockchain node",
@@ -72,6 +71,7 @@ kwargs = dict(
         "taco.farmer",
         "taco.harvester",
         "taco.introducer",
+        "taco.plotters",
         "taco.plotting",
         "taco.pools",
         "taco.protocols",
@@ -110,7 +110,7 @@ kwargs = dict(
         "": ["*.clvm", "*.clvm.hex", "*.clib", "*.clinc", "*.clsp", "py.typed"],
         "taco.util": ["initial-*.yaml", "english.txt"],
         "taco.ssl": ["taco_ca.crt", "taco_ca.key", "dst_root_ca.pem"],
-        "mozilla-ca": ["cacert.pem"],
+        "mozilla-ca": ["xtxert.pem"],
     },
     use_scm_version={"fallback_version": "unknown-no-.git-directory"},
     long_description=open("README.md").read(),
@@ -120,4 +120,4 @@ kwargs = dict(
 
 
 if __name__ == "__main__":
-    setup(**kwargs)
+    setup(**kwargs)  # type: ignore

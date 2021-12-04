@@ -9,7 +9,7 @@ wallet_program_files = set(
     [
         "taco/wallet/puzzles/calculate_synthetic_public_key.clvm",
         "taco/wallet/puzzles/cc.clvm",
-        "taco/wallet/puzzles/chialisp_deserialisation.clvm",
+        "taco/wallet/puzzles/tacolisp_deserialisation.clvm",
         "taco/wallet/puzzles/rom_bootstrap_generator.clvm",
         "taco/wallet/puzzles/generator_for_single_coin.clvm",
         "taco/wallet/puzzles/genesis-by-coin-id-with-0.clvm",

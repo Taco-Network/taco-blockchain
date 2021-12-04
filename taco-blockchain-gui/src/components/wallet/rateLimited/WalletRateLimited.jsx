@@ -18,7 +18,7 @@ import {
   send_transaction,
   rl_set_user_info_action,
 } from '../../../modules/message';
-import { byte_to_taco_string, taco_to_byte } from '../../../util/taco';
+import { mojo_to_taco_string, taco_to_mojo } from '../../../util/taco';
 import { get_transaction_result } from '../../../util/transaction_result';
 import { openDialog } from '../../../modules/dialog';
 import WalletHistory from '../WalletHistory';
@@ -400,7 +400,7 @@ const RLDetailsCard = (props) => {
               <Typography variant="subtitle1">
                 <Trans>
                   Spending Limit (taco per interval):{' '}
-                  {byte_to_taco_string(limit)}
+                  {mojo_to_taco_string(limit)}
                 </Trans>
               </Typography>
             </Box>
@@ -447,7 +447,7 @@ const RLDetailsCard = (props) => {
               <Typography variant="subtitle1">
                 <Trans>
                   Spending Limit (taco per interval):{' '}
-                  {byte_to_taco_string(limit)}
+                  {mojo_to_taco_string(limit)}
                 </Trans>
               </Typography>
             </Box>
@@ -512,7 +512,7 @@ const BalanceCardSubSection = (props) => {
         </Box>
         <Box>
           <Typography variant="subtitle1">
-            {byte_to_taco_string(props.balance)} {currencyCode}
+            {mojo_to_taco_string(props.balance)} {currencyCode}
           </Typography>
         </Box>
       </Box>
@@ -652,8 +652,8 @@ const SendCard = (props) => {
       );
       return;
     }
-    const amount = taco_to_byte(amount_input.value);
-    const fee = taco_to_byte(fee_input.value);
+    const amount = taco_to_mojo(amount_input.value);
+    const fee = taco_to_mojo(fee_input.value);
 
     if (address.startsWith('0x') || address.startsWith('0X')) {
       address = address.slice(2);

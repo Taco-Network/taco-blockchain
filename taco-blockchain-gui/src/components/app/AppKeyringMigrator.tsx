@@ -33,6 +33,8 @@ export default function AppKeyringMigrator(): JSX.Element {
   const migrationInProgress = keyring_state.migration_in_progress;
   let passphraseInput: HTMLInputElement | null = null;
   let confirmationInput: HTMLInputElement | null = null;
+  let passphraseHintInput: HTMLInputElement | null;
+  let savePassphraseCheckbox: HTMLInputElement | null = null;
   let cleanupKeyringCheckbox: HTMLInputElement | null = null;
 
   async function validateDialog(passphrase: string, confirmation: string): Promise<boolean> {
@@ -65,6 +67,8 @@ export default function AppKeyringMigrator(): JSX.Element {
   async function handleMigrate(): Promise<void> {
     const passphrase: string = passphraseInput?.value ?? "";
     const confirmation: string = confirmationInput?.value ?? "";
+    const passphraseHint: string = passphraseHintInput?.value ?? "";
+    const savePassphrase: boolean = savePassphraseCheckbox?.checked ?? false;
     const cleanup: boolean = cleanupKeyringCheckbox?.checked ?? false;
     const isValid: boolean = await validateDialog(passphrase, confirmation);
 
@@ -72,6 +76,8 @@ export default function AppKeyringMigrator(): JSX.Element {
       dispatch(
         migrate_keyring_action(
           passphrase,
+          passphraseHint,
+          savePassphrase,
           cleanup,
           (error: string) => {
             dispatch(
@@ -143,22 +149,54 @@ export default function AppKeyringMigrator(): JSX.Element {
             type="password"
             fullWidth
             />
-          <Box display="flex" alignItems="center">
-            <FormControlLabel
-              control={(
-                <Checkbox 
-                  disabled={migrationInProgress}
-                  name="cleanupKeyringPostMigration"
-                  inputRef={(input) => cleanupKeyringCheckbox = input}
-                />
-              )}
-              label={t`Remove keys from old keyring upon successful migration`}
-              style={{ marginRight: '8px' }}
+          {keyring_state.can_set_passphrase_hint && (
+            <TextField
+              disabled={migrationInProgress}
+              color="secondary"
+              margin="dense"
+              id="passphraseHintInput"
+              label={<Trans>Passphrase Hint (Optional)</Trans>}
+              placeholder={t`Passphrase Hint`}
+              inputRef={(input) => passphraseHintInput = input}
+              fullWidth
             />
-            <Tooltip title={t`After your keys are successfully migrated to the new keyring, you may choose to have your keys removed from the old keyring.`}>
-              <HelpIcon style={{ color: '#c8c8c8', fontSize: 12 }} />
-            </Tooltip>                
-          </Box>
+          )}
+          {keyring_state.can_save_passphrase && (
+            <Box display="flex" alignItems="center">
+              <FormControlLabel
+                control={(
+                  <Checkbox
+                    disabled={migrationInProgress}
+                    name="cleanupKeyringPostMigration"
+                    inputRef={(input) => savePassphraseCheckbox = input}
+                  />
+                )}
+                label={t`Save passphrase`}
+                style={{ marginRight: '8px' }}
+              />
+              <Tooltip title={t`Your passphrase can be stored in your system's secure credential store. Taco will be able to access your keys without prompting for your passphrase.`}>
+                <HelpIcon style={{ color: '#c8c8c8', fontSize: 12 }} />
+              </Tooltip>
+            </Box>
+          )}
+          {keyring_state.can_remove_legacy_keys && (
+            <Box display="flex" alignItems="center">
+              <FormControlLabel
+                control={(
+                  <Checkbox
+                    disabled={migrationInProgress}
+                    name="cleanupKeyringPostMigration"
+                    inputRef={(input) => cleanupKeyringCheckbox = input}
+                  />
+                )}
+                label={t`Remove keys from old keyring upon successful migration`}
+                style={{ marginRight: '8px' }}
+              />
+              <Tooltip title={t`After your keys are successfully migrated to the new keyring, you may choose to have your keys removed from the old keyring.`}>
+                <HelpIcon style={{ color: '#c8c8c8', fontSize: 12 }} />
+              </Tooltip>
+            </Box>
+          )}
           <DialogActions>
             <Box display="flex" alignItems="center" style={{ marginTop: '8px' }}>
               <Fade in={migrationInProgress}>

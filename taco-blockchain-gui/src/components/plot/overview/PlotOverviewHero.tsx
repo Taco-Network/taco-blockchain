@@ -38,7 +38,7 @@ export default function PlotOverviewHero() {
               }
               <Link
                 target="_blank"
-                href="https://github.com/Taco-Network/taco-blockchain/wiki/Network-Architecture"
+                href="https://github.com/BTCgreen-Network/taco-blockchain/wiki/Network-Architecture"
               >
                 Learn more
               </Link>

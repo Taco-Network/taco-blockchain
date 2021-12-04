@@ -18,9 +18,9 @@ type FeeProps = AmountProps;
 export default function Fee(props: FeeProps) {
   return (
     <Amount {...props}>
-      {({ value, byte }) => {
-        const isHigh = byte >= 1000;
-        const isLow = byte !== 0 && byte < 1;
+      {({ value, mojo }) => {
+        const isHigh = mojo >= 1000;
+        const isLow = mojo !== 0 && mojo < 1;
 
         if (isHigh) {
           return (

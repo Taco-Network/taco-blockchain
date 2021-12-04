@@ -12,7 +12,7 @@ jobs:
         with:
           fetch-depth: 0
           ref: "${{ github.event.inputs.taco_ref }}"
-          repository: taco-network/taco-blockchain
+          repository: btcgreen-network/taco-blockchain
           submodules: recursive
           token: "${{ secrets.GITHUB_TOKEN }}"
       - name: "Add changes to new branch"

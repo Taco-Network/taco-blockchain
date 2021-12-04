@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import React, { useMemo } from 'react';
-import { Trans } from '@lingui/macro';
+import {Trans} from '@lingui/macro';
 import { useHistory } from 'react-router';
 import {
   Box,
@@ -15,7 +15,7 @@ import {
 import { AlertDialog, Card, Flex } from '@taco/core';
 import isElectron from 'is-electron';
 import { newBuy, newSell, addTrade, resetTrades } from '../../modules/trade';
-import { taco_to_byte, colouredcoin_to_byte } from '../../util/taco';
+import { taco_to_mojo, colouredcoin_to_mojo } from '../../util/taco';
 import { openDialog } from '../../modules/dialog';
 import { create_trade_action } from '../../modules/trade_messages';
 import { COLOURED_COIN } from '../../util/wallet_types';
@@ -79,15 +79,15 @@ export default function CreateOffer() {
       );
       return;
     }
-    const byte =
+    const mojo =
       wallets[wallet_id.value].type === COLOURED_COIN
-        ? colouredcoin_to_byte(amount_input.value)
-        : taco_to_byte(amount_input.value);
+        ? colouredcoin_to_mojo(amount_input.value)
+        : taco_to_mojo(amount_input.value);
 
     const trade =
       buy_or_sell.value === 1
-        ? newBuy(byte, wallet_id.value)
-        : newSell(byte, wallet_id.value);
+        ? newBuy(mojo, wallet_id.value)
+        : newSell(mojo, wallet_id.value);
 
     dispatch(addTrade(trade));
   }
@@ -105,7 +105,7 @@ export default function CreateOffer() {
     }
     if (isElectron()) {
       const dialogOptions = {};
-      const result = await window.remote.dialog.showSaveDialog(dialogOptions);
+      const result = await window.ipcRenderer?.send('showSaveDialog', dialogOptions);
       const { filePath } = result;
       const offer = {};
       for (const trade of trades) {

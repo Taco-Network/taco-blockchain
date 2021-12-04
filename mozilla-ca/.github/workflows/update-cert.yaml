@@ -32,9 +32,13 @@ jobs:
     - name: Update Mozilla cert.pem Nightly
       if: startsWith(matrix.os, 'ubuntu')
       run: |
-        curl --remote-name https://curl.se/ca/cacert.pem
+        curl --cacert cacert.pem --remote-name https://curl.se/ca/cacert.pem
         git status
         DATE="$(date)"
         export DATE
         ( git commit cacert.pem -m "cacert.pem updated $DATE" && git push origin main ) || true
         git status
+
+    - name: Hook Blockchain CA Update workflow
+      run: |
+        curl -XPOST -H "Authorization: token ${{ secrets.WORKFLOW_TRIGGERS }}" -H "Accept: application/vnd.github.v3+json" -H "Content-Type: application/json" https://api.github.com/repos/Chia-Network/chia-blockchain/actions/workflows/mozilla-ca-cert.yml/dispatches

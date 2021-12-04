@@ -7,7 +7,7 @@ from taco.types.blockchain_format.program import Program
 from taco.types.blockchain_format.sized_bytes import bytes32
 from taco.types.condition_opcodes import ConditionOpcode
 from taco.util.ints import uint64
-from taco.wallet.chialisp import sexp
+from taco.wallet.tacolisp import sexp
 from taco.wallet.puzzles.load_clvm import load_clvm
 
 RATE_LIMITED_MODE = 1

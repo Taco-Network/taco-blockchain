@@ -7,7 +7,7 @@ from taco.types.blockchain_format.coin import Coin
 from taco.types.blockchain_format.program import Program, SerializedProgram
 from taco.util.ints import uint64, uint32
 from taco.util.hash import std_hash
-from taco.util.errors import Err
+from taco.util.errors import Err, ValidationError
 from taco.util.db_wrapper import DBWrapper
 from taco.types.coin_record import CoinRecord
 from taco.types.spend_bundle import SpendBundle
@@ -25,7 +25,7 @@ from taco.consensus.block_rewards import calculate_pool_reward, calculate_base_f
 from taco.consensus.cost_calculator import NPCResult
 
 """
-The purpose of this file is to provide a lightweight simulator for the testing of Chialisp smart contracts.
+The purpose of this file is to provide a lightweight simulator for the testing of Tacolisp smart contracts.
 
 The Node object uses actual MempoolManager, Mempool and CoinStore objects, while substituting FullBlock and
 BlockRecord objects for trimmed down versions.
@@ -49,6 +49,7 @@ class SimBlockRecord:
         self.timestamp = timestamp
         self.is_transaction_block = True
         self.header_hash = std_hash(bytes(height))
+        self.prev_transaction_block_hash = std_hash(std_hash(height))
 
 
 class SpendSim:
@@ -78,7 +79,7 @@ class SpendSim:
         await self.connection.close()
 
     async def new_peak(self):
-        await self.mempool_manager.new_peak(self.block_records[-1])
+        await self.mempool_manager.new_peak(self.block_records[-1], [])
 
     def new_coin_record(self, coin: Coin, coinbase=False) -> CoinRecord:
         return CoinRecord(
@@ -203,9 +204,12 @@ class SimClient:
         self.service = service
 
     async def push_tx(self, spend_bundle: SpendBundle) -> Tuple[MempoolInclusionStatus, Optional[Err]]:
-        cost_result: NPCResult = await self.service.mempool_manager.pre_validate_spendbundle(
-            spend_bundle, spend_bundle.name()
-        )
+        try:
+            cost_result: NPCResult = await self.service.mempool_manager.pre_validate_spendbundle(
+                spend_bundle, None, spend_bundle.name()
+            )
+        except ValidationError as e:
+            return MempoolInclusionStatus.FAILED, e.code
         cost, status, error = await self.service.mempool_manager.add_spendbundle(
             spend_bundle, cost_result, spend_bundle.name()
         )
