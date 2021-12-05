@@ -55,12 +55,10 @@ jobs:
           ${{ runner.os }}-build-${{ env.cache-name }}-
           ${{ runner.os }}-build-
           ${{ runner.os }}-
-
     - name: Get pip cache dir
       id: pip-cache
       run: |
         echo "::set-output name=dir::$(pip cache dir)"
-
     - name: Cache pip
       uses: actions/cache@v2.1.6
       with:
@@ -69,7 +67,6 @@ jobs:
         key: ${{ runner.os }}-pip-${{ hashFiles('**/setup.py') }}
         restore-keys: |
           ${{ runner.os }}-pip-
-
     - name: Test for secrets access
       id: check_secrets
       shell: bash
@@ -87,7 +84,7 @@ jobs:
         p12-file-base64: ${{ secrets.APPLE_DEV_ID_APP }}
         p12-password: ${{ secrets.APPLE_DEV_ID_APP_PASS }}
 
-    # Get the most recent release from taco-plotter-madmax
+    # Get the most recent release from chia-plotter-madmax
     - uses: actions/github-script@v4
       id: 'latest-madmax'
       with:
@@ -95,26 +92,23 @@ jobs:
         result-encoding: string
         script: |
           const releases = await github.repos.listReleases({
-            owner: 'Taco-Network',
-            repo: 'taco-plotter-madmax',
+            owner: 'Chia-Network',
+            repo: 'chia-plotter-madmax',
           });
           return releases.data[0].tag_name;
-
     - name: Get latest madmax plotter
       run: |
         mkdir "$GITHUB_WORKSPACE/madmax"
-        wget -O "$GITHUB_WORKSPACE/madmax/taco_plot" https://github.com/Taco-Network/taco-plotter-madmax/releases/download/${{ steps.latest-madmax.outputs.result }}/taco_plot-${{ steps.latest-madmax.outputs.result }}-macos-intel
-        wget -O "$GITHUB_WORKSPACE/madmax/taco_plot_k34" https://github.com/Taco-Network/taco-plotter-madmax/releases/download/${{ steps.latest-madmax.outputs.result }}/taco_plot_k34-${{ steps.latest-madmax.outputs.result }}-macos-intel
+        wget -O "$GITHUB_WORKSPACE/madmax/taco_plot" https://github.com/Chia-Network/chia-plotter-madmax/releases/download/${{ steps.latest-madmax.outputs.result }}/chia_plot-${{ steps.latest-madmax.outputs.result }}-macos-intel
+        wget -O "$GITHUB_WORKSPACE/madmax/taco_plot_k34" https://github.com/Chia-Network/chia-plotter-madmax/releases/download/${{ steps.latest-madmax.outputs.result }}/chia_plot_k34-${{ steps.latest-madmax.outputs.result }}-macos-intel
         chmod +x "$GITHUB_WORKSPACE/madmax/taco_plot"
         chmod +x "$GITHUB_WORKSPACE/madmax/taco_plot_k34"
-
     - name: Run install script
       env:
         INSTALL_PYTHON_VERSION: ${{ matrix.python-version }}
         BUILD_VDF_CLIENT: "N"
       run: |
         sh install.sh
-
     - name: Setup Node 14.x
       uses: actions/setup-node@v2.4.1
       with:
@@ -131,7 +125,6 @@ jobs:
         git status
         cd ../build_scripts
         sh build_macos.sh
-
     - name: Upload MacOS artifacts
       uses: actions/upload-artifact@v2
       with:
