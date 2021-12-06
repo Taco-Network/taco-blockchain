@@ -93,8 +93,8 @@ def configure(
         if testnet == "true" or testnet == "t":
             print("Setting Testnet")
             testnet_port = "58444"
-            testnet_introducer = "beta1_introducer.taco.com"
-            testnet_dns_introducer = "dns-introducer-testnet7.taco.com"
+            testnet_introducer = "beta1_introducer.taconetwork.net"
+            testnet_dns_introducer = "dns-introducer-testnet7.taconetwork.net"
             testnet = "testnet7"
             config["full_node"]["port"] = int(testnet_port)
             config["full_node"]["introducer_peer"]["port"] = int(testnet_port)
@@ -120,8 +120,8 @@ def configure(
         elif testnet == "false" or testnet == "f":
             print("Setting Mainnet")
             mainnet_port = "18620"
-            mainnet_introducer = "introducer.taco.com"
-            mainnet_dns_introducer = "dns-introducer.taco.com"
+            mainnet_introducer = "introducer.taconetwork.net"
+            mainnet_dns_introducer = "dns-introducer.taconetwork.net"
             net = "mainnet"
             config["full_node"]["port"] = int(mainnet_port)
             config["full_node"]["introducer_peer"]["port"] = int(mainnet_port)

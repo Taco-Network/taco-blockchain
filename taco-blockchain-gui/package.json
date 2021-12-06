@@ -1,6 +1,6 @@
 {
     "name": "taco-blockchain",
-    "author": "Taco Network <hello@taco.com> (https://taco.com/)",
+    "author": "Taco Network <hello@taconetwork.net> (https://taconetwork.net/)",
     "description": "GUI for Taco Blockchain",
     "productName": "Taco Blockchain",
     "private": true,

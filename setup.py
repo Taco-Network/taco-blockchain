@@ -48,7 +48,7 @@ dev_dependencies = [
 kwargs = dict(
     name="taco-blockchain",
     description="Taco blockchain full node, farmer, timelord, and wallet.",
-    url="https://taco.com/",
+    url="https://taconetwork.net/",
     license="Apache License",
     python_requires=">=3.7, <4",
     keywords="taco blockchain node",
