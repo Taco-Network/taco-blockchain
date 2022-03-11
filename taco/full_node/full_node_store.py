@@ -218,7 +218,7 @@ class FullNodeStore:
 
         self.future_cache_key_times[signage_point.rc_vdf.challenge] = int(time.time())
         self.future_sp_cache[signage_point.rc_vdf.challenge].append((index, signage_point))
-        log.info(f"Don't have rc hash {signage_point.rc_vdf.challenge}. xtxhing signage point {index}.")
+        log.info(f"Don't have rc hash {signage_point.rc_vdf.challenge}. caching signage point {index}.")
 
     def get_future_ip(self, rc_challenge_hash: bytes32) -> List[timelord_protocol.NewInfusionPointVDF]:
         return self.future_ip_cache.get(rc_challenge_hash, [])
@@ -310,7 +310,7 @@ class FullNodeStore:
                     self.future_eos_cache[rc_challenge] = []
                 self.future_eos_cache[rc_challenge].append(eos)
                 self.future_cache_key_times[rc_challenge] = int(time.time())
-                log.info(f"Don't have challenge hash {rc_challenge}, xtxhing EOS")
+                log.info(f"Don't have challenge hash {rc_challenge}, caching EOS")
                 return None
 
             if peak.deficit == self.constants.MIN_BLOCKS_PER_CHALLENGE_BLOCK:

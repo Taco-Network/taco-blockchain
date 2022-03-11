@@ -10,10 +10,12 @@ SERVICES_FOR_GROUP = {
     "timelord": "taco_timelord_launcher taco_timelord taco_full_node".split(),
     "timelord-only": "taco_timelord".split(),
     "timelord-launcher-only": "taco_timelord_launcher".split(),
-    "wallet": "taco_wallet taco_full_node".split(),
-    "wallet-only": "taco_wallet".split(),
+    "wallet": "taco_wallet".split(),
     "introducer": "taco_introducer".split(),
     "simulator": "taco_full_node_simulator".split(),
+    "crawler": "taco_crawler".split(),
+    "seeder": "taco_crawler taco_seeder".split(),
+    "seeder-only": "taco_seeder".split(),
 }
 
 

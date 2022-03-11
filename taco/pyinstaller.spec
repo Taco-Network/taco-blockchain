@@ -113,6 +113,18 @@ if THIS_IS_WINDOWS:
             "C:\\Windows\\System32\\vcruntime140_1.dll",
             ".",
         ),
+        (
+            f"{ROOT}\\madmax\\taco_plot.exe",
+            "madmax"
+        ),
+        (
+            f"{ROOT}\\madmax\\taco_plot_k34.exe",
+            "madmax"
+        ),
+        (
+            f"{ROOT}\\bladebit\\bladebit.exe",
+            "bladebit"
+        ),
     ]
 
 

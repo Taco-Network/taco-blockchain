@@ -3,8 +3,9 @@ import asyncio
 from typing import List, Optional
 
 import pytest
+import pytest_asyncio
 from clvm.casts import int_to_bytes
-from colorlog import logging
+from colorlog import getLogger
 
 from taco.consensus.block_rewards import calculate_pool_reward, calculate_base_farmer_reward
 from taco.protocols import wallet_protocol, full_node_protocol
@@ -23,9 +24,10 @@ from taco.util.ints import uint16, uint32, uint64
 from taco.wallet.wallet import Wallet
 from taco.wallet.wallet_state_manager import WalletStateManager
 from tests.connection_utils import add_dummy_connection
+from tests.pools.test_pool_rpc import wallet_is_synced
 from tests.setup_nodes import self_hostname, setup_simulators_and_wallets, bt
 from tests.time_out_assert import time_out_assert
-from tests.wallet.cc_wallet.test_cc_wallet import tx_in_pool
+from tests.wallet.cat_wallet.test_cat_wallet import tx_in_pool
 from tests.wallet_tools import WalletTool
 
 
@@ -36,7 +38,7 @@ def wallet_height_at_least(wallet_node, h):
     return False
 
 
-log = logging.getLogger(__name__)
+log = getLogger(__name__)
 
 
 @pytest.fixture(scope="session")
@@ -46,12 +48,12 @@ def event_loop():
 
 
 class TestSimpleSyncProtocol:
-    @pytest.fixture(scope="function")
+    @pytest_asyncio.fixture(scope="function")
     async def wallet_node_simulator(self):
         async for _ in setup_simulators_and_wallets(1, 1, {}):
             yield _
 
-    @pytest.fixture(scope="function")
+    @pytest_asyncio.fixture(scope="function")
     async def wallet_two_node_simulator(self):
         async for _ in setup_simulators_and_wallets(2, 1, {}):
             yield _
@@ -176,10 +178,18 @@ class TestSimpleSyncProtocol:
                 await full_node_api.farm_new_transaction_block(FarmNewBlockProtocol(puzzle_hash))
 
         funds = sum(
-            [calculate_pool_reward(uint32(i)) + calculate_base_farmer_reward(uint32(i)) for i in range(1, num_blocks)]
+            [
+                calculate_pool_reward(uint32(i)) + calculate_base_farmer_reward(uint32(i))
+                for i in range(1, num_blocks + 1)
+            ]
+        )
+        fn_amount = sum(
+            cr.coin.amount
+            for cr in await full_node_api.full_node.coin_store.get_coin_records_by_puzzle_hash(False, puzzle_hash)
         )
 
         await time_out_assert(15, wallet.get_confirmed_balance, funds)
+        assert funds == fn_amount
 
         msg_1 = wallet_protocol.RegisterForPhUpdates([puzzle_hash], 0)
         msg_response_1 = await full_node_api.register_interest_in_puzzle_hash(msg_1, fake_wallet_peer)
@@ -187,6 +197,7 @@ class TestSimpleSyncProtocol:
         data_response_1: RespondToPhUpdates = RespondToCoinUpdates.from_bytes(msg_response_1.data)
         assert len(data_response_1.coin_states) == 2 * num_blocks  # 2 per height farmer / pool reward
 
+        await time_out_assert(10, wallet_is_synced, True, wallet_node, full_node_api)
         tx_record = await wallet.generate_signed_transaction(uint64(10), puzzle_hash, uint64(0))
         assert len(tx_record.spend_bundle.removals()) == 1
         spent_coin = tx_record.spend_bundle.removals()[0]
@@ -204,6 +215,7 @@ class TestSimpleSyncProtocol:
         # Let's make sure the wallet can handle a non ephemeral launcher
         from taco.wallet.puzzles.singleton_top_layer import SINGLETON_LAUNCHER_HASH
 
+        await time_out_assert(10, wallet_is_synced, True, wallet_node, full_node_api)
         tx_record = await wallet.generate_signed_transaction(uint64(10), SINGLETON_LAUNCHER_HASH, uint64(0))
         await wallet.push_transaction(tx_record)
 
@@ -213,6 +225,8 @@ class TestSimpleSyncProtocol:
 
         for i in range(0, num_blocks):
             await full_node_api.farm_new_transaction_block(FarmNewBlockProtocol(SINGLETON_LAUNCHER_HASH))
+
+        await time_out_assert(10, wallet_is_synced, True, wallet_node, full_node_api)
 
         # Send a transaction to make sure the wallet is still running
         tx_record = await wallet.generate_signed_transaction(uint64(10), junk_ph, uint64(0))
@@ -304,6 +318,7 @@ class TestSimpleSyncProtocol:
         assert notified_coins == coins
 
         # Test getting notification for coin that is about to be created
+        await time_out_assert(10, wallet_is_synced, True, wallet_node, full_node_api)
         tx_record = await standard_wallet.generate_signed_transaction(uint64(10), puzzle_hash, uint64(0))
 
         tx_record.spend_bundle.additions()
@@ -525,6 +540,7 @@ class TestSimpleSyncProtocol:
                 ConditionWithArgs(ConditionOpcode.CREATE_COIN, [hint_puzzle_hash, amount_bin, hint])
             ]
         }
+        await time_out_assert(10, wallet_is_synced, True, wallet_node, full_node_api)
         tx: SpendBundle = wt.generate_signed_transaction(
             10,
             wt.get_new_puzzlehash(),
@@ -607,6 +623,7 @@ class TestSimpleSyncProtocol:
                 ConditionWithArgs(ConditionOpcode.CREATE_COIN, [hint_puzzle_hash, amount_bin, hint])
             ]
         }
+        await time_out_assert(10, wallet_is_synced, True, wallet_node, full_node_api)
         tx: SpendBundle = wt.generate_signed_transaction(
             10,
             wt.get_new_puzzlehash(),

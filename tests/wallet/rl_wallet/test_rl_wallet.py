@@ -1,6 +1,7 @@
 import asyncio
 
 import pytest
+import pytest_asyncio
 
 from taco.simulator.simulator_protocol import FarmNewBlockProtocol
 from taco.types.peer_info import PeerInfo
@@ -16,8 +17,8 @@ def event_loop():
     yield loop
 
 
-class TestCCWallet:
-    @pytest.fixture(scope="function")
+class TestCATWallet:
+    @pytest_asyncio.fixture(scope="function")
     async def two_wallet_nodes(self):
         async for _ in setup_simulators_and_wallets(1, 2, {}):
             yield _

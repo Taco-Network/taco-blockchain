@@ -6,6 +6,7 @@ import aiohttp
 from blspy import AugSchemeMPL, G2Element, PrivateKey
 
 import taco.server.ws_connection as ws
+from taco import __version__
 from taco.consensus.network_type import NetworkType
 from taco.consensus.pot_iterations import calculate_iterations_quality, calculate_sp_interval_iters
 from taco.farmer.farmer import Farmer
@@ -209,11 +210,14 @@ class FarmerAPI:
                             [sig_farmer, response.message_signatures[0][1], taproot_sig]
                         )
                         assert AugSchemeMPL.verify(agg_pk, m_to_sign, plot_signature)
-                authentication_pk = pool_state_dict["pool_config"].authentication_public_key
-                if bytes(authentication_pk) is None:
-                    self.farmer.log.error(f"No authentication sk for {authentication_pk}")
+
+                authentication_sk: Optional[PrivateKey] = self.farmer.get_authentication_sk(
+                    pool_state_dict["pool_config"]
+                )
+                if authentication_sk is None:
+                    self.farmer.log.error(f"No authentication sk for {p2_singleton_puzzle_hash}")
                     return
-                authentication_sk: PrivateKey = self.farmer.authentication_keys[bytes(authentication_pk)]
+
                 authentication_signature = AugSchemeMPL.sign(authentication_sk, m_to_sign)
 
                 assert plot_signature is not None
@@ -226,13 +230,14 @@ class FarmerAPI:
                 )
                 pool_state_dict["points_found_since_start"] += pool_state_dict["current_difficulty"]
                 pool_state_dict["points_found_24h"].append((time.time(), pool_state_dict["current_difficulty"]))
-
+                self.farmer.log.debug(f"POST /partial request {post_partial_request}")
                 try:
                     async with aiohttp.ClientSession() as session:
                         async with session.post(
                             f"{pool_url}/partial",
                             json=post_partial_request.to_json_dict(),
                             ssl=ssl_context_for_root(get_mozilla_ca_crt(), log=self.farmer.log),
+                            headers={"User-Agent": f"Taco Blockchain v.{__version__}"},
                         ) as resp:
                             if resp.ok:
                                 pool_response: Dict = json.loads(await resp.text())
@@ -474,10 +479,6 @@ class FarmerAPI:
         self.farmer.cache_add_time[new_signage_point.challenge_chain_sp] = uint64(int(time.time()))
         self.farmer.state_changed("new_signage_point", {"sp_hash": new_signage_point.challenge_chain_sp})
 
-        tStart = time.time()
-        self.farmer.lastChannageTime = int(round(tStart * 1000))
-        self.farmer.state_changed("new_signage_point", {"sp_hash": new_signage_point.challenge_chain_sp})
-
     @api_request
     async def request_signed_values(self, full_node_request: farmer_protocol.RequestSignedValues):
         if full_node_request.quality_string not in self.farmer.quality_str_to_identifiers:
@@ -499,9 +500,6 @@ class FarmerAPI:
 
     @api_request
     async def farming_info(self, request: farmer_protocol.FarmingInfo):
-        timeConsuming = 999
-        tEnd = time.time()
-        timeConsuming = int(round(tEnd * 1000)) - self.farmer.lastChannageTime
         self.farmer.state_changed(
             "new_farming_info",
             {
@@ -512,7 +510,6 @@ class FarmerAPI:
                     "proofs": request.proofs,
                     "total_plots": request.total_plots,
                     "timestamp": request.timestamp,
-                    "timeconsuming": timeConsuming,
                 }
             },
         )

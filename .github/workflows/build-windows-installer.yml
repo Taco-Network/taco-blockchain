@@ -1,0 +1,141 @@
+name: Windows Installer on Windows 10 and Python 3.9
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+        - '**'
+  pull_request:
+    branches:
+      - '**'
+
+jobs:
+  build:
+    name: Windows Installer on Windows 10 and Python 3.9
+    runs-on: [windows-2019]
+    timeout-minutes: 40
+
+    steps:
+    - name: Cancel previous runs on the same branch
+      if: ${{ github.ref != 'refs/heads/main' }}
+      uses: styfle/cancel-workflow-action@0.9.1
+      with:
+        access_token: ${{ github.token }}
+
+    - name: Checkout Code
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+        submodules: recursive
+
+    - name: Get npm cache directory
+      id: npm-cache
+      run: |
+        echo "::set-output name=dir::$(npm config get cache)"
+
+    - name: Cache npm
+      uses: actions/cache@v2.1.6
+      with:
+        path: ${{ steps.npm-cache.outputs.dir }}
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+
+    - name: Get pip cache dir
+      id: pip-cache
+      run: |
+        echo "::set-output name=dir::$(pip cache dir)"
+
+    - name: Cache pip
+      uses: actions/cache@v2.1.6
+      with:
+        path: ${{ steps.pip-cache.outputs.dir }}
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/setup.py') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+
+#  We can't upgrade to Python 3.8 until we have a miniupnpc binary
+    - uses: actions/setup-python@v2
+      name: Install Python 3.9
+      with:
+        python-version: "3.9"
+
+    # Create our own venv outside of the git directory JUST for getting the ACTUAL version so that install can't break it
+    - name: Get version number
+      id: version_number
+      run: |
+        python -m venv ..\venv
+        . ..\venv\Scripts\Activate.ps1
+        pip3 install setuptools_scm
+        $env:TACO_INSTALLER_VERSION = python .\build_scripts\installer-version.py -win
+        echo "$env:TACO_INSTALLER_VERSION"
+        echo "::set-output name=TACO_INSTALLER_VERSION::$env:TACO_INSTALLER_VERSION"
+        deactivate
+
+      # Get the most recent release from chia-plotter-madmax
+    - uses: actions/github-script@v4
+      id: 'latest-madmax'
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        result-encoding: string
+        script: |
+          const releases = await github.repos.listReleases({
+            owner: 'Chia-Network',
+            repo: 'chia-plotter-madmax',
+          });
+          return releases.data[0].tag_name;
+
+    - name: Get latest madmax plotter
+      run: |
+        mkdir "$env:GITHUB_WORKSPACE\madmax"
+        Invoke-WebRequest https://github.com/Chia-Network/chia-plotter-madmax/releases/download/${{ steps.latest-madmax.outputs.result }}/chia_plot-${{ steps.latest-madmax.outputs.result }}.exe -OutFile "$env:GITHUB_WORKSPACE\madmax\taco_plot.exe"
+        Invoke-WebRequest https://github.com/Chia-Network/chia-plotter-madmax/releases/download/${{ steps.latest-madmax.outputs.result }}/chia_plot_k34-${{ steps.latest-madmax.outputs.result }}.exe -OutFile "$env:GITHUB_WORKSPACE\madmax\taco_plot_k34.exe"
+
+      # Get the most recent release from bladebit
+    - uses: actions/github-script@v4
+      id: 'latest-bladebit'
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        result-encoding: string
+        script: |
+          const releases = await github.repos.listReleases({
+            owner: 'Chia-Network',
+            repo: 'bladebit',
+          });
+          return releases.data[0].tag_name;
+
+    - name: Get latest bladebit plotter
+      run: |
+        mkdir "$env:GITHUB_WORKSPACE\bladebit"
+        Invoke-WebRequest https://github.com/Chia-Network/bladebit/releases/download/${{ steps.latest-bladebit.outputs.result }}/bladebit-${{ steps.latest-bladebit.outputs.result }}-windows-x86-64.zip -OutFile "$env:GITHUB_WORKSPACE\bladebit\bladebit.zip"
+        Expand-Archive -Path "$env:GITHUB_WORKSPACE\bladebit\bladebit.zip" -DestinationPath "$env:GITHUB_WORKSPACE\bladebit\"
+        rm "$env:GITHUB_WORKSPACE\bladebit\bladebit.zip"
+
+    - name: Build Windows installer with build_scripts\build_windows.ps1
+      env:
+        WIN_CODE_SIGN_PASS: ${{ secrets.WIN_CODE_SIGN_PASS }}
+        HAS_SECRET: ${{ steps.check_secrets.outputs.HAS_SIGNING_SECRET }}
+      run: |
+        $env:path="C:\Program` Files` (x86)\Microsoft` Visual` Studio\2019\Enterprise\SDK\ScopeCppSDK\vc15\VC\bin\;$env:path"
+        $env:path="C:\Program` Files` (x86)\Windows` Kits\10\App` Certification` Kit;$env:path"
+        .\build_scripts\build_windows.ps1
+
+    - name: Upload Windows exe's to artifacts
+      uses: actions/upload-artifact@v2.2.2
+      with:
+        name: Windows-Exe
+        path: ${{ github.workspace }}\taco-blockchain-gui\Taco-win32-x64\
+
+    - name: Upload Installer to artifacts
+      uses: actions/upload-artifact@v2.2.2
+      with:
+        name: Windows-Installers
+        path: ${{ github.workspace }}\taco-blockchain-gui\release-builds\
+
+    - name: Create Checksums
+      env:
+        TACO_INSTALLER_VERSION: ${{ steps.version_number.outputs.TACO_INSTALLER_VERSION }}
+      run: |
+         certutil.exe -hashfile ${{ github.workspace }}\taco-blockchain-gui\release-builds\windows-installer\TacoSetup-${{ steps.version_number.outputs.TACO_INSTALLER_VERSION }}.exe SHA256 > ${{ github.workspace }}\taco-blockchain-gui\release-builds\windows-installer\TacoSetup-${{ steps.version_number.outputs.TACO_INSTALLER_VERSION }}.exe.sha256
+         ls ${{ github.workspace }}\taco-blockchain-gui\release-builds\windows-installer\

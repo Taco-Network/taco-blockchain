@@ -3,10 +3,7 @@ from typing import Any, Dict
 
 from taco.util.json_util import dict_to_json_str
 
-try:
-    from typings import TypedDict
-except ImportError:
-    from typing_extensions import TypedDict
+from typing_extensions import TypedDict
 
 
 # Messages must follow this format

@@ -10,8 +10,8 @@ from taco.types.announcement import Announcement
 from taco.types.blockchain_format.coin import Coin
 from taco.types.blockchain_format.sized_bytes import bytes32
 from taco.types.coin_spend import CoinSpend
+from taco.types.condition_opcodes import ConditionOpcode
 from taco.types.spend_bundle import SpendBundle
-from taco.util.condition_tools import ConditionOpcode
 
 from taco.util.ints import uint64
 from taco.wallet.puzzles.load_clvm import load_clvm

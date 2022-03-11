@@ -1,5 +1,7 @@
 from typing import Dict, List, Optional, Tuple, Set
 
+from clvm.casts import int_from_bytes
+
 from taco.types.announcement import Announcement
 from taco.types.name_puzzle_condition import NPC
 from taco.types.blockchain_format.coin import Coin
@@ -7,7 +9,6 @@ from taco.types.blockchain_format.program import Program, SerializedProgram
 from taco.types.blockchain_format.sized_bytes import bytes32, bytes48
 from taco.types.condition_opcodes import ConditionOpcode
 from taco.types.condition_with_args import ConditionWithArgs
-from taco.util.clvm import int_from_bytes
 from taco.util.errors import ConsensusError, Err
 from taco.util.ints import uint64
 
@@ -114,7 +115,7 @@ def created_outputs_for_conditions_dict(
     for cvp in conditions_dict.get(ConditionOpcode.CREATE_COIN, []):
         puzzle_hash, amount_bin = cvp.vars[0], cvp.vars[1]
         amount = int_from_bytes(amount_bin)
-        coin = Coin(input_coin_name, puzzle_hash, uint64(amount))
+        coin = Coin(input_coin_name, bytes32(puzzle_hash), uint64(amount))
         output_coins.append(coin)
     return output_coins
 

@@ -6,8 +6,8 @@ from blspy import AugSchemeMPL, BasicSchemeMPL, G1Element, G2Element
 from taco.types.blockchain_format.program import Program
 from taco.types.blockchain_format.sized_bytes import bytes32
 from taco.types.coin_spend import CoinSpend
+from taco.types.condition_opcodes import ConditionOpcode
 from taco.types.spend_bundle import SpendBundle
-from taco.util.condition_tools import ConditionOpcode
 from taco.util.hash import std_hash
 from taco.wallet.puzzles import (
     p2_conditions,

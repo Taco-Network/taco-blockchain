@@ -8,12 +8,10 @@ from taco.types.blockchain_format.program import Program, SerializedProgram
 wallet_program_files = set(
     [
         "taco/wallet/puzzles/calculate_synthetic_public_key.clvm",
-        "taco/wallet/puzzles/cc.clvm",
+        "taco/wallet/puzzles/cat.clvm",
         "taco/wallet/puzzles/tacolisp_deserialisation.clvm",
         "taco/wallet/puzzles/rom_bootstrap_generator.clvm",
         "taco/wallet/puzzles/generator_for_single_coin.clvm",
-        "taco/wallet/puzzles/genesis-by-coin-id-with-0.clvm",
-        "taco/wallet/puzzles/genesis-by-puzzle-hash-with-0.clvm",
         "taco/wallet/puzzles/lock.inner.puzzle.clvm",
         "taco/wallet/puzzles/p2_conditions.clvm",
         "taco/wallet/puzzles/p2_delegated_conditions.clvm",
@@ -37,6 +35,14 @@ wallet_program_files = set(
         "taco/wallet/puzzles/pool_member_innerpuz.clvm",
         "taco/wallet/puzzles/singleton_launcher.clvm",
         "taco/wallet/puzzles/p2_singleton_or_delayed_puzhash.clvm",
+        "taco/wallet/puzzles/genesis_by_puzzle_hash.clvm",
+        "taco/wallet/puzzles/everything_with_signature.clvm",
+        "taco/wallet/puzzles/delegated_tail.clvm",
+        "taco/wallet/puzzles/settlement_payments.clvm",
+        "taco/wallet/puzzles/genesis_by_coin_id.clvm",
+        "taco/wallet/puzzles/genesis-by-puzzle-hash-with-0.clvm",
+        "taco/wallet/puzzles/delegated_genesis_checker.clvm",
+        "taco/wallet/puzzles/genesis-by-coin-id-with-0.clvm",
     ]
 )
 

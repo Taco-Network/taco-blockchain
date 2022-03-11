@@ -4,6 +4,7 @@ from typing import Dict
 
 from taco.consensus.constants import ConsensusConstants
 from taco.consensus.default_constants import DEFAULT_CONSTANTS
+from taco.rpc.timelord_rpc_api import TimelordRpcApi
 from taco.server.outbound_message import NodeType
 from taco.server.start_service import run_service
 from taco.timelord.timelord import Timelord
@@ -46,6 +47,10 @@ def service_kwargs_for_timelord(
         auth_connect_peers=False,
         network_id=network_id,
     )
+
+    if config.get("start_rpc_server", True):
+        kwargs["rpc_info"] = (TimelordRpcApi, config.get("rpc_port", 8557))
+
     return kwargs
 
 
