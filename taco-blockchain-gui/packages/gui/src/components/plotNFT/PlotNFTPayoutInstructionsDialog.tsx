@@ -41,7 +41,6 @@ export default function PlotNFTPayoutInstructionsDialog(props: Props) {
 
   const methods = useForm<FormData>({
     mode: 'onChange',
-    shouldUnregister: false,
     defaultValues: {
       payoutAddress: payoutAddress || '',
     },
@@ -113,7 +112,7 @@ export default function PlotNFTPayoutInstructionsDialog(props: Props) {
                   </Trans>{' '}
                   <Link
                     target="_blank"
-                    href="https://github.com/Taco-Network/pool-reference/blob/main/SPECIFICATION.md#payloadpayout_instructions"
+                    href="https://github.com/BTCgreen-Network/pool-reference/blob/main/SPECIFICATION.md#payloadpayout_instructions"
                     noWrap
                   >
                     <Trans>Learn More</Trans>

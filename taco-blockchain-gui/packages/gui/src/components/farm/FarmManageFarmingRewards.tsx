@@ -1,9 +1,9 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { Trans } from '@lingui/macro';
 import { useForm } from 'react-hook-form';
 import { Alert } from '@material-ui/lab';
 import styled from 'styled-components';
-import { Flex, Form, TextField, Loading } from '@taco/core';
+import { Flex, Form, TextField, Loading, fromBech32m } from '@taco/core';
 import { useSetRewardTargetsMutation, useGetRewardTargetsQuery } from '@taco/api-react';
 import {
   Button,
@@ -13,7 +13,6 @@ import {
   DialogContent,
   Typography,
 } from '@material-ui/core';
-import { bech32m } from 'bech32';
 
 const StyledTextField = styled(TextField)`
   min-width: 640px;
@@ -32,12 +31,13 @@ type Props = {
 export default function FarmManageFarmingRewards(props: Props) {
   const { onClose, open } = props;
   const [setRewardTargets] = useSetRewardTargetsMutation();
-  const { data, isLoading } = useGetRewardTargetsQuery();
-  
+  const { data, isLoading } = useGetRewardTargetsQuery({
+    searchForPrivateKey: true,
+  });
+
   const [error, setError] = useState<Error | null>(null);
   const methods = useForm<FormData>({
     mode: 'onChange',
-    shouldUnregister: false,
     defaultValues: {
       farmerTarget: data?.farmerTarget ?? '',
       poolTarget: data?.poolTarget ?? '',
@@ -48,6 +48,15 @@ export default function FarmManageFarmingRewards(props: Props) {
     return !data?.haveFarmerSk || !data?.havePoolSk;
   }, [data?.haveFarmerSk, data?.havePoolSk]);
 
+  useEffect(() => {
+    if (data) {
+      methods.reset({
+        farmerTarget: data.farmerTarget,
+        poolTarget: data.poolTarget,
+      });
+    }
+  }, [data]);
+
   const {
     register,
     formState: { errors },
@@ -56,14 +65,16 @@ export default function FarmManageFarmingRewards(props: Props) {
   function handleClose() {
     onClose();
   }
-  function handleDialogClose(event: any, reason: any) {
-      if (reason !== 'backdropClick' || reason !== 'EscapeKeyDown') {
-      onClose();
-      }}
 
-      function checkAddress(stringToCheck: string): boolean {
+  function handleDialogClose(event: any, reason: any) {
+    if (reason !== 'backdropClick' || reason !== 'EscapeKeyDown') {
+      onClose();
+    }
+  }
+
+  function checkAddress(stringToCheck: string): boolean {
     try {
-      bech32m.decode(stringToCheck);
+      fromBech32m(stringToCheck);
       return true;
     }
     catch {
@@ -78,7 +89,7 @@ export default function FarmManageFarmingRewards(props: Props) {
 
     try {
       await setRewardTargets({
-        farmerTarget, 
+        farmerTarget,
         poolTarget,
       }).unwrap();
       handleClose();

@@ -27,7 +27,7 @@ export const farmerApi = apiWithTag.injectEndpoints({
         ? [
           ...harvesters.map(({ id }) => ({ type: 'Harvesters', id } as const)),
           { type: 'Harvesters', id: 'LIST' },
-        ] 
+        ]
         :  [{ type: 'Harvesters', id: 'LIST' }],
       onCacheEntryAdded: onCacheEntryAddedInvalidate(baseQuery, [{
         command: 'onHarvesterChanged',
@@ -36,10 +36,10 @@ export const farmerApi = apiWithTag.injectEndpoints({
       }]),
     }),
 
-    getRewardTargets: build.query<undefined, { 
-      searchForPrivateKey: boolean; 
+    getRewardTargets: build.query<undefined, {
+      searchForPrivateKey?: boolean;
     }>({
-      query: ({ searchForPrivateKey }) => ({
+      query: ({ searchForPrivateKey } = {}) => ({
         command: 'getRewardTargets',
         service: Farmer,
         args: [searchForPrivateKey],
@@ -48,7 +48,7 @@ export const farmerApi = apiWithTag.injectEndpoints({
       providesTags: ['RewardTargets']
     }),
 
-    setRewardTargets: build.mutation<RewardTargets, { 
+    setRewardTargets: build.mutation<RewardTargets, {
       farmerTarget: string;
       poolTarget: string;
     }>({
@@ -70,7 +70,7 @@ export const farmerApi = apiWithTag.injectEndpoints({
         ? [
           ...connections.map(({ nodeId }) => ({ type: 'FarmerConnections', id: nodeId } as const)),
           { type: 'FarmerConnections', id: 'LIST' },
-        ] 
+        ]
         : [{ type: 'FarmerConnections', id: 'LIST' }],
       onCacheEntryAdded: onCacheEntryAddedInvalidate(baseQuery, [{
         command: 'onConnections',
@@ -84,7 +84,7 @@ export const farmerApi = apiWithTag.injectEndpoints({
         },
       }]),
     }),
-    openFarmerConnection: build.mutation<FarmerConnection, { 
+    openFarmerConnection: build.mutation<FarmerConnection, {
       host: string;
       port: number;
     }>({
@@ -95,7 +95,7 @@ export const farmerApi = apiWithTag.injectEndpoints({
       }),
       invalidatesTags: [{ type: 'FarmerConnections', id: 'LIST' }],
     }),
-    closeFarmerConnection: build.mutation<FarmerConnection, { 
+    closeFarmerConnection: build.mutation<FarmerConnection, {
       nodeId: string;
     }>({
       query: ({ nodeId }) => ({
@@ -129,7 +129,7 @@ export const farmerApi = apiWithTag.injectEndpoints({
         ? [
           ...signagePoints.map(({ signagePoint }) => ({ type: 'SignagePoints', id: signagePoint?.challengeHash } as const)),
           { type: 'SignagePoints', id: 'LIST' },
-        ] 
+        ]
         :  [{ type: 'SignagePoints', id: 'LIST' }],
       onCacheEntryAdded: onCacheEntryAddedInvalidate(baseQuery, [{
         command: 'onNewSignagePoint',
@@ -150,11 +150,11 @@ export const farmerApi = apiWithTag.injectEndpoints({
         ? [
           ...poolsList.map(({ p2SingletonPuzzleHash }) => ({ type: 'Pools', id: p2SingletonPuzzleHash } as const)),
           { type: 'Pools', id: 'LIST' },
-        ] 
+        ]
         :  [{ type: 'Pools', id: 'LIST' }],
     }),
 
-    setPayoutInstructions: build.mutation<undefined, { 
+    setPayoutInstructions: build.mutation<undefined, {
       launcherId: string;
       payoutInstructions: string;
     }>({
@@ -184,7 +184,7 @@ export const farmerApi = apiWithTag.injectEndpoints({
 
 // TODO add new farming info query and event for last_attepmtp_proofs
 
-export const { 
+export const {
   useFarmerPingQuery,
   useGetHarvestersQuery,
   useGetRewardTargetsQuery,

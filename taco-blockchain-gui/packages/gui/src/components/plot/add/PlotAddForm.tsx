@@ -5,7 +5,7 @@ import { defaultPlotter } from '@taco/api';
 import { useStartPlottingMutation, useCreateNewPoolWalletMutation } from '@taco/api-react';
 import { ChevronRight as ChevronRightIcon } from '@material-ui/icons';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { useShowError, ButtonLoading, Flex, Form, FormBackButton } from '@taco/core';
+import { useShowError, ButtonLoading, Flex, Form, FormBackButton, toBech32m } from '@taco/core';
 import { PlotHeaderSource } from '../PlotHeader';
 import PlotAddChoosePlotter from './PlotAddChoosePlotter';
 import PlotAddChooseSize from './PlotAddChooseSize';
@@ -17,7 +17,6 @@ import PlotAddConfig from '../../../types/PlotAdd';
 import plotSizes from '../../../constants/plotSizes';
 import PlotNFTState from '../../../constants/PlotNFTState';
 import PlotterName from '../../../constants/PlotterName';
-import toBech32m from '../../../util/toBech32m';
 import useUnconfirmedPlotNFTs from '../../../hooks/useUnconfirmedPlotNFTs';
 
 type FormData = PlotAddConfig & {
@@ -43,7 +42,7 @@ export default function PlotAddForm(props: Props) {
   const [createNewPoolWallet] = useCreateNewPoolWalletMutation();
   const addNFTref = useRef();
   const { state } = useLocation();
-  
+
 
   const otherDefaults = {
     plotCount: 1,
@@ -72,7 +71,6 @@ export default function PlotAddForm(props: Props) {
   }
 
   const methods = useForm<FormData>({
-    shouldUnregister: false,
     defaultValues: defaultsForPlotter(PlotterName.TACOPOS),
   });
 

@@ -4,7 +4,6 @@ import {
   AdvancedOptions,
   Fee,
   Form,
-  AlertDialog,
   Flex,
   Card,
   ButtonLoading,
@@ -18,7 +17,7 @@ import {
   toBech32m,
   getTransactionResult,
 } from '@taco/core';
-import { 
+import {
   useSpendCATMutation,
   useGetSyncStatusQuery,
   useFarmBlockMutation,
@@ -29,6 +28,7 @@ import { useForm, useWatch } from 'react-hook-form';
 import { Button, Grid } from '@material-ui/core';
 import useWallet from '../../hooks/useWallet';
 import useWalletState from '../../hooks/useWalletState';
+import CreateWalletSendTransactionResultDialog from '../WalletSendTransactionResultDialog';
 
 type Props = {
   walletId: number;
@@ -55,13 +55,12 @@ export default function WalletCATSend(props: Props) {
       return undefined;
     }
     return toBech32m(
-      '0000000000000000000000000000000000000000000000000000000000000000', 
+      '0000000000000000000000000000000000000000000000000000000000000000',
       currencyCode
     );
   }, [currencyCode]);
 
   const methods = useForm<SendTransactionData>({
-    shouldUnregister: false,
     defaultValues: {
       address: '',
       amount: '',
@@ -158,13 +157,12 @@ export default function WalletCATSend(props: Props) {
     const response = await spendCAT(queryData).unwrap();
 
     const result = getTransactionResult(response.transaction);
-    if (result.success) {
-        openDialog(
-          <AlertDialog title={<Trans>Success</Trans>}>
-            {result.message ?? <Trans>Transaction has successfully been sent to a full node and included in the mempool.</Trans>}
-          </AlertDialog>,
-        );
-    } else {
+    const resultDialog = CreateWalletSendTransactionResultDialog({success: result.success, message: result.message});
+
+    if (resultDialog) {
+      await openDialog(resultDialog);
+    }
+    else {
       throw new Error(result.message ?? 'Something went wrong');
     }
 

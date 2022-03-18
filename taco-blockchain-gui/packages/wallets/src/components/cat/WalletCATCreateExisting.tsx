@@ -19,7 +19,6 @@ type CreateExistingCATWalletData = {
 
 export default function WalletCATCreateExisting() {
   const methods = useForm<CreateExistingCATWalletData>({
-    shouldUnregister: false,
     defaultValues: {
       name: '',
       fee: '',
@@ -72,10 +71,10 @@ export default function WalletCATCreateExisting() {
     <Form methods={methods} onSubmit={handleSubmit}>
       <Flex flexDirection="column" gap={3}>
         <Back variant="h5">
-          {asteroid 
+          {asteroid
             ? <Trans>Create custom CAT Wallet</Trans>
             : <Trans>Create Taco Asset Token Wallet from Existing TAIL</Trans>}
-          
+
         </Back>
         <Card>
           <Grid spacing={2} container>

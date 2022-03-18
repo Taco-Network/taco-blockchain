@@ -51,7 +51,6 @@ export default function PlotNFTAbsorbRewards(props: Props) {
   }, [data?.nfts, plotNFTId]);
 
   const methods = useForm<FormData>({
-    shouldUnregister: false,
     defaultValues: {
       fee: '',
     },
@@ -66,12 +65,12 @@ export default function PlotNFTAbsorbRewards(props: Props) {
       const feeMojos = tacoToMojo(fee);
 
 
-      if (walletId === undefined) { 
+      if (walletId === undefined) {
         throw new Error(t`Wallet is not defined`);
       }
 
       await pwAbsorbRewards({
-        walletId, 
+        walletId,
         fee: feeMojos,
       }).unwrap();
 

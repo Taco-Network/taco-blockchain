@@ -13,7 +13,6 @@ type CreateCATWalletData = {
 export default function WalletCATCreateNew() {
   const navigate = useNavigate();
   const methods = useForm<CreateCATWalletData>({
-    shouldUnregister: false,
     defaultValues: {
       amount: '',
       fee: '',
@@ -41,7 +40,7 @@ export default function WalletCATCreateNew() {
         );
         return;
       }
-      
+
       if (fee === '' || isNaN(Number(fee))) {
         dispatch(
           openDialog(

@@ -21,7 +21,6 @@ export default function FullNodeAddConnection(props: Props) {
   const [openConnection, { error }] = useOpenFullNodeConnectionMutation();
 
   const methods = useForm<FormData>({
-    shouldUnregister: false,
     defaultValues: {
       host: '',
       port: '',
@@ -38,7 +37,7 @@ export default function FullNodeAddConnection(props: Props) {
     const { host, port } = values;
 
     await openConnection({
-      host, 
+      host,
       port: Number.parseInt(port, 10),
     }).unwrap();
 

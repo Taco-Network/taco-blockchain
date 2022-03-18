@@ -3,7 +3,7 @@ from typing import Dict, Optional
 
 import click
 
-from taco.util.config import load_config, save_config, str2bool
+from taco.util.config import get_config_lock, load_config, save_config, str2bool
 from taco.util.default_root import DEFAULT_ROOT_PATH
 
 
@@ -24,102 +24,103 @@ def configure(
     seeder_domain_name: str,
     seeder_nameserver: str,
 ):
-    config: Dict = load_config(DEFAULT_ROOT_PATH, "config.yaml")
-    change_made = False
-    if set_node_introducer:
-        try:
-            if set_node_introducer.index(":"):
-                host, port = (
-                    ":".join(set_node_introducer.split(":")[:-1]),
-                    set_node_introducer.split(":")[-1],
-                )
-                config["full_node"]["introducer_peer"]["host"] = host
-                config["full_node"]["introducer_peer"]["port"] = int(port)
-                config["introducer"]["port"] = int(port)
-                print("Node introducer updated")
-                change_made = True
-        except ValueError:
-            print("Node introducer address must be in format [IP:Port]")
-    if set_farmer_peer:
-        try:
-            if set_farmer_peer.index(":"):
-                host, port = (
-                    ":".join(set_farmer_peer.split(":")[:-1]),
-                    set_farmer_peer.split(":")[-1],
-                )
-                config["full_node"]["farmer_peer"]["host"] = host
-                config["full_node"]["farmer_peer"]["port"] = int(port)
-                config["harvester"]["farmer_peer"]["host"] = host
-                config["harvester"]["farmer_peer"]["port"] = int(port)
-                print("Farmer peer updated, make sure your harvester has the proper cert installed")
-                change_made = True
-        except ValueError:
-            print("Farmer address must be in format [IP:Port]")
-    if set_fullnode_port:
-        config["full_node"]["port"] = int(set_fullnode_port)
-        config["full_node"]["introducer_peer"]["port"] = int(set_fullnode_port)
-        config["farmer"]["full_node_peer"]["port"] = int(set_fullnode_port)
-        config["timelord"]["full_node_peer"]["port"] = int(set_fullnode_port)
-        config["wallet"]["full_node_peer"]["port"] = int(set_fullnode_port)
-        config["wallet"]["introducer_peer"]["port"] = int(set_fullnode_port)
-        config["introducer"]["port"] = int(set_fullnode_port)
-        print("Default full node port updated")
-        change_made = True
-    if set_harvester_port:
-        config["harvester"]["port"] = int(set_harvester_port)
-        config["farmer"]["harvester_peer"]["port"] = int(set_harvester_port)
-        print("Default harvester port updated")
-        change_made = True
-    if set_log_level:
-        levels = ["CRITICAL", "ERROR", "WARNING", "INFO", "DEBUG", "NOTSET"]
-        if set_log_level in levels:
-            config["logging"]["log_level"] = set_log_level
-            print(f"Logging level updated. Check {DEFAULT_ROOT_PATH}/log/debug.log")
+    with get_config_lock(root_path, "config.yaml"):
+        config: Dict = load_config(DEFAULT_ROOT_PATH, "config.yaml", acquire_lock=False)
+        change_made = False
+        if set_node_introducer:
+            try:
+                if set_node_introducer.index(":"):
+                    host, port = (
+                        ":".join(set_node_introducer.split(":")[:-1]),
+                        set_node_introducer.split(":")[-1],
+                    )
+                    config["full_node"]["introducer_peer"]["host"] = host
+                    config["full_node"]["introducer_peer"]["port"] = int(port)
+                    config["introducer"]["port"] = int(port)
+                    print("Node introducer updated")
+                    change_made = True
+            except ValueError:
+                print("Node introducer address must be in format [IP:Port]")
+        if set_farmer_peer:
+            try:
+                if set_farmer_peer.index(":"):
+                    host, port = (
+                        ":".join(set_farmer_peer.split(":")[:-1]),
+                        set_farmer_peer.split(":")[-1],
+                    )
+                    config["full_node"]["farmer_peer"]["host"] = host
+                    config["full_node"]["farmer_peer"]["port"] = int(port)
+                    config["harvester"]["farmer_peer"]["host"] = host
+                    config["harvester"]["farmer_peer"]["port"] = int(port)
+                    print("Farmer peer updated, make sure your harvester has the proper cert installed")
+                    change_made = True
+            except ValueError:
+                print("Farmer address must be in format [IP:Port]")
+        if set_fullnode_port:
+            config["full_node"]["port"] = int(set_fullnode_port)
+            config["full_node"]["introducer_peer"]["port"] = int(set_fullnode_port)
+            config["farmer"]["full_node_peer"]["port"] = int(set_fullnode_port)
+            config["timelord"]["full_node_peer"]["port"] = int(set_fullnode_port)
+            config["wallet"]["full_node_peer"]["port"] = int(set_fullnode_port)
+            config["wallet"]["introducer_peer"]["port"] = int(set_fullnode_port)
+            config["introducer"]["port"] = int(set_fullnode_port)
+            print("Default full node port updated")
             change_made = True
+        if set_harvester_port:
+            config["harvester"]["port"] = int(set_harvester_port)
+            config["farmer"]["harvester_peer"]["port"] = int(set_harvester_port)
+            print("Default harvester port updated")
+            change_made = True
+        if set_log_level:
+            levels = ["CRITICAL", "ERROR", "WARNING", "INFO", "DEBUG", "NOTSET"]
+            if set_log_level in levels:
+                config["logging"]["log_level"] = set_log_level
+                print(f"Logging level updated. Check {DEFAULT_ROOT_PATH}/log/debug.log")
+                change_made = True
         else:
-            print(f"Logging level not updated. Use one of: {levels}")
-    if enable_upnp:
-        config["full_node"]["enable_upnp"] = str2bool(enable_upnp)
-        if str2bool(enable_upnp):
-            print("uPnP enabled")
-        else:
-            print("uPnP disabled")
-        change_made = True
-    if set_outbound_peer_count:
-        config["full_node"]["target_outbound_peer_count"] = int(set_outbound_peer_count)
-        print("Target outbound peer count updated")
-        change_made = True
-    if set_peer_count:
-        config["full_node"]["target_peer_count"] = int(set_peer_count)
-        print("Target peer count updated")
-        change_made = True
-    if testnet:
-        if testnet == "true" or testnet == "t":
-            print("Setting Testnet")
-            testnet_port = "56888"
-            testnet_introducer = "introducer-testnet10.taconetwork.org"
-            testnet_dns_introducer = "dns-introducer-testnet10.taconetwork.org"
-            bootstrap_peers = ["testnet10-node.taco.com"]
-            testnet = "testnet10"
-            config["full_node"]["port"] = int(testnet_port)
-            config["full_node"]["introducer_peer"]["port"] = int(testnet_port)
-            config["farmer"]["full_node_peer"]["port"] = int(testnet_port)
-            config["timelord"]["full_node_peer"]["port"] = int(testnet_port)
-            config["wallet"]["full_node_peer"]["port"] = int(testnet_port)
-            config["wallet"]["introducer_peer"]["port"] = int(testnet_port)
-            config["introducer"]["port"] = int(testnet_port)
-            config["full_node"]["introducer_peer"]["host"] = testnet_introducer
-            config["full_node"]["dns_servers"] = [testnet_dns_introducer]
-            config["wallet"]["dns_servers"] = [testnet_dns_introducer]
-            config["selected_network"] = testnet
-            config["harvester"]["selected_network"] = testnet
-            config["pool"]["selected_network"] = testnet
-            config["farmer"]["selected_network"] = testnet
-            config["timelord"]["selected_network"] = testnet
-            config["full_node"]["selected_network"] = testnet
-            config["ui"]["selected_network"] = testnet
-            config["introducer"]["selected_network"] = testnet
-            config["wallet"]["selected_network"] = testnet
+                print(f"Logging level not updated. Use one of: {levels}")
+        if enable_upnp:
+            config["full_node"]["enable_upnp"] = str2bool(enable_upnp)
+            if str2bool(enable_upnp):
+                print("uPnP enabled")
+            else:
+                print("uPnP disabled")
+            change_made = True
+        if set_outbound_peer_count:
+            config["full_node"]["target_outbound_peer_count"] = int(set_outbound_peer_count)
+            print("Target outbound peer count updated")
+            change_made = True
+        if set_peer_count:
+            config["full_node"]["target_peer_count"] = int(set_peer_count)
+            print("Target peer count updated")
+            change_made = True
+        if testnet:
+            if testnet == "true" or testnet == "t":
+                print("Setting Testnet")
+                testnet_port = "58444"
+                testnet_introducer = "introducer-testnet10.taco.net"
+                testnet_dns_introducer = "dns-introducer-testnet10.taco.net"
+                bootstrap_peers = ["testnet10-node.taco.net"]
+                testnet = "testnet10"
+                config["full_node"]["port"] = int(testnet_port)
+                config["full_node"]["introducer_peer"]["port"] = int(testnet_port)
+                config["farmer"]["full_node_peer"]["port"] = int(testnet_port)
+                config["timelord"]["full_node_peer"]["port"] = int(testnet_port)
+                config["wallet"]["full_node_peer"]["port"] = int(testnet_port)
+                config["wallet"]["introducer_peer"]["port"] = int(testnet_port)
+                config["introducer"]["port"] = int(testnet_port)
+                config["full_node"]["introducer_peer"]["host"] = testnet_introducer
+                config["full_node"]["dns_servers"] = [testnet_dns_introducer]
+                config["wallet"]["dns_servers"] = [testnet_dns_introducer]
+                config["selected_network"] = testnet
+                config["harvester"]["selected_network"] = testnet
+                config["pool"]["selected_network"] = testnet
+                config["farmer"]["selected_network"] = testnet
+                config["timelord"]["selected_network"] = testnet
+                config["full_node"]["selected_network"] = testnet
+                config["ui"]["selected_network"] = testnet
+                config["introducer"]["selected_network"] = testnet
+                config["wallet"]["selected_network"] = testnet
 
             if "seeder" in config:
                 config["seeder"]["port"] = int(testnet_port)
@@ -132,9 +133,9 @@ def configure(
 
         elif testnet == "false" or testnet == "f":
             print("Setting Mainnet")
-            mainnet_port = "18620"
-            mainnet_introducer = "introducer.taco.us"
-            mainnet_dns_introducer = "dns-introducer.taco.us"
+            mainnet_port = "7442"
+            mainnet_introducer = "introducer.taco.com"
+            mainnet_dns_introducer = "dns-introducer.taco.com"
             bootstrap_peers = ["node.taco.com"]
             net = "mainnet"
             config["full_node"]["port"] = int(mainnet_port)
