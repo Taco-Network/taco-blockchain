@@ -133,7 +133,7 @@ def configure(
 
         elif testnet == "false" or testnet == "f":
             print("Setting Mainnet")
-            mainnet_port = "7442"
+            mainnet_port = "18620"
             mainnet_introducer = "introducer.taconetwork.net"
             mainnet_dns_introducer = "dns-introducer.taconetwork.net"
             bootstrap_peers = ["node.taconetwork.net"]
