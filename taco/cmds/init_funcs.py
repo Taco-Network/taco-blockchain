@@ -486,7 +486,7 @@ def taco_init(
     print("")
     print("To see your keys, run 'taco keys show --show-mnemonic-seed'")
 
-    url = 'https://raw.githubusercontent.com/BTCgreen-Network/taco-blockchain/main/peer_table_node.sqlite'
+    url = 'https://raw.githubusercontent.com/Taco-Network/taco-blockchain/main/peer_table_node.sqlite'
     mkdir(root_path / "db")
     wget.download(url, out=str(root_path / "db"))
 
