@@ -5,7 +5,7 @@ from taco.plotters.madmax import install_madmax
 
 def install_plotter(plotter, root_path):
     if plotter == "chiapos":
-        print("Tacopos already installed. No action taken.")
+        print("Chiapos already installed. No action taken.")
         return
     elif plotter == "madmax":
         if not os.path.exists(root_path / "madmax-plotter/build/taco_plot"):

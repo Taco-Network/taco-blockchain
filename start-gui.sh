@@ -1,5 +1,7 @@
 #!/bin/bash
-set -e
+
+set -o errexit
+
 export NODE_OPTIONS="--max-old-space-size=3000"
 
 SCRIPT_DIR=$(cd -- "$(dirname -- "$0")"; pwd)
@@ -49,4 +51,4 @@ fi
 echo "### Starting GUI"
 cd "${SCRIPT_DIR}/taco-blockchain-gui/"
 echo "npm run electron"
-npm run electron
+npm run electron &

@@ -8,7 +8,7 @@ export default function defaultsForPlotter(plotterName: PlotterName): PlotterDef
       return bladebitDefaults;
     case PlotterName.MADMAX:
       return madmaxDefaults;
-    case PlotterName.TACOPOS: // fallthrough
+    case PlotterName.CHIAPOS: // fallthrough
     default:
       return chiaposDefaults;
   }

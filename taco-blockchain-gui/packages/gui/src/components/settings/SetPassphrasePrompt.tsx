@@ -1,22 +1,24 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Box,
-  Button,
   Checkbox,
   Dialog,
-  DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
   FormControlLabel,
+  IconButton,
+  InputAdornment,
   TextField,
   Tooltip,
-} from '@material-ui/core';
+} from '@mui/material';
 import {
   Help as HelpIcon,
-} from '@material-ui/icons';
+  KeyboardCapslock as KeyboardCapslockIcon,
+  Visibility as VisibilityIcon,
+} from '@mui/icons-material';
 import { t, Trans } from '@lingui/macro';
-import { AlertDialog, useValidateChangePassphraseParams, useOpenDialog, Suspender } from '@taco/core';
+import { AlertDialog, Button, DialogActions, Flex, useValidateChangePassphraseParams, useOpenDialog, Suspender } from '@taco/core';
 import { useGetKeyringStatusQuery, useSetKeyringPassphraseMutation } from '@taco/api-react';
 
 type Props = {
@@ -34,6 +36,9 @@ export default function SetPassphrasePrompt(props: Props) {
   let confirmationInput: HTMLInputElement | null;
   let passphraseHintInput: HTMLInputElement | null;
   let savePassphraseCheckbox: HTMLInputElement | null = null;
+  const [showPassphraseText1, setShowPassphraseText1] = useState(false);
+  const [showPassphraseText2, setShowPassphraseText2] = useState(false);
+  const [showCapsLock, setShowCapsLock] = useState(false);
 
   const [needsFocusAndSelect, setNeedsFocusAndSelect] = React.useState(false);
   useEffect(() => {
@@ -93,7 +98,7 @@ export default function SetPassphrasePrompt(props: Props) {
       setNeedsFocusAndSelect(true);
     }
   }
-  
+
   async function handleCancel() {
     onCancel();
   }
@@ -103,14 +108,25 @@ export default function SetPassphrasePrompt(props: Props) {
       'Enter' : handleSubmit,
       'Escape' : handleCancel,
     };
+
+    if (e.getModifierState("CapsLock")) {
+      setShowCapsLock(true);
+    }
+
     const handler: () => Promise<void> | undefined = keyHandlerMapping[e.key];
-  
+
     if (handler) {
       // Disable default event handling to avoid navigation updates
       e.preventDefault();
       e.stopPropagation();
-  
+
       await handler();
+    }
+  }
+
+  const handleKeyUp = (event) => {
+    if (event.key === "CapsLock") {
+      setShowCapsLock(false);
     }
   }
 
@@ -132,6 +148,7 @@ export default function SetPassphrasePrompt(props: Props) {
       fullWidth={true}
       maxWidth = {'xs'}
       onKeyDown={handleKeyDown}
+      onKeyUp={handleKeyUp}
     >
       <DialogTitle id="form-dialog-title">
         <Trans>Set Passphrase</Trans>
@@ -142,29 +159,57 @@ export default function SetPassphrasePrompt(props: Props) {
             Enter a strong passphrase to secure your keys:
           </Trans>
         </DialogContentText>
-        <TextField
-          autoFocus
-          disabled={isLoadingSetKeyringPassphrase}
-          color="secondary"
-          margin="dense"
-          id="passphraseInput"
-          label={<Trans>Passphrase</Trans>}
-          placeholder="Passphrase"
-          inputRef={(input) => passphraseInput = input}
-          type="password"
-          fullWidth
-        />
-        <TextField
-          disabled={isLoadingSetKeyringPassphrase}
-          color="secondary"
-          margin="dense"
-          id="confirmationInput"
-          label={<Trans>Confirm Passphrase</Trans>}
-          placeholder="Confirm Passphrase"
-          inputRef={(input) => confirmationInput = input}
-          type="password"
-          fullWidth
-        />
+        <Flex flexDirection="row" gap={1.5} alignItems="center">
+          <TextField
+            autoFocus
+            disabled={isLoadingSetKeyringPassphrase}
+            color="secondary"
+            margin="dense"
+            id="passphraseInput"
+            label={<Trans>Passphrase</Trans>}
+            placeholder="Passphrase"
+            inputRef={(input) => passphraseInput = input}
+            type={showPassphraseText1 ? "text" : "password"}
+            InputProps={{
+              endAdornment: (
+                <Flex alignItems="center">
+                  <InputAdornment position="end">
+                    {showCapsLock && <Flex><KeyboardCapslockIcon /></Flex>}
+                    <IconButton onClick={() => setShowPassphraseText1(s => !s)}>
+                      <VisibilityIcon />
+                    </IconButton>
+                  </InputAdornment>
+                </Flex>
+              )
+            }}
+            fullWidth
+          />
+        </Flex>
+        <Flex flexDirection="row" gap={1.5} alignItems="center">
+          <TextField
+            disabled={isLoadingSetKeyringPassphrase}
+            color="secondary"
+            margin="dense"
+            id="confirmationInput"
+            label={<Trans>Confirm Passphrase</Trans>}
+            placeholder="Confirm Passphrase"
+            inputRef={(input) => confirmationInput = input}
+            type={showPassphraseText2 ? "text" : "password"}
+            InputProps={{
+              endAdornment: (
+                <Flex alignItems="center">
+                  <InputAdornment position="end">
+                    {showCapsLock && <Flex><KeyboardCapslockIcon /></Flex>}
+                    <IconButton onClick={() => setShowPassphraseText2(s => !s)}>
+                      <VisibilityIcon />
+                    </IconButton>
+                  </InputAdornment>
+                </Flex>
+              )
+            }}
+            fullWidth
+          />
+        </Flex>
         {!!canSetPassphraseHint && (
           <TextField
             disabled={isLoadingSetKeyringPassphrase}
@@ -200,9 +245,7 @@ export default function SetPassphrasePrompt(props: Props) {
         <Button
           disabled={isLoadingSetKeyringPassphrase}
           onClick={handleCancel}
-          color="secondary"
-          variant="contained"
-          style={{ marginBottom: '8px', marginRight: '8px' }}
+          variant="outlined"
         >
           <Trans>Cancel</Trans>
         </Button>
@@ -211,7 +254,6 @@ export default function SetPassphrasePrompt(props: Props) {
           onClick={handleSubmit}
           color="primary"
           variant="contained"
-          style={{ marginBottom: '8px', marginRight: '8px' }}
         >
           <Trans>Set Passphrase</Trans>
         </Button>

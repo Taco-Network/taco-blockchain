@@ -255,7 +255,7 @@ export default [
   { word: 'cabbage', value: 253 },
   { word: 'cabin', value: 254 },
   { word: 'cable', value: 255 },
-  { word: 'cactus', value: 256 },
+  { word: 'taco', value: 256 },
   { word: 'cage', value: 257 },
   { word: 'cake', value: 258 },
   { word: 'call', value: 259 },

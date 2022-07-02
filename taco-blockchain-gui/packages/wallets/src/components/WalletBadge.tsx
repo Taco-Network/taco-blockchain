@@ -2,7 +2,7 @@ import React from 'react';
 import { Trans } from '@lingui/macro';
 import { Tooltip } from '@taco/core';
 import { useGetCatListQuery } from '@taco/api-react';
-import { VerifiedUser as VerifiedUserIcon, VerifiedUserProps } from '@material-ui/icons';
+import { VerifiedUser as VerifiedUserIcon, VerifiedUserProps } from '@mui/icons-material';
 import styled from 'styled-components';
 import type { Wallet } from '@taco/api';
 import { WalletType } from '@taco/api';

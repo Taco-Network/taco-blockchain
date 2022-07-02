@@ -1,18 +1,21 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import { Trans } from '@lingui/macro';
 import { useForm } from 'react-hook-form';
-import { Alert } from '@material-ui/lab';
 import styled from 'styled-components';
-import { Flex, Form, TextField, Loading, fromBech32m } from '@taco/core';
-import { useSetRewardTargetsMutation, useGetRewardTargetsQuery } from '@taco/api-react';
+import { Button, Flex, Form, TextField, Loading } from '@taco/core';
+import { fromBech32m } from '@taco/api';
 import {
-  Button,
+  useSetRewardTargetsMutation,
+  useGetRewardTargetsQuery,
+} from '@taco/api-react';
+import {
+  Alert,
   Dialog,
   DialogActions,
   DialogTitle,
   DialogContent,
   Typography,
-} from '@material-ui/core';
+} from '@mui/material';
 
 const StyledTextField = styled(TextField)`
   min-width: 640px;
@@ -76,12 +79,10 @@ export default function FarmManageFarmingRewards(props: Props) {
     try {
       fromBech32m(stringToCheck);
       return true;
-    }
-    catch {
+    } catch {
       return false;
     }
   }
-
 
   async function handleSubmit(values: FormData) {
     const { farmerTarget, poolTarget } = values;

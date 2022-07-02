@@ -14,7 +14,7 @@ async def create_address_manager_from_db(db_path: Path) -> Optional[AddressManag
     """
     async with aiosqlite.connect(db_path) as connection:
         await connection.execute("pragma journal_mode=wal")
-        pass  # await connection.execute("pragma synchronous=OFF")  # Prevent DB corruption by avoiding ill-advised synchronous optimization.
+        await connection.execute("pragma synchronous=OFF")
 
         metadata: Dict[str, str] = await get_metadata(connection)
         address_manager: Optional[AddressManager] = None

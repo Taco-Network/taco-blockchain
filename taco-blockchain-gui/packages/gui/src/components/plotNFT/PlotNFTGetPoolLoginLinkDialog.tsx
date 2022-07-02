@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { t, Trans } from '@lingui/macro';
-import { Alert } from '@material-ui/lab';
 import styled from 'styled-components';
-import { CopyToClipboard, Flex, Link, Loading } from '@taco/core';
+import { Button, CopyToClipboard, Flex, Link, Loading } from '@taco/core';
 import {
-  Button,
+  Alert,
   Dialog,
   DialogActions,
   DialogTitle,
   DialogContent,
   Typography,
-} from '@material-ui/core';
+} from '@mui/material';
 import { useGetPoolLoginLinkQuery } from '@taco/api-react';
 import type { PlotNFT, PlotNFTExternal } from '@taco/api';
 

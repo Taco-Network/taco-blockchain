@@ -1,6 +1,6 @@
 import React, { useState, ReactNode } from 'react';
 import { Card, Flex, Loading } from '@taco/core';
-import { Typography } from '@material-ui/core';
+import { Typography } from '@mui/material';
 import styled from 'styled-components';
 
 const StyledCardBody = styled(Flex)`

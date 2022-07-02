@@ -79,6 +79,15 @@ def install_madmax(plotters_root_path: Path):
                 [
                     "sudo",
                     "apt",
+                    "update",
+                    "-y",
+                ],
+                "Could not update get package information from apt",
+            )
+            run_command(
+                [
+                    "sudo",
+                    "apt",
                     "install",
                     "-y",
                     "libsodium-dev",
@@ -111,7 +120,7 @@ def install_madmax(plotters_root_path: Path):
             [
                 "git",
                 "clone",
-                "https://github.com/Chia-Network/chia-plotter-madmax.git",
+                "https://github.com/Taco-Network/chia-plotter-madmax.git",
                 MADMAX_PLOTTER_DIR,
             ],
             "Could not clone madmax git repository",
@@ -180,7 +189,7 @@ def plot_madmax(args, taco_root_path: Path, plotters_root_path: Path):
         except Exception as e:
             print(f"Exception while installing madmax plotter: {e}")
             return
-    plot_keys = asyncio.get_event_loop().run_until_complete(
+    plot_keys = asyncio.run(
         resolve_plot_keys(
             None if args.farmerkey == b"" else args.farmerkey.hex(),
             None,
@@ -227,8 +236,7 @@ def plot_madmax(args, taco_root_path: Path, plotters_root_path: Path):
         call_args.append("-k")
         call_args.append(str(args.size))
     try:
-        loop = asyncio.get_event_loop()
-        loop.run_until_complete(run_plotter(call_args, progress))
+        asyncio.run(run_plotter(call_args, progress))
     except Exception as e:
         print(f"Exception while plotting: {type(e)} {e}")
         print(f"Traceback: {traceback.format_exc()}")

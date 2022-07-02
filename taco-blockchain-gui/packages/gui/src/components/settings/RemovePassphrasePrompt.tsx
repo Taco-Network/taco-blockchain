@@ -1,16 +1,20 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
-  Button,
   Dialog,
-  DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
+  IconButton,
+  InputAdornment,
   TextField,
   Typography,
-} from '@material-ui/core';
+} from '@mui/material';
 import { Trans, t } from '@lingui/macro';
-import { AlertDialog, Flex, TooltipIcon, useOpenDialog, Suspender } from '@taco/core';
+import {
+  KeyboardCapslock as KeyboardCapslockIcon,
+  Visibility as VisibilityIcon,
+} from '@mui/icons-material';
+import { AlertDialog, Button, DialogActions, Flex, TooltipIcon, useOpenDialog, Suspender } from '@taco/core';
 import { useRemoveKeyringPassphraseMutation, useGetKeyringStatusQuery } from '@taco/api-react';
 
 type Props = {
@@ -24,6 +28,8 @@ export default function RemovePassphrasePrompt(props: Props) {
   const { data: keyringState, isLoading } = useGetKeyringStatusQuery();
   const [removeKeyringPassphrase, { isLoading: isLoadingRemoveKeyringPassphrase}] = useRemoveKeyringPassphraseMutation();
   let passphraseInput: HTMLInputElement | null;
+  const [showPassphraseText, setShowPassphraseText] = useState(false);
+  const [showCapsLock, setShowCapsLock] = useState(false);
 
   const [needsFocusAndSelect, setNeedsFocusAndSelect] = React.useState(false);
   useEffect(() => {
@@ -67,24 +73,34 @@ export default function RemovePassphrasePrompt(props: Props) {
       setNeedsFocusAndSelect(true);
     }
   }
-  
+
   function handleCancel() {
     onCancel();
   }
 
   async function handleKeyDown(e: React.KeyboardEvent) {
+    if (e.getModifierState("CapsLock")) {
+      setShowCapsLock(true);
+    }
+
     const keyHandlerMapping: { [key: string]: () => Promise<void> } = {
       'Enter' : handleSubmit,
       'Escape' : handleCancel,
     };
     const handler: () => Promise<void> | undefined = keyHandlerMapping[e.key];
-  
+
     if (handler) {
       // Disable default event handling to avoid navigation updates
       e.preventDefault();
       e.stopPropagation();
-  
+
       await handler();
+    }
+  }
+
+  const handleKeyUp = (event) => {
+    if (event.key === "CapsLock") {
+      setShowCapsLock(false);
     }
   }
 
@@ -95,6 +111,7 @@ export default function RemovePassphrasePrompt(props: Props) {
       fullWidth={true}
       maxWidth = {'xs'}
       onKeyDown={handleKeyDown}
+      onKeyUp={handleKeyUp}
     >
       <DialogTitle id="form-dialog-title">
         <Trans>Remove Passphrase</Trans>
@@ -103,17 +120,30 @@ export default function RemovePassphrasePrompt(props: Props) {
         <DialogContentText>
           <Trans>Enter your passphrase:</Trans>
         </DialogContentText>
-        <TextField
-          autoFocus
-          disabled={isLoadingRemoveKeyringPassphrase}
-          color="secondary"
-          margin="dense"
-          id="passphraseInput"
-          label={<Trans>Passphrase</Trans>}
-          inputRef={(input) => passphraseInput = input}
-          type="password"
-          fullWidth
-        />
+        <Flex flexDirection="row" gap={1.5} alignItems="center">
+          <TextField
+            disabled={isLoadingRemoveKeyringPassphrase}
+            color="secondary"
+            margin="dense"
+            id="passphraseInput"
+            label={<Trans>Passphrase</Trans>}
+            inputRef={(input) => passphraseInput = input}
+            type={showPassphraseText ? "text" : "password"}
+            InputProps={{
+              endAdornment: (
+                <Flex alignItems="center">
+                  <InputAdornment position="end">
+                    {showCapsLock && <Flex><KeyboardCapslockIcon /></Flex>}
+                    <IconButton onClick={() => setShowPassphraseText(s => !s)}>
+                      <VisibilityIcon />
+                    </IconButton>
+                  </InputAdornment>
+                </Flex>
+              )
+            }}
+            fullWidth
+          />
+        </Flex>
         {!!passphraseHint && (
           <Flex gap={1} alignItems="center" style={{ marginTop: '8px' }}>
             <Typography variant="body2" color="textSecondary">
@@ -132,8 +162,7 @@ export default function RemovePassphrasePrompt(props: Props) {
           disabled={isLoadingRemoveKeyringPassphrase}
           onClick={handleCancel}
           color="secondary"
-          variant="contained"
-          style={{ marginBottom: '8px', marginRight: '8px' }}
+          variant="outlined"
         >
           <Trans>Cancel</Trans>
         </Button>
@@ -142,7 +171,6 @@ export default function RemovePassphrasePrompt(props: Props) {
           onClick={handleSubmit}
           color="primary"
           variant="contained"
-          style={{ marginBottom: '8px', marginRight: '8px' }}
         >
           <Trans>Remove Passphrase</Trans>
         </Button>

@@ -1,12 +1,9 @@
 #!/bin/bash
 
-set -euo pipefail
+set -o errexit -o nounset
 
-pip install setuptools_scm
-# The environment variable TACO_INSTALLER_VERSION needs to be defined.
 # If the env variable NOTARIZE and the username and password variables are
 # set, this will attempt to Notarize the signed DMG.
-TACO_INSTALLER_VERSION=$(python installer-version.py)
 
 if [ ! "$TACO_INSTALLER_VERSION" ]; then
 	echo "WARNING: No environment variable TACO_INSTALLER_VERSION set. Using 0.0.0."
@@ -16,7 +13,7 @@ echo "Taco Installer Version is: $TACO_INSTALLER_VERSION"
 
 echo "Installing npm and electron packagers"
 cd npm_macos || exit
-npm install
+npm ci
 PATH=$(npm bin):$PATH
 cd .. || exit
 
@@ -25,7 +22,6 @@ sudo rm -rf dist
 mkdir dist
 
 echo "Create executables with pyinstaller"
-pip install pyinstaller==4.9
 SPEC_FILE=$(python -c 'import taco; print(taco.PYINSTALLER_SPEC_PATH)')
 pyinstaller --log-level=INFO "$SPEC_FILE"
 LAST_EXIT_CODE=$?
@@ -39,7 +35,7 @@ cd taco-blockchain-gui || exit
 
 echo "npm build"
 lerna clean -y
-npm install
+npm ci
 # Audit fix does not currently work with Lerna. See https://github.com/lerna/lerna/issues/1663
 # npm audit fix
 npm run build

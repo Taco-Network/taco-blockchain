@@ -39,6 +39,11 @@ export const {
 
   useFarmerPingQuery,
   useGetHarvestersQuery,
+  useGetHarvestersSummaryQuery,
+  useGetHarvesterPlotsValidQuery,
+  useGetHarvesterPlotsDuplicatesQuery,
+  useGetHarvesterPlotsInvalidQuery,
+  useGetHarvesterPlotsKeysMissingQuery,
   useGetRewardTargetsQuery,
   useSetRewardTargetsMutation,
   useGetFarmerConnectionsQuery,
@@ -130,9 +135,31 @@ export const {
   useSetCATNameMutation,
   useSpendCATMutation,
   useAddCATTokenMutation,
+  useGetStrayCatsQuery,
+
+  // PlotNFTs
+  useGetPlotNFTsQuery,
+
+  // DID
+  useCreateNewDIDWalletMutation,
+  useUpdateDIDRecoveryIdsQuery,
+  useGetDIDPubKeyQuery,
+  useGetDIDQuery,
+  useGetDIDsQuery,
+  useGetDIDNameQuery,
+  useSetDIDNameMutation,
+  useGetDIDRecoveryListQuery,
+  useGetDIDInformationNeededForRecoveryQuery,
+  useGetDIDCurrentCoinInfoQuery,
 
   // NFTs
-  useGetPlotNFTsQuery,
+  useGetNFTsQuery,
+  useGetNFTWalletsWithDIDsQuery,
+  useGetNFTInfoQuery,
+  useTransferNFTMutation,
+  useSetNFTDIDMutation,
+  useSetNFTStatusMutation,
+  useReceiveNFTMutation,
 } = wallet;
 
 // harvester hooks

@@ -13,4 +13,4 @@ export { default as mojoToCATLocaleString } from './mojoToCATLocaleString';
 export { default as mojoToTaco } from './mojoToTaco';
 export { default as mojoToTacoLocaleString } from './mojoToTacoLocaleString';
 export { default as sleep } from './sleep';
-export { default as toBech32m, fromBech32m } from './toBech32m';
+export { default as useColorModeValue } from './useColorModeValue';

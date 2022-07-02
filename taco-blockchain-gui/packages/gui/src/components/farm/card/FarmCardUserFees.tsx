@@ -1,10 +1,11 @@
 import React, { useMemo } from 'react';
 import { Trans } from '@lingui/macro';
-import { useCurrencyCode, mojoToTacoLocaleString, CardSimple } from '@taco/core';
+import { useCurrencyCode, mojoToTacoLocaleString, CardSimple, useLocale } from '@taco/core';
 import { useGetFarmedAmountQuery } from '@taco/api-react';
 
 export default function FarmCardUserFees() {
   const currencyCode = useCurrencyCode();
+  const [locale] = useLocale();
   const { data, isLoading, error } = useGetFarmedAmountQuery();
 
   const feeAmount = data?.feeAmount;
@@ -13,13 +14,13 @@ export default function FarmCardUserFees() {
     if (feeAmount !== undefined) {
       return (
         <>
-          {mojoToTacoLocaleString(feeAmount)}
+          {mojoToTacoLocaleString(feeAmount, locale)}
           &nbsp;
           {currencyCode}
         </>
       );
     }
-  }, [feeAmount]);
+  }, [feeAmount, locale, currencyCode]);
 
   return (
     <CardSimple

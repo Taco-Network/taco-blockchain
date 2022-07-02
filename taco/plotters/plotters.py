@@ -333,7 +333,7 @@ def call_plotters(root_path: Path, args):
             print(f"Cannot create plotters root path {root_path} {type(e)} {e}.")
     plotters = argparse.ArgumentParser(description="Available options.")
     subparsers = plotters.add_subparsers(help="Available options", dest="plotter")
-    build_parser(subparsers, root_path, taco_plotter, "chiapos", "Tacopos Plotter")
+    build_parser(subparsers, root_path, taco_plotter, "chiapos", "Chiapos Plotter")
     build_parser(subparsers, root_path, madmax_plotter, "madmax", "Madmax Plotter")
     build_parser(subparsers, root_path, bladebit_plotter, "bladebit", "Bladebit Plotter")
     install_parser = subparsers.add_parser("install", description="Install custom plotters.")

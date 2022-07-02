@@ -1,22 +1,24 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Box,
-  Button,
   Checkbox,
   Dialog,
-  DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
   FormControlLabel,
+  IconButton,
+  InputAdornment,
   TextField,
   Tooltip,
-} from '@material-ui/core';
+} from '@mui/material';
 import {
   Help as HelpIcon,
-} from '@material-ui/icons';
+  KeyboardCapslock as KeyboardCapslockIcon,
+  Visibility as VisibilityIcon,
+} from '@mui/icons-material';
 import { t, Trans } from '@lingui/macro';
-import { AlertDialog, Flex, useOpenDialog, Suspender, useValidateChangePassphraseParams } from '@taco/core';
+import { AlertDialog, Button, DialogActions, Flex, useOpenDialog, Suspender, useValidateChangePassphraseParams } from '@taco/core';
 import { useGetKeyringStatusQuery, useRemoveKeyringPassphraseMutation, useSetKeyringPassphraseMutation } from '@taco/api-react';
 
 type Props = {
@@ -30,9 +32,13 @@ export default function ChangePassphrasePrompt(props: Props) {
   const [validateChangePassphraseParams] = useValidateChangePassphraseParams();
   const [removeKeyringPassphrase, { isLoading: isLoadingRemoveKeyringPassphrase }] = useRemoveKeyringPassphraseMutation();
   const [setKeyringPassphrase, { isLoading: isLoadingSetKeyringPassphrase }] = useSetKeyringPassphraseMutation();
-  
+  const [showPassphraseText1, setShowPassphraseText1] = useState(false);
+  const [showPassphraseText2, setShowPassphraseText2] = useState(false);
+  const [showPassphraseText3, setShowPassphraseText3] = useState(false);
+  const [showCapsLock, setShowCapsLock] = useState(false);
+
   const isProcessing = isLoadingRemoveKeyringPassphrase || isLoadingSetKeyringPassphrase;
-  
+
   let currentPassphraseInput: HTMLInputElement | null;
   let passphraseInput: HTMLInputElement | null;
   let confirmationInput: HTMLInputElement | null;
@@ -131,14 +137,25 @@ export default function ChangePassphrasePrompt(props: Props) {
       'Enter' : handleSubmit,
       'Escape' : handleCancel,
     };
+
+    if (e.getModifierState("CapsLock")) {
+      setShowCapsLock(true);
+    }
+
     const handler: () => Promise<void> | undefined = keyHandlerMapping[e.key];
-  
+
     if (handler) {
       // Disable default event handling to avoid navigation updates
       e.preventDefault();
       e.stopPropagation();
-  
+
       await handler();
+    }
+  }
+
+  const handleKeyUp = (event) => {
+    if (event.key === "CapsLock") {
+      setShowCapsLock(false);
     }
   }
 
@@ -148,41 +165,84 @@ export default function ChangePassphrasePrompt(props: Props) {
       aria-labelledby="form-dialog-title"
       fullWidth={true}
       maxWidth="sm"
+      onKeyUp={handleKeyUp}
       onKeyDown={handleKeyDown}
     >
       <DialogTitle id="form-dialog-title">Change Passphrase</DialogTitle>
       <DialogContent>
         <DialogContentText>Enter your current passphrase and a new passphrase:</DialogContentText>
-        <TextField
-          autoFocus
-          disabled={isProcessing}
-          color="secondary"
-          id="currentPassphraseInput"
-          inputRef={(input) => currentPassphraseInput = input}
-          label={<Trans>Current Passphrase</Trans>}
-          type="password"
-          fullWidth
-        />
-        <TextField
-          disabled={isProcessing}
-          color="secondary"
-          margin="dense"
-          id="passphraseInput"
-          inputRef={(input) => passphraseInput = input}
-          label={<Trans>New Passphrase</Trans>}
-          type="password"
-          fullWidth
-        />
-        <TextField
-          disabled={isProcessing}
-          color="secondary"
-          margin="dense"
-          id="confirmationInput"
-          inputRef={(input) => confirmationInput = input}
-          label={<Trans>Confirm New Passphrase</Trans>}
-          type="password"
-          fullWidth
-        />
+        <Flex flexDirection="row" gap={1.5} alignItems="center">
+          <TextField
+            autoFocus
+            disabled={isProcessing}
+            color="secondary"
+            id="currentPassphraseInput"
+            inputRef={(input) => currentPassphraseInput = input}
+            label={<Trans>Current Passphrase</Trans>}
+            type={showPassphraseText1 ? "text" : "password"}
+            InputProps={{
+              endAdornment: (
+                <Flex alignItems="center">
+                  <InputAdornment position="end">
+                    {showCapsLock && <Flex><KeyboardCapslockIcon /></Flex>}
+                    <IconButton onClick={() => setShowPassphraseText1(s => !s)}>
+                      <VisibilityIcon />
+                    </IconButton>
+                  </InputAdornment>
+                </Flex>
+              )
+            }}
+            fullWidth
+          />
+        </Flex>
+        <Flex flexDirection="row" gap={1.5} alignItems="center">
+          <TextField
+            disabled={isProcessing}
+            color="secondary"
+            margin="dense"
+            id="passphraseInput"
+            inputRef={(input) => passphraseInput = input}
+            label={<Trans>New Passphrase</Trans>}
+            type={showPassphraseText2 ? "text" : "password"}
+            InputProps={{
+              endAdornment: (
+                <Flex alignItems="center">
+                  <InputAdornment position="end">
+                    {showCapsLock && <Flex><KeyboardCapslockIcon /></Flex>}
+                    <IconButton onClick={() => setShowPassphraseText2(s => !s)}>
+                      <VisibilityIcon />
+                    </IconButton>
+                  </InputAdornment>
+                </Flex>
+              )
+            }}
+            fullWidth
+          />
+        </Flex>
+        <Flex flexDirection="row" gap={1.5} alignItems="center">
+          <TextField
+            disabled={isProcessing}
+            color="secondary"
+            margin="dense"
+            id="confirmationInput"
+            inputRef={(input) => confirmationInput = input}
+            label={<Trans>Confirm New Passphrase</Trans>}
+            type={showPassphraseText3 ? "text" : "password"}
+            InputProps={{
+              endAdornment: (
+                <Flex alignItems="center">
+                  <InputAdornment position="end">
+                    {showCapsLock && <Flex><KeyboardCapslockIcon /></Flex>}
+                    <IconButton onClick={() => setShowPassphraseText3(s => !s)}>
+                      <VisibilityIcon />
+                    </IconButton>
+                  </InputAdornment>
+                </Flex>
+              )
+            }}
+            fullWidth
+          />
+        </Flex>
         {!!canSetPassphraseHint && (
           <TextField
             disabled={isProcessing}
@@ -214,24 +274,22 @@ export default function ChangePassphrasePrompt(props: Props) {
           </Box>
         )}
         <DialogActions>
-          <Flex gap={2}>
-            <Button
-              disabled={isProcessing}
-              onClick={handleCancel}
-              color="secondary"
-              variant="contained"
-            >
-              <Trans>Cancel</Trans>
-            </Button>
-            <Button
-              disabled={isProcessing}
-              onClick={handleSubmit}
-              color="primary"
-              variant="contained"
-            >
-              <Trans>Change Passphrase</Trans>
-            </Button>
-          </Flex>
+          <Button
+            disabled={isProcessing}
+            onClick={handleCancel}
+            color="secondary"
+            variant="outlined"
+          >
+            <Trans>Cancel</Trans>
+          </Button>
+          <Button
+            disabled={isProcessing}
+            onClick={handleSubmit}
+            color="primary"
+            variant="contained"
+          >
+            <Trans>Change Passphrase</Trans>
+          </Button>
         </DialogActions>
       </DialogContent>
     </Dialog>

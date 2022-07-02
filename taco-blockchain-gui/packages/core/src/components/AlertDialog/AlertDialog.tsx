@@ -1,11 +1,7 @@
 import React, { ReactNode } from 'react';
-import {
-  Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-} from '@material-ui/core';
+import { Dialog, DialogTitle, DialogContent } from '@mui/material';
+import DialogActions from '../DialogActions';
+import Button from '../Button';
 
 type Props = {
   title?: ReactNode;
@@ -38,14 +34,17 @@ export default function AlertDialog(props: Props) {
     >
       {title && <DialogTitle id="alert-dialog-title">{title}</DialogTitle>}
       {children && (
-        <DialogContent id="alert-dialog-description">
-            {children}
-        </DialogContent>
+        <DialogContent id="alert-dialog-description">{children}</DialogContent>
       )}
 
       <DialogActions>
-        <Button onClick={handleClose} autoFocus>
-          Ok
+        <Button
+          onClick={handleClose}
+          variant="outlined"
+          color="primary"
+          autoFocus
+        >
+          OK
         </Button>
       </DialogActions>
     </Dialog>

@@ -1,12 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Trans } from '@lingui/macro';
-import { useShowDebugInformation, Flex } from '@taco/core';
+import { useNavigate } from 'react-router-dom';
+import { WalletType } from '@taco/api';
+import { Flex } from '@taco/core';
+import { Offers as OffersIcon } from '@taco/icons';
+import { Box, Typography, ListItemIcon, MenuItem } from '@mui/material';
 import WalletHistory from '../WalletHistory';
 import WalletStandardCards from './WalletStandardCards';
 import WalletReceiveAddress from '../WalletReceiveAddress';
 import WalletSend from '../WalletSend';
 import WalletHeader from '../WalletHeader';
-import WalletConnections from '../WalletConnections';
 
 type StandardWalletProps = {
   walletId: number;
@@ -14,24 +17,65 @@ type StandardWalletProps = {
 
 export default function StandardWallet(props: StandardWalletProps) {
   const { walletId } = props;
-  const showDebugInformation = useShowDebugInformation();
+  // const showDebugInformation = useShowDebugInformation();
+  const navigate = useNavigate();
+  const [selectedTab, setSelectedTab] = useState<
+    'summary' | 'send' | 'receive'
+  >('summary');
+
+  function handleCreateOffer() {
+    navigate('/dashboard/offers/create', {
+      state: {
+        walletId,
+        walletType: WalletType.STANDARD_WALLET,
+        referrerPath: location.hash.split('#').slice(-1)[0],
+      },
+    });
+  }
 
   return (
-    <Flex flexDirection="column" gap={2}>
+    <Flex flexDirection="column" gap={2.5}>
       <WalletHeader
         walletId={walletId}
-        title={<Trans>Taco Wallet</Trans>}
+        tab={selectedTab}
+        onTabChange={setSelectedTab}
+        actions={({ onClose }) => (
+          <>
+            <MenuItem
+              onClick={() => {
+                onClose();
+                handleCreateOffer();
+              }}
+            >
+              <ListItemIcon>
+                <OffersIcon />
+              </ListItemIcon>
+              <Typography variant="inherit" noWrap>
+                <Trans>Create Offer</Trans>
+              </Typography>
+            </MenuItem>
+          </>
+        )}
       />
 
-      <Flex flexDirection="column" gap={3}>
-        <WalletStandardCards walletId={walletId} />
-        <WalletReceiveAddress walletId={walletId} />
+      <Box display={selectedTab === 'summary' ? 'block' : 'none'}>
+        <Flex flexDirection="column" gap={4}>
+          <WalletStandardCards walletId={walletId} />
+          <WalletHistory walletId={walletId} />
+        </Flex>
+      </Box>
+      <Box display={selectedTab === 'send' ? 'block' : 'none'}>
         <WalletSend walletId={walletId} />
-        <WalletHistory walletId={walletId} />
-        {showDebugInformation && (
-          <WalletConnections walletId={walletId} />
-        )}
-      </Flex>
+      </Box>
+      <Box display={selectedTab === 'receive' ? 'block' : 'none'}>
+        <WalletReceiveAddress walletId={walletId} />
+      </Box>
+
+      {/*
+      {showDebugInformation && (
+        <WalletConnections walletId={walletId} />
+      )}
+      */}
     </Flex>
   );
 }

@@ -8,8 +8,8 @@ from taco.types.end_of_slot_bundle import EndOfSubSlotBundle
 from taco.util.streamable import Streamable, streamable
 
 
-@dataclass(frozen=True)
 @streamable
+@dataclass(frozen=True)
 class HeaderBlock(Streamable):
     # Same as a FullBlock but without TransactionInfo and Generator (but with filter), used by light clients
     finished_sub_slots: List[EndOfSubSlotBundle]  # If first sb

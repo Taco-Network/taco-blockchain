@@ -1,14 +1,9 @@
 import React from 'react';
-import styled from 'styled-components';
 import { Trans } from '@lingui/macro';
 import { useNavigate } from 'react-router-dom';
-import { Button, Grid, Typography } from '@material-ui/core';
-import { CardHero } from '@taco/core';
-import { Pool as PoolIcon } from '@taco/icons';
-
-const StyledPoolIcon = styled(PoolIcon)`
-  font-size: 4rem;
-`;
+import { Grid, Typography } from '@mui/material';
+import { Button, CardHero } from '@taco/core';
+import { Pooling } from '@taco/icons';
 
 export default function PoolHero() {
   const navigate = useNavigate();
@@ -21,7 +16,7 @@ export default function PoolHero() {
     <Grid container>
       <Grid xs={12} md={6} lg={5} item>
         <CardHero>
-          <StyledPoolIcon color="primary" />
+          <Pooling color="primary" fontSize="extraLarge" />
           <Typography variant="body1">
             <Trans>
               Smooth out your XTX farming rewards by joining a pool.

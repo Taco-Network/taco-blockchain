@@ -1,4 +1,4 @@
-from typing import Callable, Optional
+from typing import Optional
 
 import taco.server.ws_connection as ws
 from taco.full_node.full_node import full_node_protocol, wallet_protocol
@@ -12,9 +12,6 @@ class CrawlerAPI:
 
     def __init__(self, crawler):
         self.crawler = crawler
-
-    def _set_state_changed_callback(self, callback: Callable):
-        self.crawler.state_changed_callback = callback
 
     def __getattr__(self, attr_name: str):
         async def invoke(*args, **kwargs):

@@ -2,11 +2,11 @@ import React from 'react';
 import { Trans } from '@lingui/macro';
 import {
   Grid, Typography,
-} from '@material-ui/core';
+} from '@mui/material';
 import { useGetWalletsQuery } from '@taco/api-react';
 import { Flex, Loading } from '@taco/core';
 import { useNavigate } from 'react-router';
-import { Eco as HomeWorkIcon, Add as AddIcon } from '@material-ui/icons';
+import { Eco as HomeWorkIcon, Add as AddIcon } from '@mui/icons-material';
 import Wallet from '../../types/Wallet';
 import WalletCreateCard from './create/WalletCreateCard';
 import WalletName from '../../constants/WalletName';
@@ -48,6 +48,13 @@ export default function WalletsList() {
             ))}
           </>
         )}
+        <Grid xs={12} sm={6} md={4} item>
+          <WalletCreateCard
+            onSelect={handleAddToken}
+            title={<Trans>Add Token</Trans>}
+            icon={<AddIcon fontSize="large" color="primary" />}
+          />
+        </Grid>
       </Grid>
     </Flex>
   );

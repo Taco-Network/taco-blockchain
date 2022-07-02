@@ -48,7 +48,7 @@ export const chiaposOptions: PlotterOptions = {
 };
 
 export const chiaposDefaults: PlotterDefaults = {
-  plotterName: PlotterName.TACOPOS,
+  plotterName: PlotterName.CHIAPOS,
   plotSize: 32,
   numThreads: 2,
   numBuckets: 128,
@@ -100,7 +100,7 @@ export const optionsForPlotter = (plotterName: PlotterName): PlotterOptions => {
       return bladebitOptions;
     case PlotterName.MADMAX:
       return madmaxOptions;
-    case PlotterName.TACOPOS: // fallthrough
+    case PlotterName.CHIAPOS: // fallthrough
     default:
       return chiaposOptions;
   }
@@ -112,7 +112,7 @@ export const defaultsForPlotter = (plotterName: PlotterName): PlotterDefaults =>
       return bladebitDefaults;
     case PlotterName.MADMAX:
       return madmaxDefaults;
-    case PlotterName.TACOPOS: // fallthrough
+    case PlotterName.CHIAPOS: // fallthrough
     default:
       return chiaposDefaults;
   }

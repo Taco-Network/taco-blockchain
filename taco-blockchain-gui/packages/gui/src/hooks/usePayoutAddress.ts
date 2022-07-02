@@ -1,6 +1,6 @@
+import { toBech32m, fromBech32m } from '@taco/api';
 import type { PlotNFT } from '@taco/api';
 import { useSetPayoutInstructionsMutation, useGetNetworkInfoQuery } from '@taco/api-react';
-import { toBech32m, fromBech32m } from '@taco/core';
 
 export default function usePayoutAddress(nft: PlotNFT): {
   loading: boolean;
@@ -14,7 +14,7 @@ export default function usePayoutAddress(nft: PlotNFT): {
   } = nft;
 
   const [setPayoutInstructions] = useSetPayoutInstructionsMutation();
-  const { data: networkInfo, isLoading } = useGetNetworkInfoQuery();
+  const { data: networkInfo, isLoading } = useGetNetworkInfoQuery(); 
   const networkPrefix = networkInfo?.networkPrefix;
 
   async function handleSetPayoutAddress(newPayoutAddress: string) {
@@ -31,7 +31,7 @@ export default function usePayoutAddress(nft: PlotNFT): {
     }
 
     await setPayoutInstructions({
-      launcherId,
+      launcherId, 
       payoutInstructions: newPayoutInstructions,
     }).unwrap();
   }

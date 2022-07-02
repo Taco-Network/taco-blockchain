@@ -71,7 +71,7 @@ const Spacer = styled.div`
   margin-bottom: 1rem;
 `;
 
-const url = 'https://taconetwork.org';
+const url = 'https://taco-network.net';
 
 type Props = {
   version: string;

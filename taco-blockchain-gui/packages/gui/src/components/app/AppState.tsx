@@ -4,7 +4,7 @@ import { Trans } from '@lingui/macro';
 import { ConnectionState, ServiceHumanName, ServiceName, PassphrasePromptReason } from '@taco/api';
 import { useCloseMutation, useGetStateQuery, useGetKeyringStatusQuery, useServices } from '@taco/api-react';
 import { Flex, useSkipMigration, LayoutHero, LayoutLoading, useMode, useIsSimulator } from '@taco/core';
-import { Typography, Collapse } from '@material-ui/core';
+import { Typography, Collapse } from '@mui/material';
 import AppKeyringMigrator from './AppKeyringMigrator';
 import AppPassPrompt from './AppPassPrompt';
 import AppSelectMode from './AppSelectMode';

@@ -22,7 +22,7 @@ try {
     Set-Location taco-blockchain-gui
 
     $ErrorActionPreference = "SilentlyContinue"
-    npm install --loglevel=error
+    npm ci --loglevel=error
     npm audit fix
     npm run build
     py ..\installhelper.py

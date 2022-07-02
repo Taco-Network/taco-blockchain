@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { Trans, t } from '@lingui/macro';
 import {
   AdvancedOptions,
+  Button,
   Fee,
   Form,
   Flex,
@@ -14,18 +15,17 @@ import {
   catToMojo,
   useIsSimulator,
   useCurrencyCode,
-  toBech32m,
   getTransactionResult,
+  TooltipIcon,
 } from '@taco/core';
 import {
   useSpendCATMutation,
-  useGetSyncStatusQuery,
   useFarmBlockMutation,
 } from '@taco/api-react';
-import { SyncingStatus } from '@taco/api';
+import { SyncingStatus, toBech32m } from '@taco/api';
 import isNumeric from 'validator/es/lib/isNumeric';
 import { useForm, useWatch } from 'react-hook-form';
-import { Button, Grid } from '@material-ui/core';
+import { Grid, Typography } from '@mui/material';
 import useWallet from '../../hooks/useWallet';
 import useWalletState from '../../hooks/useWalletState';
 import CreateWalletSendTransactionResultDialog from '../WalletSendTransactionResultDialog';
@@ -170,85 +170,87 @@ export default function WalletCATSend(props: Props) {
   }
 
   return (
-    <Card
-      title={<Trans>Create Transaction</Trans>}
-      tooltip={
-        <Trans>
-          On average there is one minute between each transaction block. Unless
-          there is congestion you can expect your transaction to be included in
-          less than a minute.
-        </Trans>
-      }
-    >
-      <Form methods={methods} onSubmit={handleSubmit}>
-        <Grid spacing={2} container>
-          <Grid xs={12} item>
-            <TextField
-              name="address"
-              variant="filled"
-              color="secondary"
-              fullWidth
-              disabled={isSubmitting}
-              label={<Trans>Address / Puzzle hash</Trans>}
-              required
-            />
-          </Grid>
-          <Grid xs={12} md={6} item>
-            <TextFieldNumber
-              id="filled-secondary"
-              variant="filled"
-              color="secondary"
-              name="amount"
-              disabled={isSubmitting}
-              label={<Trans>Amount</Trans>}
-              currency={unit}
-              fullWidth
-              required
-            />
-          </Grid>
-          <Grid xs={12} md={6} item>
-            <Fee
-              id="filled-secondary"
-              variant="filled"
-              name="fee"
-              color="secondary"
-              disabled={isSubmitting}
-              label={<Trans>Fee</Trans>}
-              fullWidth
-            />
-          </Grid>
-          <Grid xs={12} item>
-            <AdvancedOptions>
+    <Form methods={methods} onSubmit={handleSubmit}>
+      <Flex gap={2} flexDirection="column">
+        <Typography variant="h6">
+          <Trans>Create Transaction</Trans>
+          &nbsp;
+          <TooltipIcon>
+            <Trans>
+              On average there is one minute between each transaction block. Unless
+              there is congestion you can expect your transaction to be included in
+              less than a minute.
+            </Trans>
+          </TooltipIcon>
+        </Typography>
+        <Card>
+          <Grid spacing={2} container>
+            <Grid xs={12} item>
               <TextField
-                name="memo"
+                name="address"
                 variant="filled"
                 color="secondary"
                 fullWidth
                 disabled={isSubmitting}
-                label={<Trans>Memo</Trans>}
+                label={<Trans>Address / Puzzle hash</Trans>}
+                required
               />
-            </AdvancedOptions>
+            </Grid>
+            <Grid xs={12} md={6} item>
+              <TextFieldNumber
+                id="filled-secondary"
+                variant="filled"
+                color="secondary"
+                name="amount"
+                disabled={isSubmitting}
+                label={<Trans>Amount</Trans>}
+                currency={unit}
+                fullWidth
+                required
+              />
+            </Grid>
+            <Grid xs={12} md={6} item>
+              <Fee
+                id="filled-secondary"
+                variant="filled"
+                name="fee"
+                color="secondary"
+                disabled={isSubmitting}
+                label={<Trans>Fee</Trans>}
+                fullWidth
+              />
+            </Grid>
+            <Grid xs={12} item>
+              <AdvancedOptions>
+                <TextField
+                  name="memo"
+                  variant="filled"
+                  color="secondary"
+                  fullWidth
+                  disabled={isSubmitting}
+                  label={<Trans>Memo</Trans>}
+                />
+              </AdvancedOptions>
+            </Grid>
           </Grid>
-          <Grid xs={12} item>
-            <Flex justifyContent="flex-end" gap={1}>
-              {isSimulator && (
-                <Button onClick={farm} variant="outlined">
-                  <Trans>Farm</Trans>
-                </Button>
-              )}
-              <ButtonLoading
-                variant="contained"
-                color="primary"
-                type="submit"
-                disabled={!canSubmit}
-                loading={isSpendCatLoading}
-              >
-                <Trans>Send</Trans>
-              </ButtonLoading>
-            </Flex>
-          </Grid>
-        </Grid>
-      </Form>
-    </Card>
+        </Card>
+        <Flex justifyContent="flex-end" gap={1}>
+          {isSimulator && (
+            <Button onClick={farm} variant="outlined">
+              <Trans>Farm</Trans>
+            </Button>
+          )}
+          <ButtonLoading
+            variant="contained"
+            color="primary"
+            type="submit"
+            disabled={!canSubmit}
+            loading={isSpendCatLoading}
+          >
+            <Trans>Send</Trans>
+          </ButtonLoading>
+        </Flex>
+      </Flex>
+    </Form>
   );
 }

@@ -1,5 +1,7 @@
 #!/bin/bash
-set -e
+
+set -o errexit
+
 export NODE_OPTIONS="--max-old-space-size=3000"
 
 SCRIPT_DIR=$(cd -- "$(dirname -- "$0")"; pwd)
@@ -55,12 +57,12 @@ do_install_npm_locally(){
     cd "${NPM_GLOBAL}"
     if [ "$NPM_VERSION" -lt "6" ]; then
       # Ubuntu image of Amazon ec2 instance surprisingly uses nodejs@3.5.2
-      # which doesn't support `npm install` as of 27th Jan, 2022
+      # which doesn't support `npm ci` as of 27th Jan, 2022
       echo "npm install"
       npm install
     else
-      echo "npm install"
-      npm install
+      echo "npm ci"
+      npm ci
     fi
     export N_PREFIX=${SCRIPT_DIR}/.n
     PATH="${N_PREFIX}/bin:$(npm bin):${PATH}"

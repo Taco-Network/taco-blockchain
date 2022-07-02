@@ -109,7 +109,7 @@ class WalletPoolStore:
         DB until db_wrapper.commit() is called. However it is written to the cache, so it can be fetched with
         get_all_state_transitions.
         """
-        
+
         if not in_transaction:
             await self.db_wrapper.lock.acquire()
         try:

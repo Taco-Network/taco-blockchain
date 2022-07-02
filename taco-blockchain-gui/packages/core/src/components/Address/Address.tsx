@@ -1,7 +1,7 @@
 import React from 'react';
-import { Box } from '@material-ui/core';
+import { Box } from '@mui/material';
 import styled from 'styled-components';
-import toBech32m from '../../utils/toBech32m';
+import { toBech32m } from '@taco/api';
 import useCurrencyCode from '../../hooks/useCurrencyCode';
 import Tooltip from '../Tooltip';
 import CopyToClipboard from '../CopyToClipboard';

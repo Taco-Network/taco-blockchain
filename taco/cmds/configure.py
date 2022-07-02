@@ -1,10 +1,9 @@
 from pathlib import Path
-from typing import Dict, Optional
+from typing import Optional
 
 import click
 
-from taco.util.config import get_config_lock, load_config, save_config, str2bool
-from taco.util.default_root import DEFAULT_ROOT_PATH
+from taco.util.config import lock_and_load_config, save_config, str2bool
 
 
 def configure(
@@ -24,8 +23,7 @@ def configure(
     seeder_domain_name: str,
     seeder_nameserver: str,
 ):
-    with get_config_lock(root_path, "config.yaml"):
-        config: Dict = load_config(DEFAULT_ROOT_PATH, "config.yaml", acquire_lock=False)
+    with lock_and_load_config(root_path, "config.yaml") as config:
         change_made = False
         if set_node_introducer:
             try:
@@ -75,9 +73,9 @@ def configure(
             levels = ["CRITICAL", "ERROR", "WARNING", "INFO", "DEBUG", "NOTSET"]
             if set_log_level in levels:
                 config["logging"]["log_level"] = set_log_level
-                print(f"Logging level updated. Check {DEFAULT_ROOT_PATH}/log/debug.log")
+                print(f"Logging level updated. Check {root_path}/log/debug.log")
                 change_made = True
-        else:
+            else:
                 print(f"Logging level not updated. Use one of: {levels}")
         if enable_upnp:
             config["full_node"]["enable_upnp"] = str2bool(enable_upnp)
@@ -98,9 +96,9 @@ def configure(
             if testnet == "true" or testnet == "t":
                 print("Setting Testnet")
                 testnet_port = "58444"
-                testnet_introducer = "introducer-testnet10.taconetwork.net"
-                testnet_dns_introducer = "dns-introducer-testnet10.taconetwork.net"
-                bootstrap_peers = ["testnet10-node.taconetwork.net"]
+                testnet_introducer = "introducer-testnet10.taco-network.net"
+                testnet_dns_introducer = "dns-introducer-testnet10.taco-network.net"
+                bootstrap_peers = ["testnet10-node.taco-network.net"]
                 testnet = "testnet10"
                 config["full_node"]["port"] = int(testnet_port)
                 config["full_node"]["introducer_peer"]["port"] = int(testnet_port)
@@ -111,6 +109,7 @@ def configure(
                 config["introducer"]["port"] = int(testnet_port)
                 config["full_node"]["introducer_peer"]["host"] = testnet_introducer
                 config["full_node"]["dns_servers"] = [testnet_dns_introducer]
+                config["wallet"]["introducer_peer"]["host"] = testnet_introducer
                 config["wallet"]["dns_servers"] = [testnet_dns_introducer]
                 config["selected_network"] = testnet
                 config["harvester"]["selected_network"] = testnet
@@ -122,75 +121,77 @@ def configure(
                 config["introducer"]["selected_network"] = testnet
                 config["wallet"]["selected_network"] = testnet
 
-            if "seeder" in config:
-                config["seeder"]["port"] = int(testnet_port)
-                config["seeder"]["other_peers_port"] = int(testnet_port)
-                config["seeder"]["selected_network"] = testnet
-                config["seeder"]["bootstrap_peers"] = bootstrap_peers
+                if "seeder" in config:
+                    config["seeder"]["port"] = int(testnet_port)
+                    config["seeder"]["other_peers_port"] = int(testnet_port)
+                    config["seeder"]["selected_network"] = testnet
+                    config["seeder"]["bootstrap_peers"] = bootstrap_peers
 
-            print("Default full node port, introducer and network setting updated")
+                print("Default full node port, introducer and network setting updated")
+                change_made = True
+
+            elif testnet == "false" or testnet == "f":
+                print("Setting Mainnet")
+                mainnet_port = "8444"
+                mainnet_introducer = "introducer.taco-network.net"
+                mainnet_dns_introducer = "dns-introducer.taco-network.net"
+                bootstrap_peers = ["node.taco-network.net"]
+                net = "mainnet"
+                config["full_node"]["port"] = int(mainnet_port)
+                config["full_node"]["introducer_peer"]["port"] = int(mainnet_port)
+                config["farmer"]["full_node_peer"]["port"] = int(mainnet_port)
+                config["timelord"]["full_node_peer"]["port"] = int(mainnet_port)
+                config["wallet"]["full_node_peer"]["port"] = int(mainnet_port)
+                config["wallet"]["introducer_peer"]["port"] = int(mainnet_port)
+                config["introducer"]["port"] = int(mainnet_port)
+                config["full_node"]["introducer_peer"]["host"] = mainnet_introducer
+                config["full_node"]["dns_servers"] = [mainnet_dns_introducer]
+                config["wallet"]["introducer_peer"]["host"] = mainnet_introducer
+                config["wallet"]["dns_servers"] = [mainnet_dns_introducer]
+                config["selected_network"] = net
+                config["harvester"]["selected_network"] = net
+                config["pool"]["selected_network"] = net
+                config["farmer"]["selected_network"] = net
+                config["timelord"]["selected_network"] = net
+                config["full_node"]["selected_network"] = net
+                config["ui"]["selected_network"] = net
+                config["introducer"]["selected_network"] = net
+                config["wallet"]["selected_network"] = net
+
+                if "seeder" in config:
+                    config["seeder"]["port"] = int(mainnet_port)
+                    config["seeder"]["other_peers_port"] = int(mainnet_port)
+                    config["seeder"]["selected_network"] = net
+                    config["seeder"]["bootstrap_peers"] = bootstrap_peers
+
+                print("Default full node port, introducer and network setting updated")
+                change_made = True
+            else:
+                print("Please choose True or False")
+
+        if peer_connect_timeout:
+            config["full_node"]["peer_connect_timeout"] = int(peer_connect_timeout)
             change_made = True
 
-        elif testnet == "false" or testnet == "f":
-            print("Setting Mainnet")
-            mainnet_port = "18620"
-            mainnet_introducer = "introducer.taconetwork.net"
-            mainnet_dns_introducer = "dns-introducer.taconetwork.net"
-            bootstrap_peers = ["node.taconetwork.net"]
-            net = "mainnet"
-            config["full_node"]["port"] = int(mainnet_port)
-            config["full_node"]["introducer_peer"]["port"] = int(mainnet_port)
-            config["farmer"]["full_node_peer"]["port"] = int(mainnet_port)
-            config["timelord"]["full_node_peer"]["port"] = int(mainnet_port)
-            config["wallet"]["full_node_peer"]["port"] = int(mainnet_port)
-            config["wallet"]["introducer_peer"]["port"] = int(mainnet_port)
-            config["introducer"]["port"] = int(mainnet_port)
-            config["full_node"]["introducer_peer"]["host"] = mainnet_introducer
-            config["full_node"]["dns_servers"] = [mainnet_dns_introducer]
-            config["selected_network"] = net
-            config["harvester"]["selected_network"] = net
-            config["pool"]["selected_network"] = net
-            config["farmer"]["selected_network"] = net
-            config["timelord"]["selected_network"] = net
-            config["full_node"]["selected_network"] = net
-            config["ui"]["selected_network"] = net
-            config["introducer"]["selected_network"] = net
-            config["wallet"]["selected_network"] = net
-
-            if "seeder" in config:
-                config["seeder"]["port"] = int(mainnet_port)
-                config["seeder"]["other_peers_port"] = int(mainnet_port)
-                config["seeder"]["selected_network"] = net
-                config["seeder"]["bootstrap_peers"] = bootstrap_peers
-
-            print("Default full node port, introducer and network setting updated")
+        if crawler_db_path is not None and "seeder" in config:
+            config["seeder"]["crawler_db_path"] = crawler_db_path
             change_made = True
-        else:
-            print("Please choose True or False")
 
-    if peer_connect_timeout:
-        config["full_node"]["peer_connect_timeout"] = int(peer_connect_timeout)
-        change_made = True
+        if crawler_minimum_version_count is not None and "seeder" in config:
+            config["seeder"]["minimum_version_count"] = crawler_minimum_version_count
+            change_made = True
 
-    if crawler_db_path is not None and "seeder" in config:
-        config["seeder"]["crawler_db_path"] = crawler_db_path
-        change_made = True
+        if seeder_domain_name is not None and "seeder" in config:
+            config["seeder"]["domain_name"] = seeder_domain_name
+            change_made = True
 
-    if crawler_minimum_version_count is not None and "seeder" in config:
-        config["seeder"]["minimum_version_count"] = crawler_minimum_version_count
-        change_made = True
+        if seeder_nameserver is not None and "seeder" in config:
+            config["seeder"]["nameserver"] = seeder_nameserver
+            change_made = True
 
-    if seeder_domain_name is not None and "seeder" in config:
-        config["seeder"]["domain_name"] = seeder_domain_name
-        change_made = True
-
-    if seeder_nameserver is not None and "seeder" in config:
-        config["seeder"]["nameserver"] = seeder_nameserver
-        change_made = True
-
-    if change_made:
-        print("Restart any running taco services for changes to take effect")
-        save_config(root_path, "config.yaml", config)
+        if change_made:
+            print("Restart any running taco services for changes to take effect")
+            save_config(root_path, "config.yaml", config)
 
 
 @click.command("configure", short_help="Modify configuration")

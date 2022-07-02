@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Trans } from '@lingui/macro';
 import { tacoToMojo, AlertDialog, Amount, Fee, Back, ButtonLoading, Card, Flex, Form } from '@taco/core';
-import { Box, Grid } from '@material-ui/core';
+import { Box, Grid } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router';
 
@@ -40,7 +40,7 @@ export default function WalletCATCreateNew() {
         );
         return;
       }
-
+      
       if (fee === '' || isNaN(Number(fee))) {
         dispatch(
           openDialog(

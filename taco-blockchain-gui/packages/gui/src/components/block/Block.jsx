@@ -1,42 +1,40 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Button,
+  Alert,
   Paper,
   TableRow,
   Table,
   TableBody,
   TableCell,
   TableContainer,
-} from '@material-ui/core';
-import { Alert } from '@material-ui/lab';
+} from '@mui/material';
+import moment from 'moment';
 import { Trans } from '@lingui/macro';
+import { toBech32m } from '@taco/api';
 import { useGetBlockQuery, useGetBlockRecordQuery  } from '@taco/api-react'
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   Back,
+  Button,
   Card,
   FormatLargeNumber,
   Link,
   Loading,
+  LayoutDashboardSub,
   TooltipIcon,
   Flex,
   calculatePoolReward,
   calculateBaseFarmerReward,
   useCurrencyCode,
   mojoToTaco,
-  DashboardTitle,
   Suspender,
-  toBech32m,
 } from '@taco/core';
 import {
-  unix_to_short_date,
   hex_to_array,
   arr_to_hex,
   sha256,
 } from '../../util/utils';
 import BlockTitle from './BlockTitle';
-
-/* global BigInt */
 
 async function computeNewPlotId(block) {
   const { poolPublicKey, plotPublicKey } =
@@ -112,46 +110,37 @@ export default function Block() {
 
   if (isLoading) {
     return (
-      <>
-        <DashboardTitle><Trans>Block</Trans></DashboardTitle>
-        <Suspender />
-      </>
+      <Suspender />
     );
   }
 
   if (error) {
     return (
-      <>
-        <DashboardTitle><Trans>Block</Trans></DashboardTitle>
-        <Card
-          title={
-            <BlockTitle>
-              <Trans>Block with hash {headerHash}</Trans>
-            </BlockTitle>
-          }
-        >
-          <Alert severity="error">{error.message}</Alert>
-        </Card>
-      </>
+      <Card
+        title={
+          <BlockTitle>
+            <Trans>Block with hash {headerHash}</Trans>
+          </BlockTitle>
+        }
+      >
+        <Alert severity="error">{error.message}</Alert>
+      </Card>
     );
   }
 
   if (!block) {
     return (
-      <>
-        <DashboardTitle><Trans>Block</Trans></DashboardTitle>
-        <Card
-          title={
-            <BlockTitle>
-              <Trans>Block</Trans>
-            </BlockTitle>
-          }
-        >
-          <Alert severity="warning">
-            <Trans>Block with hash {headerHash} does not exist.</Trans>
-          </Alert>
-        </Card>
-      </>
+      <Card
+        title={
+          <BlockTitle>
+            <Trans>Block</Trans>
+          </BlockTitle>
+        }
+      >
+        <Alert severity="warning">
+          <Trans>Block with hash {headerHash} does not exist.</Trans>
+        </Alert>
+      </Card>
     );
   }
 
@@ -177,7 +166,7 @@ export default function Block() {
     {
       name: <Trans>Timestamp</Trans>,
       value: blockRecord.timestamp
-        ? unix_to_short_date(blockRecord.timestamp)
+        ? moment(blockRecord.timestamp * 1000).format('LLL')
         : null,
       tooltip: (
         <Trans>
@@ -195,7 +184,7 @@ export default function Block() {
       value: <FormatLargeNumber value={blockRecord.weight} />,
       tooltip: (
         <Trans>
-          Weight is the total added difficulty of all sub blocks up to and
+          Weight is the total added difficulty of all blocks up to and
           including this one
         </Trans>
       ),
@@ -216,7 +205,7 @@ export default function Block() {
       tooltip: (
         <Trans>
           The total number of VDF (verifiable delay function) or proof of time
-          iterations on the whole chain up to this sub block.
+          iterations on the whole chain up to this block.
         </Trans>
       ),
     },
@@ -257,7 +246,7 @@ export default function Block() {
       value: (
         <Link
           target="_blank"
-          href={`https://www.tacoexplorer.org/blockchain/puzzlehash/${blockRecord.farmerPuzzleHash}`}
+          href={`https://www.tacoexplorer.com/blockchain/puzzlehash/${blockRecord.farmerPuzzleHash}`}
         >
           {currencyCode
             ? toBech32m(
@@ -273,7 +262,7 @@ export default function Block() {
       value: (
         <Link
           target="_blank"
-          href={`https://www.tacoexplorer.org/blockchain/puzzlehash/${blockRecord.poolPuzzleHash}`}
+          href={`https://www.tacoexplorer.com/blockchain/puzzlehash/${blockRecord.poolPuzzleHash}`}
         >
           {currencyCode
             ? toBech32m(
@@ -318,8 +307,7 @@ export default function Block() {
   ];
 
   return (
-    <>
-      <DashboardTitle><Trans>Block</Trans></DashboardTitle>
+    <LayoutDashboardSub>
       <Card
         title={
           <Back variant="h5">
@@ -341,6 +329,7 @@ export default function Block() {
             </Button>
           </Flex>
         }
+        transparent
       >
         <TableContainer component={Paper}>
           <Table>
@@ -360,6 +349,6 @@ export default function Block() {
           </Table>
         </TableContainer>
       </Card>
-    </>
+    </LayoutDashboardSub>
   );
 }

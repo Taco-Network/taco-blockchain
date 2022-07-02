@@ -9,7 +9,7 @@ import untildify from './untildify';
 function getConfigRootDir(net = 'mainnet'): string {
   const homedir = os.homedir();
 
-  return 'TACO_ROOT' in process.env
+  return 'TACO_ROOT' in process.env 
     ? untildify(process.env.TACO_ROOT)
     : path.join(homedir, '.taco', net);
 }
@@ -31,7 +31,7 @@ export default async function loadConfig(net?: string): Promise<{
     const config = readConfigFile(net);
 
     const selfHostname = get(config, 'ui.daemon_host', 'localhost');
-    const daemonPort = get(config, 'ui.daemon_port', 44476);
+    const daemonPort = get(config, 'ui.daemon_port', 58400);
 
     // store these in the global object so they can be used by both main and renderer processes
     const url = `wss://${selfHostname}:${daemonPort}`;

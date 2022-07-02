@@ -5,8 +5,8 @@ from taco.types.blockchain_format.vdf import VDFInfo, VDFProof
 from taco.util.streamable import Streamable, streamable
 
 
-@dataclass(frozen=True)
 @streamable
+@dataclass(frozen=True)
 class SignagePoint(Streamable):
     cc_vdf: Optional[VDFInfo]
     cc_proof: Optional[VDFProof]

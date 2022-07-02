@@ -38,26 +38,32 @@ and in this way they control whether a spend is valid or not.
 import json
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List, Tuple, Dict
+from typing import Dict, List, Tuple
 
 import click
-
-from clvm_rs import COND_CANON_INTS, NO_NEG_DIV
+from chia_rs import COND_CANON_INTS, NO_NEG_DIV
+from clvm.casts import int_from_bytes
 
 from taco.consensus.constants import ConsensusConstants
 from taco.consensus.default_constants import DEFAULT_CONSTANTS
 from taco.full_node.generator import create_generator_args
-from taco.types.blockchain_format.program import SerializedProgram
 from taco.types.blockchain_format.coin import Coin
+from taco.types.blockchain_format.program import SerializedProgram
+from taco.types.blockchain_format.sized_bytes import bytes32
 from taco.types.condition_opcodes import ConditionOpcode
 from taco.types.condition_with_args import ConditionWithArgs
 from taco.types.generator_types import BlockGenerator
-from taco.types.name_puzzle_condition import NPC
 from taco.util.config import load_config
 from taco.util.default_root import DEFAULT_ROOT_PATH
 from taco.util.ints import uint32, uint64
 from taco.wallet.cat_wallet.cat_utils import match_cat_puzzle
-from clvm.casts import int_from_bytes
+
+
+@dataclass
+class NPC:
+    coin_name: bytes32
+    puzzle_hash: bytes32
+    conditions: List[Tuple[ConditionOpcode, List[ConditionWithArgs]]]
 
 
 @dataclass
@@ -94,7 +100,13 @@ def run_generator(
     block_generator: BlockGenerator, constants: ConsensusConstants, max_cost: int, height: uint32
 ) -> List[CAT]:
 
-    flags = 0
+    if height >= DEFAULT_CONSTANTS.SOFT_FORK_HEIGHT:
+        # conditions must use integers in canonical encoding (i.e. no redundant
+        # leading zeros)
+        # the division operator may not be used with negative operands
+        flags = COND_CANON_INTS | NO_NEG_DIV
+    else:
+        flags = 0
 
     args = create_generator_args(block_generator.generator_refs).first()
     _, block_result = block_generator.program.run_with_cost(max_cost, flags, args)

@@ -14,12 +14,10 @@
         "build": "lerna run build",
         "build:watch": "lerna run build:watch",
         "start:gui": "lerna run start --scope @taco/gui",
-        "start:wallet": "lerna run start --scope @taco/wallet",
         "dev:gui": "lerna run dev --scope @taco/gui --stream",
-        "dev:wallet": "lerna run dev --scope @taco/wallet --stream",
-        "wallet": "npm run start:wallet",
         "electron": "npm run start:gui",
         "locale:extract": "lerna run locale:extract",
+        "locale": "lerna run locale",
         "audit": "lerna exec -- npm audit",
         "audit:fix": "lerna exec -- npm audit fix"
     },
@@ -29,11 +27,11 @@
     "devDependencies": {
         "@typescript-eslint/eslint-plugin": "5.9.0",
         "@typescript-eslint/parser": "5.9.0",
-        "lerna-audit": "^1.3.3",
         "eslint": "8.6.0",
         "eslint-config-prettier": "8.3.0",
         "eslint-plugin-react": "^7.28.0",
         "eslint-plugin-react-hooks": "^4.3.0",
+        "lerna-audit": "^1.3.3",
         "prettier": "2.5.1",
         "typescript": "^4.5.4"
     },
@@ -89,7 +87,8 @@
                         ".tsx"
                     ]
                 }
-            ]
+            ],
+            "react-hooks/exhaustive-deps": "warn"
         },
         "settings": {
             "react": {
@@ -97,5 +96,5 @@
             }
         }
     },
-    "version": "0.0.0"
+    "version": "1.4"
 }

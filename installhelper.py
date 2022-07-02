@@ -6,8 +6,9 @@
 #
 import json
 import os
-from os.path import exists
 import subprocess
+from os.path import exists
+
 from pkg_resources import parse_version
 
 
@@ -43,7 +44,7 @@ def make_semver(version_str: str) -> str:
     if local:
         version += "+{0}".format(local)
 
-    return version
+    return "1.4" #Dommer
 
 
 def get_taco_version() -> str:

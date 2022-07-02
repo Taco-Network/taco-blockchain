@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Trans } from '@lingui/macro';
 import { AlertDialog, Fee, Back, ButtonLoading, Card, Flex, Form, TextField } from '@taco/core';
-import { Box, Grid } from '@material-ui/core';
+import { Box, Grid } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router';
@@ -71,10 +71,10 @@ export default function WalletCATCreateExisting() {
     <Form methods={methods} onSubmit={handleSubmit}>
       <Flex flexDirection="column" gap={3}>
         <Back variant="h5">
-          {asteroid
+          {asteroid 
             ? <Trans>Create custom CAT Wallet</Trans>
             : <Trans>Create Taco Asset Token Wallet from Existing TAIL</Trans>}
-
+          
         </Back>
         <Card>
           <Grid spacing={2} container>

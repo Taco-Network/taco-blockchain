@@ -1,10 +1,11 @@
 import React, { useMemo } from 'react';
 import { Trans } from '@lingui/macro';
-import { useCurrencyCode, mojoToTacoLocaleString, CardSimple } from '@taco/core';
+import { useCurrencyCode, mojoToTacoLocaleString, CardSimple, useLocale } from '@taco/core';
 import { useGetFarmedAmountQuery } from '@taco/api-react';
 
 export default function FarmCardTotalTacoFarmed() {
   const currencyCode = useCurrencyCode();
+  const [locale] = useLocale();
   const { data, isLoading, error } = useGetFarmedAmountQuery();
 
   const farmedAmount = data?.farmedAmount;
@@ -13,13 +14,13 @@ export default function FarmCardTotalTacoFarmed() {
     if (farmedAmount !== undefined) {
       return (
         <>
-          {mojoToTacoLocaleString(farmedAmount)}
+          {mojoToTacoLocaleString(farmedAmount, locale)}
           &nbsp;
           {currencyCode}
         </>
       );
     }
-  }, [farmedAmount]);
+  }, [farmedAmount, locale, currencyCode]);
 
   return (
     <CardSimple

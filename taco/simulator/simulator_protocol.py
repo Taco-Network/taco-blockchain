@@ -5,14 +5,14 @@ from taco.util.ints import uint32
 from taco.util.streamable import Streamable, streamable
 
 
-@dataclass(frozen=True)
 @streamable
+@dataclass(frozen=True)
 class FarmNewBlockProtocol(Streamable):
     puzzle_hash: bytes32
 
 
-@dataclass(frozen=True)
 @streamable
+@dataclass(frozen=True)
 class ReorgProtocol(Streamable):
     old_index: uint32
     new_index: uint32
