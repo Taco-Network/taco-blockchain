@@ -7,7 +7,7 @@ mkdir build_scripts\win_build
 git status
 
 if (-not (Test-Path env:TACO_INSTALLER_VERSION)) {
-  $env:TACO_INSTALLER_VERSION = '1.4.0'
+  $env:TACO_INSTALLER_VERSION = '0.0.0'
   Write-Output "WARNING: No environment variable TACO_INSTALLER_VERSION set. Using 0.0.0"
 }
 Write-Output "Taco Version is: $env:TACO_INSTALLER_VERSION"
