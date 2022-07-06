@@ -25,7 +25,7 @@ echo "Taco Installer Version is: $TACO_INSTALLER_VERSION"
 
 echo "Installing npm and electron packagers"
 cd npm_linux_rpm || exit
-npm ci
+npm install
 GLOBAL_NPM_ROOT=$(pwd)/node_modules
 PATH=$(npm bin):$PATH
 cd .. || exit
@@ -74,7 +74,7 @@ cd taco-blockchain-gui || exit
 
 echo "npm build"
 lerna clean -y
-npm ci
+npm install
 # Audit fix does not currently work with Lerna. See https://github.com/lerna/lerna/issues/1663
 # npm audit fix
 npm run build
