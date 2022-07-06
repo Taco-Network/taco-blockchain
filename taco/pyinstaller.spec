@@ -26,7 +26,7 @@ def solve_name_collision_problem(analysis):
 
     A sample large compressible file (1 MB of `/dev/zero`), seems to be
     about eight times slower.
-
+    
     Note that this hack isn't documented, but seems to work.
     """
 
