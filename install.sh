@@ -49,7 +49,7 @@ if [ "$(uname -m)" = "armv7l" ]; then
   echo "WARNING:"
   echo "The Taco Blockchain requires a 64 bit OS and this is 32 bit armv7l"
   echo "For more information, see"
-  echo "https://github.com/Taco-Network/taco-blockchain/wiki/Raspberry-Pi"
+  echo "https://github.com/TacoNetwork/taco-blockchain/wiki/Raspberry-Pi"
   echo "Exiting."
   exit 1
 fi
@@ -303,7 +303,7 @@ echo "For assistance join us on Keybase in the #support chat channel:"
 echo "https://keybase.io/team/taco_network.public"
 echo ""
 echo "Try the Quick Start Guide to running taco-blockchain:"
-echo "https://github.com/Taco-Network/taco-blockchain/wiki/Quick-Start-Guide"
+echo "https://github.com/TacoNetwork/taco-blockchain/wiki/Quick-Start-Guide"
 echo ""
 echo "To install the GUI type 'sh install-gui.sh' after '. ./activate'."
 echo ""

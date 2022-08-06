@@ -34,6 +34,7 @@ from taco.util.keychain import (
     supports_keyring_passphrase,
     supports_os_passphrase_storage,
 )
+from taco.util.path import mkdir
 from taco.util.service_groups import validate_service
 from taco.util.setproctitle import setproctitle
 from taco.util.ws_message import WsRpcMessage, create_payload, format_response
@@ -243,7 +244,6 @@ class WebSocketServer:
                             self.log.error(f"Unexpected exception trying to send to websocket: {e} {tb}")
                             self.remove_connection(socket)
                             await socket.close()
-                            break
             else:
                 service_name = "Unknown"
                 if ws in self.remote_address_map:
@@ -712,7 +712,7 @@ class WebSocketServer:
         plotter: str = config["plotter"]
         final_words: List[str] = []
 
-        if plotter == "chiapos":
+        if plotter == "tacopos":
             final_words = ["Renamed final file"]
         elif plotter == "bladebit":
             final_words = ["Finished plotting in"]
@@ -773,7 +773,7 @@ class WebSocketServer:
 
         return command_args
 
-    def _chiapos_plotting_command_args(self, request: Any, ignoreCount: bool) -> List[str]:
+    def _tacopos_plotting_command_args(self, request: Any, ignoreCount: bool) -> List[str]:
         k = request["k"]  # Plot size
         t = request["t"]  # Temp directory
         t2 = request["t2"]  # Temp2 directory
@@ -846,13 +846,13 @@ class WebSocketServer:
         return command_args
 
     def _build_plotting_command_args(self, request: Any, ignoreCount: bool, index: int) -> List[str]:
-        plotter: str = request.get("plotter", "chiapos")
+        plotter: str = request.get("plotter", "tacopos")
         command_args: List[str] = ["taco", "plotters", plotter]
 
         command_args.extend(self._common_plotting_command_args(request, ignoreCount))
 
-        if plotter == "chiapos":
-            command_args.extend(self._chiapos_plotting_command_args(request, ignoreCount))
+        if plotter == "tacopos":
+            command_args.extend(self._tacopos_plotting_command_args(request, ignoreCount))
         elif plotter == "madmax":
             command_args.extend(self._madmax_plotting_command_args(request, ignoreCount, index))
         elif plotter == "bladebit":
@@ -891,10 +891,7 @@ class WebSocketServer:
         exclude_final_dir: bool = job["exclude_final_dir"]
         log.info(f"Post-processing plotter job with ID {id}")  # lgtm [py/clear-text-logging-sensitive-data]
         if not exclude_final_dir:
-            try:
-                add_plot_directory(self.root_path, final_dir)
-            except ValueError as e:
-                log.warning(f"_post_process_plotting_job: {e}")
+            add_plot_directory(self.root_path, final_dir)
 
     async def _start_plotting(self, id: str, loop: asyncio.AbstractEventLoop, queue: str = "default"):
         current_process = None
@@ -965,7 +962,7 @@ class WebSocketServer:
     async def start_plotting(self, request: Dict[str, Any]):
         service_name = request["service"]
 
-        plotter = request.get("plotter", "chiapos")
+        plotter = request.get("plotter", "tacopos")
         delay = int(request.get("delay", 0))
         parallel = request.get("parallel", False)
         size = request.get("k")
@@ -1233,7 +1230,7 @@ def launch_plotter(root_path: Path, service_name: str, service_array: List[str],
         if plotter_path.exists():
             plotter_path.unlink()
     else:
-        plotter_path.parent.mkdir(parents=True, exist_ok=True)
+        mkdir(plotter_path.parent)
     outfile = open(plotter_path.resolve(), "w")
     log.info(f"Service array: {service_array}")  # lgtm [py/clear-text-logging-sensitive-data]
     process = subprocess.Popen(
@@ -1247,7 +1244,7 @@ def launch_plotter(root_path: Path, service_name: str, service_array: List[str],
 
     pid_path = pid_path_for_service(root_path, service_name, id)
     try:
-        pid_path.parent.mkdir(parents=True, exist_ok=True)
+        mkdir(pid_path.parent)
         with open(pid_path, "w") as f:
             f.write(f"{process.pid}\n")
     except Exception:
@@ -1294,7 +1291,7 @@ def launch_service(root_path: Path, service_command) -> Tuple[subprocess.Popen, 
     )
     pid_path = pid_path_for_service(root_path, service_command)
     try:
-        pid_path.parent.mkdir(parents=True, exist_ok=True)
+        mkdir(pid_path.parent)
         with open(pid_path, "w") as f:
             f.write(f"{process.pid}\n")
     except Exception:
@@ -1360,7 +1357,7 @@ def singleton(lockfile: Path, text: str = "semaphore") -> Optional[TextIO]:
     """
 
     if not lockfile.parent.exists():
-        lockfile.parent.mkdir(parents=True, exist_ok=True)
+        mkdir(lockfile.parent)
 
     try:
         if has_fcntl:

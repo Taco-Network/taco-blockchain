@@ -16,6 +16,8 @@ import yaml
 from filelock import FileLock
 from typing_extensions import Literal
 
+from taco.util.path import mkdir
+
 PEER_DB_PATH_KEY_DEPRECATED = "peer_db_path"  # replaced by "peers_file_path"
 WALLET_PEERS_PATH_KEY_DEPRECATED = "wallet_peers_path"  # replaced by "wallet_peers_file_path"
 
@@ -31,7 +33,7 @@ def create_default_taco_config(root_path: Path, filenames=["config.yaml"]) -> No
         default_config_file_data: str = initial_config_file(filename)
         path: Path = config_path_for_filename(root_path, filename)
         tmp_path: Path = path.with_suffix("." + str(os.getpid()))
-        path.parent.mkdir(parents=True, exist_ok=True)
+        mkdir(path.parent)
         with open(tmp_path, "w") as f:
             f.write(default_config_file_data)
         try:
@@ -54,7 +56,7 @@ def lock_config(root_path: Path, filename: Union[str, Path]) -> Iterator[None]:
     #       should probably be removed and this function made private.
     config_path = config_path_for_filename(root_path, filename)
     lock_path: Path = config_path.with_name(config_path.name + ".lock")
-    with FileLock(lock_path):  # pylint: disable=E0110
+    with FileLock(lock_path):
         yield
 
 

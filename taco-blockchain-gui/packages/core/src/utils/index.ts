@@ -14,3 +14,4 @@ export { default as mojoToTaco } from './mojoToTaco';
 export { default as mojoToTacoLocaleString } from './mojoToTacoLocaleString';
 export { default as sleep } from './sleep';
 export { default as useColorModeValue } from './useColorModeValue';
+export { default as validAddress } from './validAddress';

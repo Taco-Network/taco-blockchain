@@ -49,7 +49,7 @@ export default class Client extends EventEmitter {
     this.options = {
       timeout: 60 * 1000 * 10, // 10 minutes
       camelCase: true,
-      backupHost: 'https://backup.taco-network.net',
+      backupHost: 'https://backup.taco.net',
       debug: false,
       services: [],
       ...options,

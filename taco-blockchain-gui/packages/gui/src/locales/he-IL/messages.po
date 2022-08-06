@@ -1009,7 +1009,7 @@ msgid "Fee"
 msgstr "דמי"
 
 #: src/components/wallet/coloured/WalletColoured.tsx:420
-#~ msgid "Fee (TXCH)"
+#~ msgid "Fee (TXTX)"
 #~ msgstr ""
 
 #: src/components/wallet/coloured/WalletColoured.tsx:420
@@ -1251,16 +1251,16 @@ msgid "Join a Pool"
 msgstr "הצטרף/י לבריכה (Pool)"
 
 #: src/components/plot/add/PlotAddNFT.tsx:49
-msgid "Join a pool and get consistent XCH farming rewards. The average returns are the same, but it is much less volatile."
-msgstr "הצטרף/י לבריכה (Pool) וקבל/י תגמולים עקביים של חקלאות (Farming) - XCH. התשואה הממוצעת זהה, אך היא הרבה פחות תנודתית."
+msgid "Join a pool and get consistent XTX farming rewards. The average returns are the same, but it is much less volatile."
+msgstr "הצטרף/י לבריכה (Pool) וקבל/י תגמולים עקביים של חקלאות (Farming) - XTX. התשואה הממוצעת זהה, אך היא הרבה פחות תנודתית."
 
 #: src/components/plotNFT/PlotNFTAdd.tsx:63
-msgid "Join a pool and get consistent XCH farming rewards. The average returns are the same, but it is much less volatile. Assign plots to a plot NFT. You can easily switch pools without having to re-plot."
-msgstr "הצטרף/י לבריכה (Pool) וקבל/י תגמולים עקביים של חקלאות (Farming) - XCH. התשואה הממוצעת זהה, אך היא הרבה פחות תנודתית. הקצה/י פלוטים אל פלוט NFT. תוכל/י להחליף בריכה (Pool) בקלות מבלי שתצטרך/י ליצור פלוטים מחדש."
+msgid "Join a pool and get consistent XTX farming rewards. The average returns are the same, but it is much less volatile. Assign plots to a plot NFT. You can easily switch pools without having to re-plot."
+msgstr "הצטרף/י לבריכה (Pool) וקבל/י תגמולים עקביים של חקלאות (Farming) - XTX. התשואה הממוצעת זהה, אך היא הרבה פחות תנודתית. הקצה/י פלוטים אל פלוט NFT. תוכל/י להחליף בריכה (Pool) בקלות מבלי שתצטרך/י ליצור פלוטים מחדש."
 
 #: src/components/plot/add/PlotAddNFT.tsx:138
-msgid "Join a pool and get more consistent XCH farming rewards. Create a plot NFT and assign your new plots to a group."
-msgstr "הצטרף/י לבריכה (Pool) וקבל/י תגמולים עקביים של חקלאות (Farming) - XCH. צור/י פלוט NFT והקצה/י את הפלוטים החדשים שלך לקבוצה."
+msgid "Join a pool and get more consistent XTX farming rewards. Create a plot NFT and assign your new plots to a group."
+msgstr "הצטרף/י לבריכה (Pool) וקבל/י תגמולים עקביים של חקלאות (Farming) - XTX. צור/י פלוט NFT והקצה/י את הפלוטים החדשים שלך לקבוצה."
 
 #: src/components/app/AppSelectMode.tsx:146
 msgid "Join farming pools"
@@ -1576,8 +1576,8 @@ msgstr "לא מחובר"
 
 #: src/components/block/FarmManageFarmingRewards.tsx:163
 #: src/components/farm/FarmManageFarmingRewards.tsx:174
-msgid "Note that this does not change your pooling payout addresses. This only affects old format plots, and the 0.25XCH reward for pooling plots."
-msgstr "שים/י לב שזה לא משנה את כתובות תשלומי הבריכות (Pooling Payout Addresses) שלך. זה משפיע רק על פלוטים בפורמט ישן, ועל התגמול של 0.25XCH על פלוטים של בריכות (Pooling Plots)."
+msgid "Note that this does not change your pooling payout addresses. This only affects old format plots, and the 0.25XTX reward for pooling plots."
+msgstr "שים/י לב שזה לא משנה את כתובות תשלומי הבריכות (Pooling Payout Addresses) שלך. זה משפיע רק על פלוטים בפורמט ישן, ועל התגמול של 0.25XTX על פלוטים של בריכות (Pooling Plots)."
 
 #: src/components/plotNFT/PlotExternalNFTCard.tsx:117
 #: src/components/plotNFT/PlotNFTCard.tsx:158
@@ -2363,8 +2363,8 @@ msgid "Self Pooling"
 msgstr "בריכה עצמאית (Self Pooling)"
 
 #: src/components/plotNFT/select/PlotNFTSelectBase.tsx:104
-msgid "Self pool. When you win a block you will earn XCH rewards."
-msgstr "בריכה עצמאית (Self Pooling). כשתזכה/י בבלוק תתוגמל/י בפרסים של XCH."
+msgid "Self pool. When you win a block you will earn XTX rewards."
+msgstr "בריכה עצמאית (Self Pooling). כשתזכה/י בבלוק תתוגמל/י בפרסים של XTX."
 
 #: src/components/trading/CreateOffer.jsx:165
 #: src/components/trading/TradesTable.tsx:46
@@ -2445,8 +2445,8 @@ msgid "Skips adding a final directory to harvester for farming"
 msgstr "דלג על הוספת ספרייה סופית עבור harvester בשביל farming"
 
 #: src/components/pool/PoolHero.tsx:21
-msgid "Smooth out your XCH farming rewards by joining a pool."
-msgstr "החלק את פרסי החקלאות שלך ב- XCH על ידי הצטרפות לבריכה (Pool)."
+msgid "Smooth out your XTX farming rewards by joining a pool."
+msgstr "החלק את פרסי החקלאות שלך ב- XTX על ידי הצטרפות לבריכה (Pool)."
 
 #: src/components/plotNFT/PlotNFTGetPoolLoginLinkDialog.tsx:60
 #~ msgid "Something went wrong"
@@ -2526,7 +2526,7 @@ msgstr "מצב"
 #~ msgstr ""
 
 #: src/components/app/AppSelectMode.tsx:89
-msgid "Store and Send XCH"
+msgid "Store and Send XTX"
 msgstr ""
 
 #: src/components/plot/add/PlotAddNumberOfPlots.tsx:103
@@ -2568,23 +2568,23 @@ msgstr "מסנכרן"
 #~ msgstr "Syncing {progress}/{tip}"
 
 #: src/components/farm/card/FarmCardBlockRewards.tsx:15
-#~ msgid "TXCH Block Rewards"
+#~ msgid "TXTX Block Rewards"
 #~ msgstr ""
 
 #: src/components/farm/card/FarmCardCoinbaseRewards.tsx:12
-#~ msgid "TXCH Farming Rewards"
+#~ msgid "TXTX Farming Rewards"
 #~ msgstr ""
 
 #: src/components/farm/card/FarmCardFeesReward.tsx:12
-#~ msgid "TXCH Fees Collected"
+#~ msgid "TXTX Fees Collected"
 #~ msgstr ""
 
 #: src/components/farm/card/FarmCardUserFees.tsx:12
-#~ msgid "TXCH User Fees"
-#~ msgstr "TXCH User Fees"
+#~ msgid "TXTX User Fees"
+#~ msgstr "TXTX User Fees"
 
 #: src/components/farm/card/FarmCardUserFees.tsx:15
-#~ msgid "TXCH User Transaction Fees"
+#~ msgid "TXTX User Transaction Fees"
 #~ msgstr ""
 
 #: src/components/pool/PoolInfo.tsx:37
@@ -2675,8 +2675,8 @@ msgid "The total transactions fees in this block. Rewarded to the farmer."
 msgstr "סך דמי העסקאות בבלוק הנוכחי. אשר תוגמל החלקאי."
 
 #: src/components/plotNFT/PlotNFTPayoutInstructionsDialog.tsx:106
-msgid "These are the instructions for how the farmer wants to get paid. By default this will be an XCH address, but it can be set to any string with a size of less than 1024 characters, so it can represent another blockchain or payment system identifier."
-msgstr "אלה ההנחיות כיצד החקלאי/ת רוצה לקבל תשלום. כברירת מחדל זו תהיה כתובת XCH, אך ניתן להגדיר אותה לכל מחרוזת בגודל של פחות מ -1024 תווים, כך שהיא יכולה לייצג מערכת blockchain נוספת או מזהה מערכת התשלומים (Payment System Identifier)."
+msgid "These are the instructions for how the farmer wants to get paid. By default this will be an XTX address, but it can be set to any string with a size of less than 1024 characters, so it can represent another blockchain or payment system identifier."
+msgstr "אלה ההנחיות כיצד החקלאי/ת רוצה לקבל תשלום. כברירת מחדל זו תהיה כתובת XTX, אך ניתן להגדיר אותה לכל מחרוזת בגודל של פחות מ -1024 תווים, כך שהיא יכולה לייצג מערכת blockchain נוספת או מזהה מערכת התשלומים (Payment System Identifier)."
 
 #: src/components/plot/card/PlotCardPlotsFailedToOpen.tsx:15
 msgid "These plots are invalid, you might want to delete them."

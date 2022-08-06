@@ -8,7 +8,7 @@ msgstr ""
 "Language: fi_FI\n"
 "Project-Id-Version: taco-blockchain\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2022-06-17 17:33\n"
+"PO-Revision-Date: 2022-05-26 15:57\n"
 "Last-Translator: \n"
 "Language-Team: Finnish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -304,18 +304,6 @@ msgstr "Palaa"
 #~ msgid "CCListItems.title"
 #~ msgstr ""
 
-#: src/electron/main.tsx:430
-#~ msgid "Taco"
-#~ msgstr "Taco"
-
-#: src/electron/main.tsx:369
-#~ msgid "Taco Blockchain Wiki"
-#~ msgstr "Taco Blockchain Wiki"
-
-#: src/components/_wallet_old/standard/WalletStandard.tsx:642
-#~ msgid "Taco Wallet"
-#~ msgstr "Taco Wallet"
-
 #: src/screens/SelectKey/SelectKeyItem.tsx:146
 msgid "Can be backed up to mnemonic seed"
 msgstr "Varmuuskopioitavissa muistisanoiksi"
@@ -359,6 +347,18 @@ msgstr "Peru"
 #: src/electron/main.tsx:412
 #~ msgid "Chat on KeyBase"
 #~ msgstr "Chat on KeyBase"
+
+#: src/electron/main.tsx:430
+#~ msgid "Taco"
+#~ msgstr "Taco"
+
+#: src/electron/main.tsx:369
+#~ msgid "Taco Blockchain Wiki"
+#~ msgstr "Taco Blockchain Wiki"
+
+#: src/components/_wallet_old/standard/WalletStandard.tsx:642
+#~ msgid "Taco Wallet"
+#~ msgstr "Taco Wallet"
 
 #: src/components/plot/add/PlotAddNumberOfPlots.tsx:34
 #~ msgid "Choose Number of Plots"
@@ -865,8 +865,8 @@ msgstr "Virhe:"
 #~ msgstr ""
 
 #: src/components/LayoutMain/LayoutFooter.tsx:50
-#~ msgid "FAQ"
-#~ msgstr "USEIN KYSYTTYÄ"
+msgid "FAQ"
+msgstr "USEIN KYSYTTYÄ"
 
 #: src/components/plot/PlotsFailed.tsx:34
 #~ msgid "Failed to open (invalid plots)"
@@ -943,7 +943,7 @@ msgstr "Farmarin julkinen avain:"
 
 #: src/components/Settings/SettingsApp.tsx:66
 msgid "Farming"
-msgstr "Farmaroidaan"
+msgstr "Tuotetaan Farmissa"
 
 #: src/components/farm/card/FarmCardStatus.tsx:15
 #: src/components/farm/card/FarmCardStatus.tsx:26
@@ -2271,6 +2271,7 @@ msgstr "Valitse..."
 #~ msgid "Send"
 #~ msgstr "Send"
 
+#: src/components/LayoutMain/LayoutFooter.tsx:53
 #: src/components/Settings/SettingsApp.tsx:108
 msgid "Send Feedback"
 msgstr "Lähetä palautetta"
@@ -2897,12 +2898,12 @@ msgstr "Lompakko"
 #~ msgid "Wallet is not defined"
 #~ msgstr "Wallet is not defined"
 
-#: src/components/wallet/Wallets.tsx:30
-#~ msgid "WalletItem.tacoWallet"
-#~ msgstr ""
-
 #: src/components/wallet/Wallets.tsx:34
 #~ msgid "WalletItem.ccWallet"
+#~ msgstr ""
+
+#: src/components/wallet/Wallets.tsx:30
+#~ msgid "WalletItem.tacoWallet"
 #~ msgstr ""
 
 #: src/components/wallet/Wallets.tsx:48

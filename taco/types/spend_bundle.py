@@ -1,3 +1,4 @@
+import dataclasses
 import warnings
 
 from dataclasses import dataclass
@@ -100,7 +101,7 @@ class SpendBundle(Streamable):
     def to_json_dict(self, include_legacy_keys: bool = True, exclude_modern_keys: bool = True):
         if include_legacy_keys is False and exclude_modern_keys is True:
             raise ValueError("`coin_spends` not included in legacy or modern outputs")
-        d = recurse_jsonify(self)
+        d = dataclasses.asdict(self)
         if include_legacy_keys:
             d["coin_solutions"] = d["coin_spends"]
         if exclude_modern_keys:

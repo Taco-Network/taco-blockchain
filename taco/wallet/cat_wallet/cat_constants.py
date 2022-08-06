@@ -1,5 +1,5 @@
 SPACEBUCKS = {
-    "asset_id": "78ad32a8c9ea70f27d73e9306fc467bab2a6b15b30289791e37ab6e8612212b1",
+    "asset_id": "a628c1c2c6fcb74d53746157e438e108eab5c0bb3e5c80ff9b1910b3e4832913",
     "name": "Spacebucks",
     "symbol": "SBX",
 }
@@ -16,9 +16,9 @@ STABLY_USDS = {
     "symbol": "USDS",
 }
 
-CHIA_HOLIDAY_TOKEN = {
+TACO_HOLIDAY_TOKEN = {
     "asset_id": "509deafe3cd8bbfbb9ccce1d930e3d7b57b40c964fa33379b18d628175eb7a8f",
-    "name": "Chia Holiday 2021 Token",
+    "name": "Taco Holiday 2021 Token",
     "symbol": "CH21",
 }
 
@@ -26,5 +26,5 @@ DEFAULT_CATS = {
     SPACEBUCKS["asset_id"]: SPACEBUCKS,
     MARMOT["asset_id"]: MARMOT,
     STABLY_USDS["asset_id"]: STABLY_USDS,
-    CHIA_HOLIDAY_TOKEN["asset_id"]: CHIA_HOLIDAY_TOKEN,
+    TACO_HOLIDAY_TOKEN["asset_id"]: TACO_HOLIDAY_TOKEN,
 }

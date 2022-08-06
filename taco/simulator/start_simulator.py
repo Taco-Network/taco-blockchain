@@ -9,7 +9,7 @@ from taco.server.start_service import run_service
 from taco.simulator.SimulatorFullNodeRpcApi import SimulatorFullNodeRpcApi
 from taco.util.config import load_config_cli
 from taco.util.default_root import DEFAULT_ROOT_PATH
-from taco.util.path import path_from_root
+from taco.util.path import mkdir, path_from_root
 from tests.block_tools import BlockTools, create_block_tools, test_constants
 from tests.util.keyring import TempKeyring
 
@@ -22,7 +22,7 @@ SERVICE_NAME = "full_node"
 
 
 def service_kwargs_for_full_node_simulator(root_path: Path, config: Dict, bt: BlockTools) -> Dict:
-    path_from_root(root_path, config["database_path"]).parent.mkdir(parents=True, exist_ok=True)
+    mkdir(path_from_root(root_path, config["database_path"]).parent)
     constants = bt.constants
 
     node = FullNode(

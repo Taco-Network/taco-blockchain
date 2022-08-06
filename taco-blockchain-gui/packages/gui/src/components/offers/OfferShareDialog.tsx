@@ -73,7 +73,7 @@ type CommonDialogProps = {
 
 type OfferShareServiceDialogProps = CommonOfferProps & CommonDialogProps;
 
-const testnetDummyHost = 'offers-api-sim.taco-network.net';
+const testnetDummyHost = 'offers-api-sim.taco.net';
 
 const OfferSharingProviders: {
   [key in OfferSharingService]: OfferSharingProvider;
@@ -243,7 +243,7 @@ async function postToOfferBin(
   console.log('OfferBin upload completed');
 
   if (testnet) {
-    return 'https://www.taco-network.net/offers';
+    return 'https://www.taco.net/offers';
   }
 
   const { hash } = JSON.parse(responseBody);
@@ -294,7 +294,7 @@ async function postToHashgreen(
     console.log('Hashgreen upload completed');
 
     if (testnet) {
-      return 'https://www.taco-network.net/offers';
+      return 'https://www.taco.net/offers';
     }
 
     const jsonObj = JSON.parse(responseBody);

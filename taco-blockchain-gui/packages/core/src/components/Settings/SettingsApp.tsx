@@ -49,7 +49,7 @@ export default function SettingsApp(props: SettingsAppProps) {
   async function handleOpenSendFeedbackURL(): Promise<void> {
     try {
       const shell: Shell = (window as any).shell;
-      await shell.openExternal('https://feedback.taco-network.net/lightwallet');
+      await shell.openExternal('https://feedback.taco.net/lightwallet');
     } catch (error: any) {
       showError(error);
     }

@@ -239,9 +239,9 @@ const IncompleteCard = (props) => {
 
   function submit() {
     const ip_val = ip_input.value;
-    const hecaceck = /[\da-f]+$/gi;
+    const hextxeck = /[\da-f]+$/gi;
 
-    if (!hecaceck.test(ip_val) || ip_val.value === '') {
+    if (!hextxeck.test(ip_val) || ip_val.value === '') {
       dispatch(openDialog('Please enter a valid info packet'));
       return;
     }

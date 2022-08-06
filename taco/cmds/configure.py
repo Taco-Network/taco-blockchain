@@ -95,11 +95,11 @@ def configure(
         if testnet:
             if testnet == "true" or testnet == "t":
                 print("Setting Testnet")
-                testnet_port = "58444"
-                testnet_introducer = "introducer-testnet10.taco-network.net"
-                testnet_dns_introducer = "dns-introducer-testnet10.taco-network.net"
-                bootstrap_peers = ["testnet10-node.taco-network.net"]
-                testnet = "testnet10"
+                testnet_port = "23333"
+                testnet_introducer = "introducer-testnet10.taconetwork.net"
+                testnet_dns_introducer = "dns-introducer-testnet0.taconetwork.net"
+                bootstrap_peers = ["testnet0-node.taconetwork.net"]
+                testnet = "testnet0"
                 config["full_node"]["port"] = int(testnet_port)
                 config["full_node"]["introducer_peer"]["port"] = int(testnet_port)
                 config["farmer"]["full_node_peer"]["port"] = int(testnet_port)
@@ -132,10 +132,10 @@ def configure(
 
             elif testnet == "false" or testnet == "f":
                 print("Setting Mainnet")
-                mainnet_port = "8444"
-                mainnet_introducer = "introducer.taco-network.net"
-                mainnet_dns_introducer = "dns-introducer.taco-network.net"
-                bootstrap_peers = ["node.taco-network.net"]
+                mainnet_port = "18620"
+                mainnet_introducer = "introducer.taconetwork.net"
+                mainnet_dns_introducer = "dns-introducer.taconetwork.net"
+                bootstrap_peers = ["node.taconetwork.net"]
                 net = "mainnet"
                 config["full_node"]["port"] = int(mainnet_port)
                 config["full_node"]["introducer_peer"]["port"] = int(mainnet_port)

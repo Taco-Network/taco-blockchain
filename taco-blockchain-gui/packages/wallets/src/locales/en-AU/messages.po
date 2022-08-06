@@ -118,8 +118,8 @@ msgstr ""
 #~ msgstr ""
 
 #: src/components/hero/WalletHeroAdd.tsx:99
-#~ msgid "Add Custom Token"
-#~ msgstr ""
+msgid "Add Custom Token"
+msgstr ""
 
 #: src/components/plot/PlotHeader.tsx:89
 #~ msgid "Add Plot Directory"
@@ -133,6 +133,8 @@ msgstr ""
 #: src/components/WalletsManageTokens.tsx:170
 #: src/components/cat/WalletCATCreateExistingSimple.tsx:61
 #: src/components/cat/WalletCATCreateSimple.tsx:70
+#: src/components/hero/WalletHeroAdd.tsx:64
+#: src/components/hero/WalletHeroWallets.tsx:83
 msgid "Add Token"
 msgstr ""
 
@@ -376,24 +378,6 @@ msgstr "Alcohol Balance"
 #~ msgid "CCListItems.title"
 #~ msgstr ""
 
-#: src/electron/main.tsx:430
-#~ msgid "Taco"
-#~ msgstr "Taco"
-
-#: src/components/cat/WalletCATSelect.tsx:25
-#: src/components/create/WalletCreateList.tsx:32
-#: src/constants/WalletName.ts:23
-msgid "Taco Asset Token"
-msgstr ""
-
-#: src/electron/main.tsx:369
-#~ msgid "Taco Blockchain Wiki"
-#~ msgstr "Taco Blockchain Wiki"
-
-#: src/components/standard/WalletStandard.tsx:23
-#~ msgid "Taco Wallet"
-#~ msgstr "Taco Wallet"
-
 #: src/components/_selectKey_old/SelectKey.tsx:212
 #~ msgid "Can be backed up to mnemonic seed"
 #~ msgstr "Can be backed up to mnemonic seed"
@@ -453,6 +437,28 @@ msgstr ""
 #~ msgid "Chat on KeyBase"
 #~ msgstr "Chat on KeyBase"
 
+#: src/components/WalletsSidebar.tsx:157
+msgid "Check my snapshot balance"
+msgstr ""
+
+#: src/electron/main.tsx:430
+#~ msgid "Taco"
+#~ msgstr "Taco"
+
+#: src/components/cat/WalletCATSelect.tsx:25
+#: src/components/create/WalletCreateList.tsx:32
+#: src/constants/WalletName.ts:23
+msgid "Taco Asset Token"
+msgstr ""
+
+#: src/electron/main.tsx:369
+#~ msgid "Taco Blockchain Wiki"
+#~ msgstr "Taco Blockchain Wiki"
+
+#: src/components/standard/WalletStandard.tsx:23
+#~ msgid "Taco Wallet"
+#~ msgstr "Taco Wallet"
+
 #: src/components/plot/add/PlotAddNumberOfPlots.tsx:34
 #~ msgid "Choose Number of Plots"
 #~ msgstr "Choose Number of Plots"
@@ -469,6 +475,10 @@ msgstr ""
 #: src/components/pool/PoolOverview.tsx:89
 #~ msgid "Claim Rewards"
 #~ msgstr "Claim Rewards"
+
+#: src/components/WalletsSidebar.tsx:168
+msgid "Click here to download an older version of the wallet"
+msgstr ""
 
 #: src/components/offers/OfferManager.tsx:159
 #: src/components/offers/OfferShareDialog.tsx:379
@@ -639,8 +649,8 @@ msgid "Create An Attestation Packet"
 msgstr ""
 
 #: src/components/cat/WalletCATCreateExisting.tsx:76
-#~ msgid "Create Taco Asset Token Wallet from Existing TAIL"
-#~ msgstr ""
+msgid "Create Taco Asset Token Wallet from Existing TAIL"
+msgstr ""
 
 #: src/components/wallet/create/WalletCreate.jsx:290
 #~ msgid "Create DID wallet"
@@ -716,8 +726,8 @@ msgstr ""
 #~ msgstr ""
 
 #: src/components/cat/WalletCATCreateExisting.tsx:75
-#~ msgid "Create custom CAT Wallet"
-#~ msgstr ""
+msgid "Create custom CAT Wallet"
+msgstr ""
 
 #: src/components/_wallet_old/create/WalletCreate.jsx:132
 #~ msgid "Create new coloured coin"
@@ -1377,6 +1387,7 @@ msgstr ""
 #~ msgid "Install Keybase"
 #~ msgstr ""
 
+#: src/components/offers/OfferViewer.tsx:358
 #~ msgid ""
 #~ "Insufficient funds available to accept offer. Ensure that your\n"
 #~ "spendable balance is sufficient to cover the offer amount."
@@ -1386,7 +1397,7 @@ msgstr ""
 #~ msgid ""
 #~ "Insufficient funds available to create offer. Ensure that your\n"
 #~ "spendable balance is sufficient to cover the offer amount."
-#~ msgstr ">>>>>>> tmp"
+#~ msgstr ""
 
 #: src/components/create/createRLAdmin.jsx:217
 msgid "Interval"
@@ -2005,8 +2016,8 @@ msgid "Please enter a puzzlehash"
 msgstr ""
 
 #: src/components/cat/WalletCATCreateExisting.tsx:40
-#~ msgid "Please enter a valid CAT name"
-#~ msgstr ""
+msgid "Please enter a valid CAT name"
+msgstr ""
 
 #: src/components/cat/WalletCATCreateExistingSimple.tsx:41
 msgid "Please enter a valid asset id"
@@ -2439,6 +2450,10 @@ msgstr ""
 msgid "Rate Limited User Wallet Setup"
 msgstr ""
 
+#: src/components/WalletsSidebar.tsx:160
+msgid "Read the blog post for details"
+msgstr ""
+
 #: src/components/WalletHeader.tsx:60
 msgid "Receive"
 msgstr ""
@@ -2452,6 +2467,7 @@ msgstr ""
 msgid "Recipient address is not a coloured wallet address. Please enter a coloured wallet address"
 msgstr ""
 
+#: src/components/cat/WalletCATCreateExisting.tsx:104
 #: src/components/cat/WalletDID.tsx:463
 #: src/components/did/WalletDID.tsx:463
 #: src/components/did/WalletDIDRecovery.tsx:124
@@ -2626,6 +2642,7 @@ msgstr ""
 #~ msgstr "Select Temporary Directory"
 
 #: src/components/WalletsList.tsx:32
+#: src/components/hero/WalletHeroWallets.tsx:47
 msgid "Select Wallet"
 msgstr ""
 
@@ -3165,8 +3182,8 @@ msgid "To"
 msgstr ""
 
 #: src/components/cat/WalletCATCreateExisting.tsx:85
-#~ msgid "Token and Asset Issuance Limitations"
-#~ msgstr ""
+msgid "Token and Asset Issuance Limitations"
+msgstr ""
 
 #: src/components/cat/WalletCATCreateSimple.tsx:45
 msgid "Token has empty asset id"
@@ -3176,7 +3193,7 @@ msgstr ""
 msgid "Token has empty name"
 msgstr ""
 
-#: src/components/WalletsSidebar.tsx:88
+#: src/components/WalletsSidebar.tsx:223
 msgid "Tokens"
 msgstr ""
 
@@ -3432,12 +3449,12 @@ msgstr ""
 msgid "Wallet {walletId} not found"
 msgstr ""
 
-#: src/components/wallet/Wallets.tsx:30
-#~ msgid "WalletItem.tacoWallet"
-#~ msgstr ""
-
 #: src/components/wallet/Wallets.tsx:34
 #~ msgid "WalletItem.ccWallet"
+#~ msgstr ""
+
+#: src/components/wallet/Wallets.tsx:30
+#~ msgid "WalletItem.tacoWallet"
 #~ msgstr ""
 
 #: src/components/wallet/Wallets.tsx:48
@@ -3480,6 +3497,10 @@ msgstr ""
 #~ msgid "Want to have a delay before the next plot starts?"
 #~ msgstr "Want to have a delay before the next plot starts?"
 
+#: src/components/WalletsSidebar.tsx:165
+msgid "Want to see your old balance for yourself?"
+msgstr ""
+
 #: src/components/plot/add/PlotAddNumberOfPlots.tsx:252
 #~ msgid "Warm start"
 #~ msgstr "Warm start"
@@ -3519,6 +3540,14 @@ msgstr ""
 
 #: src/components/WalletAdd.tsx:76
 msgid "Welcome! The following words are used for your wallet backup. Without them, you will lose access to your wallet, keep them safe! Write down each word along with the order number next to them. (Order is important)"
+msgstr ""
+
+#: src/components/WalletsSidebar.tsx:134
+#~ msgid "We’ve made an upgrade to the CAT standard which requires all CATs to be reissued. You will be airdropped your new tokens as they are re-issued by the original issuers. The airdropped tokens will be based on the balance as of block height: 12345678"
+#~ msgstr ""
+
+#: src/components/WalletsSidebar.tsx:135
+msgid "We’ve made an upgrade to the CAT standard which requires all CATs to be reissued. You will be airdropped your new tokens as they are re-issued by the original issuers. The airdropped tokens will be based on the balance as of block height: <0/>"
 msgstr ""
 
 #: src/components/rateLimited/WalletRateLimited.jsx:315
@@ -3615,6 +3644,10 @@ msgstr ""
 #: src/hooks/useAbsorbRewards.tsx:51
 #~ msgid "You will recieve <0/> to {address}"
 #~ msgstr "You will receive <0/> to {address}"
+
+#: src/components/WalletsSidebar.tsx:131
+msgid "Your CAT tokens have been upgraded!"
+msgstr ""
 
 #: src/components/cat/WalletDID.tsx:326
 #: src/components/did/WalletDID.tsx:326

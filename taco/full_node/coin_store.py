@@ -6,15 +6,15 @@ from taco.protocols.wallet_protocol import CoinState
 from taco.types.blockchain_format.coin import Coin
 from taco.types.blockchain_format.sized_bytes import bytes32
 from taco.types.coin_record import CoinRecord
-from taco.util.db_wrapper import DBWrapper2, SQLITE_MAX_VARIABLE_NUMBER
+from taco.util.db_wrapper import DBWrapper2
 from taco.util.ints import uint32, uint64
 from taco.util.chunks import chunks
 import time
 import logging
 
-from taco.util.lru_cache import LRUCache
-
 log = logging.getLogger(__name__)
+
+MAX_SQLITE_PARAMETERS = 900
 
 
 class CoinStore:
@@ -23,14 +23,12 @@ class CoinStore:
     """
 
     db_wrapper: DBWrapper2
-    coins_added_at_height_cache: LRUCache
 
     @classmethod
     async def create(cls, db_wrapper: DBWrapper2):
         self = cls()
 
         self.db_wrapper = db_wrapper
-        self.coins_added_at_height_cache = LRUCache(capacity=100)
 
         async with self.db_wrapper.write_db() as conn:
 
@@ -177,7 +175,7 @@ class CoinStore:
 
         async with self.db_wrapper.read_db() as conn:
             cursors: List[Cursor] = []
-            for names_chunk in chunks(names, SQLITE_MAX_VARIABLE_NUMBER):
+            for names_chunk in chunks(names, MAX_SQLITE_PARAMETERS):
                 names_db: Tuple[Any, ...]
                 if self.db_wrapper.db_version == 2:
                     names_db = tuple(names_chunk)
@@ -201,10 +199,6 @@ class CoinStore:
         return coins
 
     async def get_coins_added_at_height(self, height: uint32) -> List[CoinRecord]:
-        coins_added: Optional[List[CoinRecord]] = self.coins_added_at_height_cache.get(height)
-        if coins_added is not None:
-            return coins_added
-
         async with self.db_wrapper.read_db() as conn:
             async with conn.execute(
                 "SELECT confirmed_index, spent_index, coinbase, puzzle_hash, "
@@ -216,7 +210,6 @@ class CoinStore:
                 for row in rows:
                     coin = self.row_to_coin(row)
                     coins.append(CoinRecord(coin, row[0], row[1], row[2], row[6]))
-                self.coins_added_at_height_cache.put(height, coins)
                 return coins
 
     async def get_coins_removed_at_height(self, height: uint32) -> List[CoinRecord]:
@@ -350,7 +343,7 @@ class CoinStore:
 
         coins = set()
         async with self.db_wrapper.read_db() as conn:
-            for puzzles in chunks(puzzle_hashes, SQLITE_MAX_VARIABLE_NUMBER):
+            for puzzles in chunks(puzzle_hashes, MAX_SQLITE_PARAMETERS):
                 puzzle_hashes_db: Tuple[Any, ...]
                 if self.db_wrapper.db_version == 2:
                     puzzle_hashes_db = tuple(puzzles)
@@ -382,7 +375,7 @@ class CoinStore:
 
         coins = set()
         async with self.db_wrapper.read_db() as conn:
-            for ids in chunks(parent_ids, SQLITE_MAX_VARIABLE_NUMBER):
+            for ids in chunks(parent_ids, MAX_SQLITE_PARAMETERS):
                 parent_ids_db: Tuple[Any, ...]
                 if self.db_wrapper.db_version == 2:
                     parent_ids_db = tuple(ids)
@@ -413,7 +406,7 @@ class CoinStore:
 
         coins = set()
         async with self.db_wrapper.read_db() as conn:
-            for ids in chunks(coin_ids, SQLITE_MAX_VARIABLE_NUMBER):
+            for ids in chunks(coin_ids, MAX_SQLITE_PARAMETERS):
                 coin_ids_db: Tuple[Any, ...]
                 if self.db_wrapper.db_version == 2:
                     coin_ids_db = tuple(ids)
@@ -470,7 +463,6 @@ class CoinStore:
                 await conn.execute(
                     "UPDATE coin_record SET spent_index = 0, spent = 0 WHERE spent_index>?", (block_index,)
                 )
-        self.coins_added_at_height_cache = LRUCache(self.coins_added_at_height_cache.capacity)
         return list(coin_changes.values())
 
     # Store CoinRecord in DB
@@ -487,7 +479,7 @@ class CoinStore:
                         int(record.coinbase),
                         record.coin.puzzle_hash,
                         record.coin.parent_coin_info,
-                        bytes(uint64(record.coin.amount)),
+                        bytes(record.coin.amount),
                         record.timestamp,
                     )
                 )
@@ -509,7 +501,7 @@ class CoinStore:
                         int(record.coinbase),
                         record.coin.puzzle_hash.hex(),
                         record.coin.parent_coin_info.hex(),
-                        bytes(uint64(record.coin.amount)),
+                        bytes(record.coin.amount),
                         record.timestamp,
                     )
                 )

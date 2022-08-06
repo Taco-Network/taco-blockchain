@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh_CN\n"
 "Project-Id-Version: taco-blockchain\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2022-06-01 00:56\n"
+"PO-Revision-Date: 2022-05-30 00:56\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -304,18 +304,6 @@ msgstr "返回"
 #~ msgid "CCListItems.title"
 #~ msgstr ""
 
-#: src/electron/main.tsx:430
-#~ msgid "Taco"
-#~ msgstr "Taco"
-
-#: src/electron/main.tsx:369
-#~ msgid "Taco Blockchain Wiki"
-#~ msgstr "Taco Blockchain Wiki"
-
-#: src/components/_wallet_old/standard/WalletStandard.tsx:642
-#~ msgid "Taco Wallet"
-#~ msgstr "Taco Wallet"
-
 #: src/screens/SelectKey/SelectKeyItem.tsx:146
 msgid "Can be backed up to mnemonic seed"
 msgstr "可备份为助记词"
@@ -359,6 +347,18 @@ msgstr "取消"
 #: src/electron/main.tsx:412
 #~ msgid "Chat on KeyBase"
 #~ msgstr "Chat on KeyBase"
+
+#: src/electron/main.tsx:430
+#~ msgid "Taco"
+#~ msgstr "Taco"
+
+#: src/electron/main.tsx:369
+#~ msgid "Taco Blockchain Wiki"
+#~ msgstr "Taco Blockchain Wiki"
+
+#: src/components/_wallet_old/standard/WalletStandard.tsx:642
+#~ msgid "Taco Wallet"
+#~ msgstr "Taco Wallet"
 
 #: src/components/plot/add/PlotAddNumberOfPlots.tsx:34
 #~ msgid "Choose Number of Plots"
@@ -865,8 +865,8 @@ msgstr "错误:"
 #~ msgstr ""
 
 #: src/components/LayoutMain/LayoutFooter.tsx:50
-#~ msgid "FAQ"
-#~ msgstr "常见问题"
+msgid "FAQ"
+msgstr "常见问题"
 
 #: src/components/plot/PlotsFailed.tsx:34
 #~ msgid "Failed to open (invalid plots)"
@@ -2271,6 +2271,7 @@ msgstr "请选择..."
 #~ msgid "Send"
 #~ msgstr "Send"
 
+#: src/components/LayoutMain/LayoutFooter.tsx:53
 #: src/components/Settings/SettingsApp.tsx:108
 msgid "Send Feedback"
 msgstr "发送反馈"
@@ -2897,12 +2898,12 @@ msgstr "钱包"
 #~ msgid "Wallet is not defined"
 #~ msgstr "Wallet is not defined"
 
-#: src/components/wallet/Wallets.tsx:30
-#~ msgid "WalletItem.tacoWallet"
-#~ msgstr ""
-
 #: src/components/wallet/Wallets.tsx:34
 #~ msgid "WalletItem.ccWallet"
+#~ msgstr ""
+
+#: src/components/wallet/Wallets.tsx:30
+#~ msgid "WalletItem.tacoWallet"
 #~ msgstr ""
 
 #: src/components/wallet/Wallets.tsx:48
@@ -3171,7 +3172,7 @@ msgstr "您的密钥尚未迁移到新的密钥串。在迁移完成之前，您
 
 #: src/components/Amount/Amount.tsx:96
 msgid "{0, plural, one {mojo} other {mojos}}"
-msgstr "{0, plural, one {mojo} other {mojos}}"
+msgstr ""
 
 #: src/components/farm/card/FarmCardBlockRewards.tsx:16
 #~ msgid "{0} Block Rewards"

@@ -23,7 +23,6 @@ import useUnconfirmedPlotNFTs from '../../../hooks/useUnconfirmedPlotNFTs';
 type FormData = PlotAddConfig & {
   p2SingletonPuzzleHash?: string;
   createNFT?: boolean;
-  plotNFTContractAddr?: string;
 };
 
 type Props = {
@@ -56,7 +55,6 @@ export default function PlotAddForm(props: Props) {
     workspaceLocation2: '',
     farmerPublicKey: '',
     poolPublicKey: '',
-    plotNFTContractAddr: '',
     excludeFinalDir: false,
     p2SingletonPuzzleHash: state?.p2SingletonPuzzleHash ?? '',
     createNFT: false,
@@ -79,7 +77,7 @@ export default function PlotAddForm(props: Props) {
   };
 
   const methods = useForm<FormData>({
-    defaultValues: defaultsForPlotter(PlotterName.CHIAPOS),
+    defaultValues: defaultsForPlotter(PlotterName.TACOPOS),
   });
 
   const { watch, setValue, reset } = methods;
@@ -107,7 +105,7 @@ export default function PlotAddForm(props: Props) {
     try {
       setLoading(true);
       const { p2SingletonPuzzleHash, delay, createNFT, ...rest } = data;
-      const { farmerPublicKey, poolPublicKey, plotNFTContractAddr } = rest;
+      const { farmerPublicKey, poolPublicKey } = rest;
 
       let selectedP2SingletonPuzzleHash = p2SingletonPuzzleHash;
 
@@ -150,10 +148,6 @@ export default function PlotAddForm(props: Props) {
         ...rest,
         delay: delay * 60,
       };
-
-      if (!selectedP2SingletonPuzzleHash && plotNFTContractAddr) {
-        selectedP2SingletonPuzzleHash = fromBech32m(plotNFTContractAddr);
-      }
 
       if (selectedP2SingletonPuzzleHash) {
         plotAddConfig.c = toBech32m(

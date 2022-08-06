@@ -42,6 +42,7 @@ from taco.util.block_cache import BlockCache
 from taco.util.hash import std_hash
 from taco.util.ints import uint8, uint32, uint64, uint128
 from taco.util.setproctitle import getproctitle, setproctitle
+from taco.util.streamable import dataclass_from_dict, recurse_jsonify
 
 log = logging.getLogger(__name__)
 
@@ -565,7 +566,9 @@ class WeightProofHandler:
         if summaries is None:
             log.warning("weight proof failed sub epoch data validation")
             return False, uint32(0)
-        summary_bytes, wp_segment_bytes, wp_recent_chain_bytes = vars_to_bytes(summaries, weight_proof)
+        constants, summary_bytes, wp_segment_bytes, wp_recent_chain_bytes = vars_to_bytes(
+            self.constants, summaries, weight_proof
+        )
         log.info("validate sub epoch challenge segments")
         seed = summaries[-2].get_hash()
         rng = random.Random(seed)
@@ -573,10 +576,10 @@ class WeightProofHandler:
             log.error("failed weight proof sub epoch sample validation")
             return False, uint32(0)
 
-        if not _validate_sub_epoch_segments(self.constants, rng, wp_segment_bytes, summary_bytes):
+        if not _validate_sub_epoch_segments(constants, rng, wp_segment_bytes, summary_bytes):
             return False, uint32(0)
         log.info("validate weight proof recent blocks")
-        if not _validate_recent_blocks(self.constants, wp_recent_chain_bytes, summary_bytes):
+        if not _validate_recent_blocks(constants, wp_recent_chain_bytes, summary_bytes):
             return False, uint32(0)
         return True, self.get_fork_point(summaries)
 
@@ -633,14 +636,16 @@ class WeightProofHandler:
             with _create_shutdown_file() as shutdown_file:
                 await asyncio.sleep(0)  # break up otherwise multi-second sync code
                 # timing reference: 1.1 second
-                summary_bytes, wp_segment_bytes, wp_recent_chain_bytes = vars_to_bytes(summaries, weight_proof)
+                constants, summary_bytes, wp_segment_bytes, wp_recent_chain_bytes = vars_to_bytes(
+                    self.constants, summaries, weight_proof
+                )
                 await asyncio.sleep(0)  # break up otherwise multi-second sync code
 
                 # timing reference: 2 second
                 recent_blocks_validation_task = asyncio.get_running_loop().run_in_executor(
                     executor,
                     _validate_recent_blocks,
-                    self.constants,
+                    constants,
                     wp_recent_chain_bytes,
                     summary_bytes,
                     pathlib.Path(shutdown_file.name),
@@ -648,7 +653,7 @@ class WeightProofHandler:
 
                 # timing reference: 2 second
                 segments_validated, vdfs_to_validate = _validate_sub_epoch_segments(
-                    self.constants, rng, wp_segment_bytes, summary_bytes
+                    constants, rng, wp_segment_bytes, summary_bytes
                 )
                 await asyncio.sleep(0)  # break up otherwise multi-second sync code
                 if not segments_validated:
@@ -666,7 +671,7 @@ class WeightProofHandler:
                     vdf_task = asyncio.get_running_loop().run_in_executor(
                         executor,
                         _validate_vdf_batch,
-                        self.constants,
+                        constants,
                         byte_chunks,
                         pathlib.Path(shutdown_file.name),
                     )
@@ -990,12 +995,12 @@ def _validate_summaries_weight(constants: ConsensusConstants, sub_epoch_data_wei
 
 
 def _validate_sub_epoch_segments(
-    constants: ConsensusConstants,
+    constants_dict: Dict,
     rng: random.Random,
     weight_proof_bytes: bytes,
     summaries_bytes: List[bytes],
 ):
-    summaries = summaries_from_bytes(summaries_bytes)
+    constants, summaries = bytes_to_vars(constants_dict, summaries_bytes)
     sub_epoch_segments: SubEpochSegments = SubEpochSegments.from_bytes(weight_proof_bytes)
     rc_sub_slot_hash = constants.GENESIS_CHALLENGE
     total_blocks, total_ip_iters = 0, 0
@@ -1335,32 +1340,34 @@ def validate_recent_blocks(
 
 
 def _validate_recent_blocks(
-    constants: ConsensusConstants,
+    constants_dict: Dict,
     recent_chain_bytes: bytes,
     summaries_bytes: List[bytes],
     shutdown_file_path: Optional[pathlib.Path] = None,
 ) -> bool:
+    constants, summaries = bytes_to_vars(constants_dict, summaries_bytes)
     recent_chain: RecentChainData = RecentChainData.from_bytes(recent_chain_bytes)
     success, records = validate_recent_blocks(
         constants=constants,
         recent_chain=recent_chain,
-        summaries=summaries_from_bytes(summaries_bytes),
+        summaries=summaries,
         shutdown_file_path=shutdown_file_path,
     )
     return success
 
 
 def _validate_recent_blocks_and_get_records(
-    constants: ConsensusConstants,
+    constants_dict: Dict,
     recent_chain_bytes: bytes,
     summaries_bytes: List[bytes],
     shutdown_file_path: Optional[pathlib.Path] = None,
 ) -> Tuple[bool, List[bytes]]:
+    constants, summaries = bytes_to_vars(constants_dict, summaries_bytes)
     recent_chain: RecentChainData = RecentChainData.from_bytes(recent_chain_bytes)
     return validate_recent_blocks(
         constants=constants,
         recent_chain=recent_chain,
-        summaries=summaries_from_bytes(summaries_bytes),
+        summaries=summaries,
         shutdown_file_path=shutdown_file_path,
     )
 
@@ -1565,20 +1572,22 @@ def _get_curr_diff_ssi(constants: ConsensusConstants, idx, summaries):
     return curr_difficulty, curr_ssi
 
 
-def vars_to_bytes(summaries: List[SubEpochSummary], weight_proof: WeightProof):
+def vars_to_bytes(constants: ConsensusConstants, summaries: List[SubEpochSummary], weight_proof: WeightProof):
+    constants_dict = recurse_jsonify(constants)
     wp_recent_chain_bytes = bytes(RecentChainData(weight_proof.recent_chain_data))
     wp_segment_bytes = bytes(SubEpochSegments(weight_proof.sub_epoch_segments))
     summary_bytes = []
     for summary in summaries:
         summary_bytes.append(bytes(summary))
-    return summary_bytes, wp_segment_bytes, wp_recent_chain_bytes
+    return constants_dict, summary_bytes, wp_segment_bytes, wp_recent_chain_bytes
 
 
-def summaries_from_bytes(summaries_bytes: List[bytes]) -> List[SubEpochSummary]:
+def bytes_to_vars(constants_dict, summaries_bytes):
     summaries = []
     for summary in summaries_bytes:
         summaries.append(SubEpochSummary.from_bytes(summary))
-    return summaries
+    constants: ConsensusConstants = dataclass_from_dict(ConsensusConstants, constants_dict)
+    return constants, summaries
 
 
 def _get_last_ses_hash(
@@ -1651,7 +1660,7 @@ def blue_boxed_end_of_slot(sub_slot: EndOfSubSlotBundle):
 def validate_sub_epoch_sampling(rng, sub_epoch_weight_list, weight_proof):
     tip = weight_proof.recent_chain_data[-1]
     weight_to_check = _get_weights_for_sampling(rng, tip.weight, weight_proof.recent_chain_data)
-    sampled_sub_epochs: Dict[int, bool] = {}
+    sampled_sub_epochs: dict[int, bool] = {}
     for idx in range(1, len(sub_epoch_weight_list)):
         if _sample_sub_epoch(sub_epoch_weight_list[idx - 1], sub_epoch_weight_list[idx], weight_to_check):
             sampled_sub_epochs[idx - 1] = True
@@ -1710,10 +1719,9 @@ def validate_total_iters(
 
 
 def _validate_vdf_batch(
-    constants: ConsensusConstants,
-    vdf_list: List[Tuple[bytes, bytes, bytes]],
-    shutdown_file_path: Optional[pathlib.Path] = None,
+    constants_dict, vdf_list: List[Tuple[bytes, bytes, bytes]], shutdown_file_path: Optional[pathlib.Path] = None
 ):
+    constants: ConsensusConstants = dataclass_from_dict(ConsensusConstants, constants_dict)
 
     for vdf_proof_bytes, class_group_bytes, info in vdf_list:
         vdf = VDFProof.from_bytes(vdf_proof_bytes)

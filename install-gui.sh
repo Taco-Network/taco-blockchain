@@ -88,7 +88,7 @@ do_install_npm_locally(){
 }
 
 # Work around for inconsistent `npm` exec path issue
-# https://github.com/Taco-Network/taco-blockchain/pull/10460#issuecomment-1054492495
+# https://github.com/TacoNetwork/taco-blockchain/pull/10460#issuecomment-1054492495
 patch_inconsistent_npm_issue(){
   node_module_dir=$1
   if [ ! -d "$node_module_dir" ]; then
@@ -194,10 +194,10 @@ if [ ! "$CI" ]; then
   fi
 
   # Work around for inconsistent `npm` exec path issue
-  # https://github.com/Taco-Network/taco-blockchain/pull/10460#issuecomment-1054492495
+  # https://github.com/TacoNetwork/taco-blockchain/pull/10460#issuecomment-1054492495
   patch_inconsistent_npm_issue "../node_modules"
 
-  npm install
+  npm ci
   npm audit fix || true
   npm run build
 

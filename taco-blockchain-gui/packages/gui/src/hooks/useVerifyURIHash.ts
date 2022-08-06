@@ -3,7 +3,7 @@ import isURL from 'validator/lib/isURL';
 import isContentHashValid from '../util/isContentHashValid';
 import getRemoteFileContent from '../util/getRemoteFileContent';
 
-const XTXHE_SIZE = 1000;
+const CACHE_SIZE = 1000;
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
 
 const cache = new Map<string, boolean>();
@@ -50,7 +50,7 @@ export default function useVerifyURIHash(
           cache.set(cacheKey, true);
 
           // remove oldest cache entry
-          if (cache.size > XTXHE_SIZE) {
+          if (cache.size > CACHE_SIZE) {
             const [key] = cache.keys();
             cache.delete(key);
           }

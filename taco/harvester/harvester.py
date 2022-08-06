@@ -19,7 +19,7 @@ from taco.plotting.util import (
     remove_plot,
     remove_plot_directory,
 )
-from taco.server.server import TacoServer
+from taco.util.streamable import dataclass_from_dict
 
 log = logging.getLogger(__name__)
 
@@ -35,7 +35,6 @@ class Harvester:
     constants: ConsensusConstants
     _refresh_lock: asyncio.Lock
     event_loop: asyncio.events.AbstractEventLoop
-    server: Optional[TacoServer]
 
     def __init__(self, root_path: Path, config: Dict, constants: ConsensusConstants):
         self.log = log
@@ -51,7 +50,7 @@ class Harvester:
                 refresh_parameter, interval_seconds=config["plot_loading_frequency_seconds"]
             )
         if "plots_refresh_parameter" in config:
-            refresh_parameter = PlotsRefreshParameter.from_json_dict(config["plots_refresh_parameter"])
+            refresh_parameter = dataclass_from_dict(PlotsRefreshParameter, config["plots_refresh_parameter"])
 
         self.plot_manager = PlotManager(
             root_path, refresh_parameter=refresh_parameter, refresh_callback=self._plot_refresh_callback

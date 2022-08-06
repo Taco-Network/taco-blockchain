@@ -118,8 +118,8 @@ msgstr "Aggiungi Backup Id"
 #~ msgstr "Aggiungi portafogli CAT per avere più opzioni"
 
 #: src/components/hero/WalletHeroAdd.tsx:99
-#~ msgid "Add Custom Token"
-#~ msgstr "Aggiungi un nodo personalizzato"
+msgid "Add Custom Token"
+msgstr "Aggiungi un nodo personalizzato"
 
 #: src/components/plot/PlotHeader.tsx:89
 #~ msgid "Add Plot Directory"
@@ -133,6 +133,8 @@ msgstr "Aggiungi Backup Id"
 #: src/components/WalletsManageTokens.tsx:170
 #: src/components/cat/WalletCATCreateExistingSimple.tsx:61
 #: src/components/cat/WalletCATCreateSimple.tsx:70
+#: src/components/hero/WalletHeroAdd.tsx:64
+#: src/components/hero/WalletHeroWallets.tsx:83
 msgid "Add Token"
 msgstr "Aggiungi token"
 
@@ -376,24 +378,6 @@ msgstr "Bilancio"
 #~ msgid "CCListItems.title"
 #~ msgstr ""
 
-#: src/electron/main.tsx:430
-#~ msgid "Taco"
-#~ msgstr "Taco"
-
-#: src/components/cat/WalletCATSelect.tsx:25
-#: src/components/create/WalletCreateList.tsx:32
-#: src/constants/WalletName.ts:23
-msgid "Taco Asset Token"
-msgstr "Taco Asset Token"
-
-#: src/electron/main.tsx:369
-#~ msgid "Taco Blockchain Wiki"
-#~ msgstr "Taco Blockchain Wiki"
-
-#: src/components/standard/WalletStandard.tsx:23
-#~ msgid "Taco Wallet"
-#~ msgstr "Taco Wallet"
-
 #: src/components/_selectKey_old/SelectKey.tsx:212
 #~ msgid "Can be backed up to mnemonic seed"
 #~ msgstr "Can be backed up to mnemonic seed"
@@ -453,6 +437,28 @@ msgstr "Errore: impossibile inviare taco ad un indirizzo colorato. Perfavore ins
 #~ msgid "Chat on KeyBase"
 #~ msgstr "Chat on KeyBase"
 
+#: src/components/WalletsSidebar.tsx:157
+msgid "Check my snapshot balance"
+msgstr ""
+
+#: src/electron/main.tsx:430
+#~ msgid "Taco"
+#~ msgstr "Taco"
+
+#: src/components/cat/WalletCATSelect.tsx:25
+#: src/components/create/WalletCreateList.tsx:32
+#: src/constants/WalletName.ts:23
+msgid "Taco Asset Token"
+msgstr "Taco Asset Token"
+
+#: src/electron/main.tsx:369
+#~ msgid "Taco Blockchain Wiki"
+#~ msgstr "Taco Blockchain Wiki"
+
+#: src/components/standard/WalletStandard.tsx:23
+#~ msgid "Taco Wallet"
+#~ msgstr "Taco Wallet"
+
 #: src/components/plot/add/PlotAddNumberOfPlots.tsx:34
 #~ msgid "Choose Number of Plots"
 #~ msgstr "Choose Number of Plots"
@@ -469,6 +475,10 @@ msgstr "Errore: impossibile inviare taco ad un indirizzo colorato. Perfavore ins
 #: src/components/pool/PoolOverview.tsx:89
 #~ msgid "Claim Rewards"
 #~ msgstr "Claim Rewards"
+
+#: src/components/WalletsSidebar.tsx:168
+msgid "Click here to download an older version of the wallet"
+msgstr ""
 
 #: src/components/offers/OfferManager.tsx:159
 #: src/components/offers/OfferShareDialog.tsx:379
@@ -639,8 +649,8 @@ msgid "Create An Attestation Packet"
 msgstr "Crea un Attestation Packet"
 
 #: src/components/cat/WalletCATCreateExisting.tsx:76
-#~ msgid "Create Taco Asset Token Wallet from Existing TAIL"
-#~ msgstr "Crea Portafoglio Taco Asset Token dal TAIL esistente"
+msgid "Create Taco Asset Token Wallet from Existing TAIL"
+msgstr "Crea Portafoglio Taco Asset Token dal TAIL esistente"
 
 #: src/components/wallet/create/WalletCreate.jsx:290
 #~ msgid "Create DID wallet"
@@ -716,8 +726,8 @@ msgstr "Crea una transazione"
 #~ msgstr "Crea un'offerta per scambiare XTX o altri token. Carica un offer file per ispezionare e accettare un'offerta fatta da un'altro utente."
 
 #: src/components/cat/WalletCATCreateExisting.tsx:75
-#~ msgid "Create custom CAT Wallet"
-#~ msgstr "Crea portafoglio CAT personalizzato"
+msgid "Create custom CAT Wallet"
+msgstr "Crea portafoglio CAT personalizzato"
 
 #: src/components/_wallet_old/create/WalletCreate.jsx:132
 #~ msgid "Create new coloured coin"
@@ -1377,6 +1387,7 @@ msgstr "Inizializza un Wallet Utente a tariffa Limitata:"
 #~ msgid "Install Keybase"
 #~ msgstr "Installa Keybase"
 
+#: src/components/offers/OfferViewer.tsx:358
 #~ msgid ""
 #~ "Insufficient funds available to accept offer. Ensure that your\n"
 #~ "spendable balance is sufficient to cover the offer amount."
@@ -1390,7 +1401,7 @@ msgstr "Inizializza un Wallet Utente a tariffa Limitata:"
 #~ "spendable balance is sufficient to cover the offer amount."
 #~ msgstr ""
 #~ "Fondi insufficienti per creare l'offerta. Assicurati che il tuo saldo spendibile\n"
-#~ "sia sufficiente a coprire l'importo dell'offerta.>>>>>>> tmp"
+#~ "sia sufficiente a coprire l'importo dell'offerta."
 
 #: src/components/create/createRLAdmin.jsx:217
 msgid "Interval"
@@ -2009,8 +2020,8 @@ msgid "Please enter a puzzlehash"
 msgstr "Per favore, inserisci un Puzzlehash"
 
 #: src/components/cat/WalletCATCreateExisting.tsx:40
-#~ msgid "Please enter a valid CAT name"
-#~ msgstr "Si prega di inserire il nome di un CAT valido"
+msgid "Please enter a valid CAT name"
+msgstr "Si prega di inserire il nome di un CAT valido"
 
 #: src/components/cat/WalletCATCreateExistingSimple.tsx:41
 msgid "Please enter a valid asset id"
@@ -2443,6 +2454,10 @@ msgstr "Informazioni Velocità Limitata"
 msgid "Rate Limited User Wallet Setup"
 msgstr "Setup Utente Wallet a Velocità Limitata"
 
+#: src/components/WalletsSidebar.tsx:160
+msgid "Read the blog post for details"
+msgstr ""
+
 #: src/components/WalletHeader.tsx:60
 msgid "Receive"
 msgstr "Ricevi"
@@ -2456,6 +2471,7 @@ msgstr "Indirizzo per Ricevere"
 msgid "Recipient address is not a coloured wallet address. Please enter a coloured wallet address"
 msgstr "L'indirizzo del destinatario non è un indirizzo coloured. Inserisci un indirizzo coloured al portafoglio"
 
+#: src/components/cat/WalletCATCreateExisting.tsx:104
 #: src/components/cat/WalletDID.tsx:463
 #: src/components/did/WalletDID.tsx:463
 #: src/components/did/WalletDIDRecovery.tsx:124
@@ -2630,6 +2646,7 @@ msgstr "Cerca nel Tail Database"
 #~ msgstr "Select Temporary Directory"
 
 #: src/components/WalletsList.tsx:32
+#: src/components/hero/WalletHeroWallets.tsx:47
 msgid "Select Wallet"
 msgstr "Scegli il portafoglio"
 
@@ -3169,8 +3186,8 @@ msgid "To"
 msgstr "A"
 
 #: src/components/cat/WalletCATCreateExisting.tsx:85
-#~ msgid "Token and Asset Issuance Limitations"
-#~ msgstr "Token e Limitazioni nell'emissioni di beni"
+msgid "Token and Asset Issuance Limitations"
+msgstr "Token e Limitazioni nell'emissioni di beni"
 
 #: src/components/cat/WalletCATCreateSimple.tsx:45
 msgid "Token has empty asset id"
@@ -3180,7 +3197,7 @@ msgstr "Il token ha un id asset vuoto"
 msgid "Token has empty name"
 msgstr "Il token ha un nome vuoto"
 
-#: src/components/WalletsSidebar.tsx:88
+#: src/components/WalletsSidebar.tsx:223
 msgid "Tokens"
 msgstr "Tokens"
 
@@ -3436,12 +3453,12 @@ msgstr "Portafoglio con tipo {0} non supportato"
 msgid "Wallet {walletId} not found"
 msgstr "Portafoglio {walletId} non trovato"
 
-#: src/components/wallet/Wallets.tsx:30
-#~ msgid "WalletItem.tacoWallet"
-#~ msgstr ""
-
 #: src/components/wallet/Wallets.tsx:34
 #~ msgid "WalletItem.ccWallet"
+#~ msgstr ""
+
+#: src/components/wallet/Wallets.tsx:30
+#~ msgid "WalletItem.tacoWallet"
 #~ msgstr ""
 
 #: src/components/wallet/Wallets.tsx:48
@@ -3484,6 +3501,10 @@ msgstr "Portafoglio {walletId} non trovato"
 #~ msgid "Want to have a delay before the next plot starts?"
 #~ msgstr "Want to have a delay before the next plot starts?"
 
+#: src/components/WalletsSidebar.tsx:165
+msgid "Want to see your old balance for yourself?"
+msgstr ""
+
 #: src/components/plot/add/PlotAddNumberOfPlots.tsx:252
 #~ msgid "Warm start"
 #~ msgstr "Warm start"
@@ -3524,6 +3545,14 @@ msgstr "Portafoglio {walletId} non trovato"
 #: src/components/WalletAdd.tsx:76
 msgid "Welcome! The following words are used for your wallet backup. Without them, you will lose access to your wallet, keep them safe! Write down each word along with the order number next to them. (Order is important)"
 msgstr "Benvenuto! Le parole seguenti sono utilizzate per il backup del tuo wallet. Senza di queste, perderai l'accesso al tuo wallet, tienile al sicuro! Scrivi ogni parola insieme al suo vicino numero d'ordine. (L'ordine è importate)"
+
+#: src/components/WalletsSidebar.tsx:134
+#~ msgid "We’ve made an upgrade to the CAT standard which requires all CATs to be reissued. You will be airdropped your new tokens as they are re-issued by the original issuers. The airdropped tokens will be based on the balance as of block height: 12345678"
+#~ msgstr ""
+
+#: src/components/WalletsSidebar.tsx:135
+msgid "We’ve made an upgrade to the CAT standard which requires all CATs to be reissued. You will be airdropped your new tokens as they are re-issued by the original issuers. The airdropped tokens will be based on the balance as of block height: <0/>"
+msgstr ""
 
 #: src/components/rateLimited/WalletRateLimited.jsx:315
 msgid "When you receive the setup info packet from your admin, enter it below to complete your Rate Limited Wallet setup:"
@@ -3619,6 +3648,10 @@ msgstr "Quando ricevi il tuo pacchetto di informazioni di setup dal tuo amminist
 #: src/hooks/useAbsorbRewards.tsx:51
 #~ msgid "You will recieve <0/> to {address}"
 #~ msgstr "You will receive <0/> to {address}"
+
+#: src/components/WalletsSidebar.tsx:131
+msgid "Your CAT tokens have been upgraded!"
+msgstr ""
 
 #: src/components/cat/WalletDID.tsx:326
 #: src/components/did/WalletDID.tsx:326

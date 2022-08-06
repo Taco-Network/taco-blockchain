@@ -9,12 +9,6 @@ daemon_max_message_size: 50000000 # maximum size of RPC message in bytes
 inbound_rate_limit_percent: 100
 outbound_rate_limit_percent: 30
 
-# Limit the number of start_full_node worker processes to reduce ram and cpu usage
-# This allows users to farm more forks without running out of ram
-# Setting this too low reduces sync speed, but a synced node can stay synced with a multiprocessing_limit of 2
-# A value higher than 61 takes no effect, as chia limits the workers to 61 (windows server related python bug)
-# multiprocessing_limit: 4
-
 network_overrides: &network_overrides
   constants:
     mainnet:
@@ -26,88 +20,18 @@ network_overrides: &network_overrides
       MIN_PLOT_SIZE: 18
       GENESIS_CHALLENGE: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
       NETWORK_TYPE: 1
-      GENESIS_PRE_FARM_POOL_PUZZLE_HASH: "5593755c5604a1651c85700d2db91a2fa4d978fcd9d5bb9aa948fbf4d0093193"
-      GENESIS_PRE_FARM_FARMER_PUZZLE_HASH: "5593755c5604a1651c85700d2db91a2fa4d978fcd9d5bb9aa948fbf4d0093193"
-    testnet2:
-      MIN_PLOT_SIZE: 18
-      GENESIS_CHALLENGE: ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad
-      NETWORK_TYPE: 1
-      DIFFICULTY_CONSTANT_FACTOR: 10052721566054
-      GENESIS_PRE_FARM_POOL_PUZZLE_HASH: "5593755c5604a1651c85700d2db91a2fa4d978fcd9d5bb9aa948fbf4d0093193"
-      GENESIS_PRE_FARM_FARMER_PUZZLE_HASH: "5593755c5604a1651c85700d2db91a2fa4d978fcd9d5bb9aa948fbf4d0093193"
-    testnet3:
-      DIFFICULTY_CONSTANT_FACTOR: 10052721566054
-      GENESIS_CHALLENGE: ca7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015af
-      GENESIS_PRE_FARM_FARMER_PUZZLE_HASH: 5593755c5604a1651c85700d2db91a2fa4d978fcd9d5bb9aa948fbf4d0093193
       GENESIS_PRE_FARM_POOL_PUZZLE_HASH: 5593755c5604a1651c85700d2db91a2fa4d978fcd9d5bb9aa948fbf4d0093193
-      MIN_PLOT_SIZE: 18
-      NETWORK_TYPE: 1
-      MEMPOOL_BLOCK_BUFFER: 10
-    testnet4:
-      DIFFICULTY_CONSTANT_FACTOR: 10052721566054
-      GENESIS_CHALLENGE: dd7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015af
       GENESIS_PRE_FARM_FARMER_PUZZLE_HASH: 5593755c5604a1651c85700d2db91a2fa4d978fcd9d5bb9aa948fbf4d0093193
-      GENESIS_PRE_FARM_POOL_PUZZLE_HASH: 5593755c5604a1651c85700d2db91a2fa4d978fcd9d5bb9aa948fbf4d0093193
-      MIN_PLOT_SIZE: 18
-      NETWORK_TYPE: 1
-      MEMPOOL_BLOCK_BUFFER: 10
-      EPOCH_BLOCKS: 768
-      DIFFICULTY_STARTING: 30
-    testnet5:
-      DIFFICULTY_CONSTANT_FACTOR: 10052721566054
-      GENESIS_CHALLENGE: ee7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015af
-      GENESIS_PRE_FARM_FARMER_PUZZLE_HASH: 5593755c5604a1651c85700d2db91a2fa4d978fcd9d5bb9aa948fbf4d0093193
-      GENESIS_PRE_FARM_POOL_PUZZLE_HASH: 5593755c5604a1651c85700d2db91a2fa4d978fcd9d5bb9aa948fbf4d0093193
-      MIN_PLOT_SIZE: 18
-      NETWORK_TYPE: 1
-      MEMPOOL_BLOCK_BUFFER: 10
-      EPOCH_BLOCKS: 768
-      DIFFICULTY_STARTING: 30
-    testnet7:
-      DIFFICULTY_CONSTANT_FACTOR: 10052721566054
-      GENESIS_CHALLENGE: 117816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015af
-      GENESIS_PRE_FARM_FARMER_PUZZLE_HASH: 5593755c5604a1651c85700d2db91a2fa4d978fcd9d5bb9aa948fbf4d0093193
-      GENESIS_PRE_FARM_POOL_PUZZLE_HASH: 5593755c5604a1651c85700d2db91a2fa4d978fcd9d5bb9aa948fbf4d0093193
-      MIN_PLOT_SIZE: 18
-      NETWORK_TYPE: 1
-      MEMPOOL_BLOCK_BUFFER: 50
-      EPOCH_BLOCKS: 768
-      DIFFICULTY_STARTING: 30
-    testnet10:
-      AGG_SIG_ME_ADDITIONAL_DATA: ae83525ba8d1dd3f09b277de18ca3e43fc0af20d20c4b3e92ef2a48bd291ccb2
-      DIFFICULTY_CONSTANT_FACTOR: 10052721566054
-      DIFFICULTY_STARTING: 30
-      EPOCH_BLOCKS: 768
-      GENESIS_CHALLENGE: ae83525ba8d1dd3f09b277de18ca3e43fc0af20d20c4b3e92ef2a48bd291ccb2
-      GENESIS_PRE_FARM_FARMER_PUZZLE_HASH: 5593755c5604a1651c85700d2db91a2fa4d978fcd9d5bb9aa948fbf4d0093193
-      GENESIS_PRE_FARM_POOL_PUZZLE_HASH: 5593755c5604a1651c85700d2db91a2fa4d978fcd9d5bb9aa948fbf4d0093193
-      MEMPOOL_BLOCK_BUFFER: 10
-      MIN_PLOT_SIZE: 18
-      NETWORK_TYPE: 1
   config:
     mainnet:
       address_prefix: "xtx"
       default_full_node_port: 18620
     testnet0:
       address_prefix: "txtx"
-      default_full_node_port: 518620
-    testnet1:
-      address_prefix: "txtx"
-    testnet2:
-      address_prefix: "txtx"
-    testnet3:
-      address_prefix: "txtx"
-    testnet4:
-      address_prefix: "txtx"
-    testnet7:
-      address_prefix: "txtx"
-      default_full_node_port: 518620
-    testnet10:
-      address_prefix: "txtx"
-      default_full_node_port: 518620
+      default_full_node_port: 23333
 
 selected_network: &selected_network "mainnet"
-ALERTS_URL: https://download.taco-network.net/notify/mainnet_alert.txt
+ALERTS_URL: https://download.taconetwork.net/notify/mainnet_alert.txt
 TACO_ALERTS_PUBKEY: 89b7fd87cb56e926ecefb879a29aae308be01f31980569f6a75a69d2a9a69daefd71fb778d865f7c50d6c967e3025937
 
 # public ssl ca is included in source code
@@ -130,7 +54,7 @@ daemon_ssl:
 logging: &logging
   log_stdout: False  # If True, outputs to stdout instead of a file
   log_filename: "log/debug.log"
-  log_level: "INFO"  # Can be CRITICAL, ERROR, WARNING, INFO, DEBUG, NOTSET
+  log_level: "WARNING"  # Can be CRITICAL, ERROR, WARNING, INFO, DEBUG, NOTSET
   log_maxfilesrotation: 7 #  Max files in rotation. Default value 7 if the key is not set
   log_maxbytesrotation: 52428800 #  Max bytes logged before rotating logs
   log_syslog: False  # If True, outputs to SysLog host and port specified
@@ -140,7 +64,7 @@ logging: &logging
 seeder:
   # The fake full node used for crawling will run on this port.
   port: 18620
-  # Most full nodes on the network run on this port. (i.e. 18620 for mainnet, 518620 for testnet).
+  # Most full nodes on the network run on this port. (i.e. 18620 for mainnet, 23333 for testnet).
   other_peers_port: 18620
   # This will override the default full_node.peer_connect_timeout for the crawler full node
   peer_connect_timeout: 2
@@ -148,7 +72,7 @@ seeder:
   crawler_db_path: "crawler.db"
   # Peers used for the initial run.
   bootstrap_peers:
-    - "node.taco-network.net"
+    - "node.taconetwork.net"
   # Only consider nodes synced at least to this height.
   minimum_height: 240000
   # How many of a particular version we need to see before reporting it in the logs
@@ -169,7 +93,7 @@ seeder:
   # Crawler is its own standalone service within the seeder component
   crawler:
     start_rpc_server: True
-    rpc_port: 11561
+    rpc_port: 21451
     ssl:
       private_crt: "config/ssl/crawler/private_crawler.crt"
       private_key: "config/ssl/crawler/private_crawler.key"
@@ -192,7 +116,7 @@ harvester:
     batch_sleep_milliseconds: 1 # Milliseconds the harvester sleeps between batch processing
 
 
-  # If True use parallel reads in chiapos
+  # If True use parallel reads in tacopos
   parallel_read: True
 
   logging: *logging
@@ -315,7 +239,7 @@ timelord:
   multiprocessing_start_method: default
 
   start_rpc_server: True
-  rpc_port: 11557
+  rpc_port: 21450
 
   ssl:
     private_crt:  "config/ssl/timelord/private_timelord.crt"
@@ -421,7 +345,7 @@ full_node:
   # List of trusted DNS seeders to bootstrap from.
   # If you modify this, please change the hardcode as well from FullNode.set_server()
   dns_servers:
-    - "dns-introducer.taco-network.net"
+    - "dns-introducer.taconetwork.net"
   farmer_peer:
       host: *self_hostname
       port: 18623
@@ -429,7 +353,7 @@ full_node:
       host: *self_hostname
       port: 18622
   introducer_peer:
-      host: introducer.taco-network.net  # Taco AWS introducer IPv4/IPv6
+      host: introducer.taconetwork.net  # Taco AWS introducer IPv4/IPv6
       port: 18620
   wallet_peer:
     host: *self_hostname
@@ -499,7 +423,7 @@ wallet:
   initial_num_public_keys: 100
 
   dns_servers:
-    - "dns-introducer.taco-network.net"
+    - "dns-introducer.taconetwork.net"
 
   full_node_peer:
     host: *self_hostname
@@ -525,7 +449,7 @@ wallet:
   recent_peer_threshold: 6000
 
   introducer_peer:
-    host: introducer.taco-network.net # Taco AWS introducer IPv4/IPv6
+    host: introducer.taconetwork.net # Taco AWS introducer IPv4/IPv6
     port: 18620
 
   ssl:

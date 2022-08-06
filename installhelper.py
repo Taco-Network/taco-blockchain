@@ -44,7 +44,7 @@ def make_semver(version_str: str) -> str:
     if local:
         version += "+{0}".format(local)
 
-    return "1.4" #Dommer
+    return version
 
 
 def get_taco_version() -> str:

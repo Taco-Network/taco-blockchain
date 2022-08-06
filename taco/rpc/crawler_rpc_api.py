@@ -1,7 +1,6 @@
 import ipaddress
-from typing import Any, Dict, List, Optional
+from typing import Any, Callable, Dict, List, Optional
 
-from taco.rpc.rpc_server import Endpoint
 from taco.seeder.crawler import Crawler
 from taco.util.ws_message import WsRpcMessage, create_payload_dict
 
@@ -11,7 +10,7 @@ class CrawlerRpcApi:
         self.service = crawler
         self.service_name = "taco_crawler"
 
-    def get_routes(self) -> Dict[str, Endpoint]:
+    def get_routes(self) -> Dict[str, Callable]:
         return {
             "/get_peer_counts": self.get_peer_counts,
             "/get_ips_after_timestamp": self.get_ips_after_timestamp,

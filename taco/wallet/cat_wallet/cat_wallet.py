@@ -93,7 +93,11 @@ class CATWallet:
         if name is None:
             name = "CAT WALLET"
 
-        self.wallet_info = await wallet_state_manager.user_store.create_wallet(name, WalletType.CAT, info_as_string)
+        new_wallet_info = await wallet_state_manager.user_store.create_wallet(name, WalletType.CAT, info_as_string)
+        if new_wallet_info is None:
+            raise ValueError("Internal Error")
+
+        self.wallet_info = new_wallet_info
 
         try:
             taco_tx, spend_bundle = await ALL_LIMITATIONS_PROGRAMS[
@@ -190,9 +194,12 @@ class CATWallet:
         limitations_program_hash = bytes32(hexstr_to_bytes(limitations_program_hash_hex))
         self.cat_info = CATInfo(limitations_program_hash, None)
         info_as_string = bytes(self.cat_info).hex()
-        self.wallet_info = await wallet_state_manager.user_store.create_wallet(
+        new_wallet_info = await wallet_state_manager.user_store.create_wallet(
             name, WalletType.CAT, info_as_string, in_transaction=in_transaction
         )
+        if new_wallet_info is None:
+            raise Exception("wallet_info is None")
+        self.wallet_info = new_wallet_info
 
         self.lineage_store = await CATLineageStore.create(
             self.wallet_state_manager.db_wrapper, self.get_asset_id(), in_transaction=in_transaction
@@ -329,7 +336,7 @@ class CATWallet:
         self.log.info(f"CAT wallet has been notified that {coin} was added")
 
         inner_puzzle = await self.inner_puzzle_for_cat_puzhash(coin.puzzle_hash)
-        lineage_proof = LineageProof(coin.parent_coin_info, inner_puzzle.get_tree_hash(), uint64(coin.amount))
+        lineage_proof = LineageProof(coin.parent_coin_info, inner_puzzle.get_tree_hash(), coin.amount)
         await self.add_lineage(coin.name(), lineage_proof, True)
 
         lineage = await self.get_lineage_proof_for_coin(coin)
@@ -362,7 +369,7 @@ class CATWallet:
 
             await self.add_lineage(
                 coin_name,
-                LineageProof(parent_coin.parent_coin_info, inner_puzzle.get_tree_hash(), uint64(parent_coin.amount)),
+                LineageProof(parent_coin.parent_coin_info, inner_puzzle.get_tree_hash(), parent_coin.amount),
                 True,
             )
         else:
@@ -463,6 +470,7 @@ class CATWallet:
             exclude,
             min_coin_amount,
         )
+        assert coins is not None and len(coins) > 0
         assert sum(c.amount for c in coins) >= amount
         return coins
 
@@ -524,6 +532,7 @@ class CATWallet:
         fee: uint64,
         amount_to_claim: uint64,
         announcement_to_assert: Optional[Announcement] = None,
+        min_coin_amount: Optional[uint128] = None,
     ) -> Tuple[TransactionRecord, Optional[Announcement]]:
         """
         This function creates a non-CAT transaction to pay fees, contribute funds for issuance, and absorb melt value.
@@ -532,7 +541,7 @@ class CATWallet:
         """
         announcement = None
         if fee > amount_to_claim:
-            taco_coins = await self.standard_wallet.select_coins(fee)
+            taco_coins = await self.standard_wallet.select_coins(fee, min_coin_amount=min_coin_amount)
             origin_id = list(taco_coins)[0].name()
             taco_tx = await self.standard_wallet.generate_signed_transaction(
                 uint64(0),
@@ -556,7 +565,7 @@ class CATWallet:
             assert message is not None
             announcement = Announcement(origin_id, message)
         else:
-            taco_coins = await self.standard_wallet.select_coins(fee)
+            taco_coins = await self.standard_wallet.select_coins(fee, min_coin_amount=min_coin_amount)
             selected_amount = sum([c.amount for c in taco_coins])
             taco_tx = await self.standard_wallet.generate_signed_transaction(
                 uint64(selected_amount + amount_to_claim - fee),
@@ -577,6 +586,7 @@ class CATWallet:
         coins: Set[Coin] = None,
         coin_announcements_to_consume: Optional[Set[Announcement]] = None,
         puzzle_announcements_to_consume: Optional[Set[Announcement]] = None,
+        min_coin_amount: Optional[uint128] = None,
     ) -> Tuple[SpendBundle, Optional[TransactionRecord]]:
         if coin_announcements_to_consume is not None:
             coin_announcements_bytes: Optional[Set[bytes32]] = {a.name() for a in coin_announcements_to_consume}
@@ -596,7 +606,7 @@ class CATWallet:
         starting_amount: int = payment_amount - extra_delta
 
         if coins is None:
-            cat_coins = await self.select_coins(uint64(starting_amount))
+            cat_coins = await self.select_coins(uint64(starting_amount), min_coin_amount=min_coin_amount)
         else:
             cat_coins = coins
 
@@ -636,11 +646,14 @@ class CATWallet:
         for coin in cat_coins:
             if first:
                 first = False
-                announcement = Announcement(coin.name(), std_hash(b"".join([c.name() for c in cat_coins])), b"\xca")
+                announcement = Announcement(coin.name(), std_hash(b"".join([c.name() for c in cat_coins])))
                 if need_taco_transaction:
                     if fee > regular_taco_to_claim:
                         taco_tx, _ = await self.create_tandem_xtx_tx(
-                            fee, uint64(regular_taco_to_claim), announcement_to_assert=announcement
+                            fee,
+                            uint64(regular_taco_to_claim),
+                            announcement_to_assert=announcement,
+                            min_coin_amount=min_coin_amount,
                         )
                         innersol = self.standard_wallet.make_solution(
                             primaries=primaries,
@@ -649,7 +662,9 @@ class CATWallet:
                             puzzle_announcements_to_assert=puzzle_announcements_bytes,
                         )
                     elif regular_taco_to_claim > fee:
-                        taco_tx, _ = await self.create_tandem_xtx_tx(fee, uint64(regular_taco_to_claim))
+                        taco_tx, _ = await self.create_tandem_xtx_tx(
+                            fee, uint64(regular_taco_to_claim), min_coin_amount=min_coin_amount
+                        )
                         innersol = self.standard_wallet.make_solution(
                             primaries=primaries,
                             coin_announcements={announcement.message},
@@ -707,6 +722,7 @@ class CATWallet:
         memos: Optional[List[List[bytes]]] = None,
         coin_announcements_to_consume: Optional[Set[Announcement]] = None,
         puzzle_announcements_to_consume: Optional[Set[Announcement]] = None,
+        min_coin_amount: Optional[uint128] = None,
     ) -> List[TransactionRecord]:
         if memos is None:
             memos = [[] for _ in range(len(puzzle_hashes))]
@@ -731,6 +747,7 @@ class CATWallet:
             coins=coins,
             coin_announcements_to_consume=coin_announcements_to_consume,
             puzzle_announcements_to_consume=puzzle_announcements_to_consume,
+            min_coin_amount=min_coin_amount,
         )
         spend_bundle = await self.sign(unsigned_spend_bundle)
         # TODO add support for array in stored records
@@ -810,8 +827,10 @@ class CATWallet:
     def get_puzzle_info(self, asset_id: bytes32) -> PuzzleInfo:
         return PuzzleInfo({"type": AssetType.CAT.value, "tail": "0x" + self.get_asset_id()})
 
-    async def get_coins_to_offer(self, asset_id: Optional[bytes32], amount: uint64) -> Set[Coin]:
+    async def get_coins_to_offer(
+        self, asset_id: Optional[bytes32], amount: uint64, min_coin_amount: Optional[uint128] = None
+    ) -> Set[Coin]:
         balance = await self.get_confirmed_balance()
         if balance < amount:
             raise Exception(f"insufficient funds in wallet {self.id()}")
-        return await self.select_coins(amount)
+        return await self.select_coins(amount, min_coin_amount=min_coin_amount)

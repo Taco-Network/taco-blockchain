@@ -15,7 +15,7 @@ export default function PlotNFTSelectFaucet(props: Props) {
   const openExternal = useOpenExternal();
 
   function handleClick() {
-    openExternal('https://faucet.taco-network.net/');
+    openExternal('https://faucet.taco.net/');
   }
 
   return (

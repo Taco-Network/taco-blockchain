@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh_CN\n"
 "Project-Id-Version: taco-blockchain\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2022-06-23 01:06\n"
+"PO-Revision-Date: 2022-05-31 09:21\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -118,8 +118,8 @@ msgstr "添加备份 ID"
 #~ msgstr "添加 CAT 钱包以提供更多选项"
 
 #: src/components/hero/WalletHeroAdd.tsx:99
-#~ msgid "Add Custom Token"
-#~ msgstr "添加自定义代币"
+msgid "Add Custom Token"
+msgstr "添加自定义代币"
 
 #: src/components/plot/PlotHeader.tsx:89
 #~ msgid "Add Plot Directory"
@@ -133,6 +133,8 @@ msgstr "添加备份 ID"
 #: src/components/WalletsManageTokens.tsx:170
 #: src/components/cat/WalletCATCreateExistingSimple.tsx:61
 #: src/components/cat/WalletCATCreateSimple.tsx:70
+#: src/components/hero/WalletHeroAdd.tsx:64
+#: src/components/hero/WalletHeroWallets.tsx:83
 msgid "Add Token"
 msgstr "添加代币"
 
@@ -376,24 +378,6 @@ msgstr "余额"
 #~ msgid "CCListItems.title"
 #~ msgstr ""
 
-#: src/electron/main.tsx:430
-#~ msgid "Taco"
-#~ msgstr "Taco"
-
-#: src/components/cat/WalletCATSelect.tsx:25
-#: src/components/create/WalletCreateList.tsx:32
-#: src/constants/WalletName.ts:23
-msgid "Taco Asset Token"
-msgstr ""
-
-#: src/electron/main.tsx:369
-#~ msgid "Taco Blockchain Wiki"
-#~ msgstr "Taco Blockchain Wiki"
-
-#: src/components/standard/WalletStandard.tsx:23
-#~ msgid "Taco Wallet"
-#~ msgstr "Taco Wallet"
-
 #: src/components/_selectKey_old/SelectKey.tsx:212
 #~ msgid "Can be backed up to mnemonic seed"
 #~ msgstr "Can be backed up to mnemonic seed"
@@ -453,6 +437,28 @@ msgstr ""
 #~ msgid "Chat on KeyBase"
 #~ msgstr "Chat on KeyBase"
 
+#: src/components/WalletsSidebar.tsx:157
+msgid "Check my snapshot balance"
+msgstr ""
+
+#: src/electron/main.tsx:430
+#~ msgid "Taco"
+#~ msgstr "Taco"
+
+#: src/components/cat/WalletCATSelect.tsx:25
+#: src/components/create/WalletCreateList.tsx:32
+#: src/constants/WalletName.ts:23
+msgid "Taco Asset Token"
+msgstr ""
+
+#: src/electron/main.tsx:369
+#~ msgid "Taco Blockchain Wiki"
+#~ msgstr "Taco Blockchain Wiki"
+
+#: src/components/standard/WalletStandard.tsx:23
+#~ msgid "Taco Wallet"
+#~ msgstr "Taco Wallet"
+
 #: src/components/plot/add/PlotAddNumberOfPlots.tsx:34
 #~ msgid "Choose Number of Plots"
 #~ msgstr "Choose Number of Plots"
@@ -469,6 +475,10 @@ msgstr ""
 #: src/components/pool/PoolOverview.tsx:89
 #~ msgid "Claim Rewards"
 #~ msgstr "Claim Rewards"
+
+#: src/components/WalletsSidebar.tsx:168
+msgid "Click here to download an older version of the wallet"
+msgstr ""
 
 #: src/components/offers/OfferManager.tsx:159
 #: src/components/offers/OfferShareDialog.tsx:379
@@ -488,8 +498,9 @@ msgstr ""
 msgid "Coin Name"
 msgstr "代币名称"
 
+#: src/components/offers/OfferViewer.tsx:527
 #~ msgid "Coins"
-#~ msgstr ">>>>>>> tmp"
+#~ msgstr ""
 
 #: src/components/trading/TradingOverview.jsx:365
 #~ msgid "Coins:"
@@ -635,11 +646,11 @@ msgstr "创建"
 #: src/components/cat/WalletDID.tsx:967
 #: src/components/did/WalletDID.tsx:967
 msgid "Create An Attestation Packet"
-msgstr "创建一个认证包"
+msgstr ""
 
 #: src/components/cat/WalletCATCreateExisting.tsx:76
-#~ msgid "Create Taco Asset Token Wallet from Existing TAIL"
-#~ msgstr "从现有的TAIL创建Taco Asset Token 钱包"
+msgid "Create Taco Asset Token Wallet from Existing TAIL"
+msgstr "从现有的TAIL创建Taco Asset Token 钱包"
 
 #: src/components/wallet/create/WalletCreate.jsx:290
 #~ msgid "Create DID wallet"
@@ -715,8 +726,8 @@ msgstr "发起交易"
 #~ msgstr ""
 
 #: src/components/cat/WalletCATCreateExisting.tsx:75
-#~ msgid "Create custom CAT Wallet"
-#~ msgstr "创建自定义 CAT 钱包"
+msgid "Create custom CAT Wallet"
+msgstr ""
 
 #: src/components/_wallet_old/create/WalletCreate.jsx:132
 #~ msgid "Create new coloured coin"
@@ -746,8 +757,9 @@ msgstr "发起交易"
 #~ msgid "Created by us:"
 #~ msgstr "Created by us:"
 
+#: src/components/offers/OfferManager.tsx:123
 #~ msgid "Creates and submits a transaction on the blockchain that cancels the offer"
-#~ msgstr ">>>>>>> tmp"
+#~ msgstr ""
 
 #: src/components/plotNFT/PlotNFTUnconfirmedCard.tsx:61
 #~ msgid "Creating Plot NFT and Joining the Pool"
@@ -757,8 +769,10 @@ msgstr "发起交易"
 #~ msgid "Creating Plot NFT for Self Pooling"
 #~ msgstr "Creating Plot NFT for Self Pooling"
 
+#: src/components/offers/OfferManager.tsx:339
+#: src/components/offers/OfferViewer.tsx:204
 #~ msgid "Creation Date"
-#~ msgstr ">>>>>>> tmp"
+#~ msgstr ""
 
 #: src/components/plot/add/PlotAddForm.tsx:109
 #~ msgid "Currency code is not defined"
@@ -784,11 +798,11 @@ msgstr "发起交易"
 
 #: src/constants/WalletName.ts:20
 msgid "Custody Wallet"
-msgstr "Custody 钱包"
+msgstr ""
 
 #: src/components/cat/WalletCATCreateSimple.tsx:102
 msgid "Custom"
-msgstr "自定义"
+msgstr ""
 
 #: src/components/_selectKey_old/SelectKey.tsx:227
 #~ msgid "DANGER: permanently delete private key"
@@ -796,7 +810,7 @@ msgstr "自定义"
 
 #: src/constants/WalletName.ts:29
 msgid "DID Wallet"
-msgstr "DID钱包"
+msgstr ""
 
 #: src/components/wallet/create/WalletCreate.jsx:310
 #~ msgid "DIDListItems.title"
@@ -862,8 +876,9 @@ msgstr "删除未确认的交易"
 #~ msgid "Depending on your system configuration, you may find that an alternative plotter produces plots faster than the default Taco Proof of Space plotter. If unsure, use the default Taco Proof of Space plotter."
 #~ msgstr "Depending on your system configuration, you may find that an alternative plotter produces plots faster than the default Taco Proof of Space plotter. If unsure, use the default Taco Proof of Space plotter."
 
+#: src/components/offers/OfferViewer.tsx:504
 #~ msgid "Details"
-#~ msgstr ">>>>>>> tmp"
+#~ msgstr ""
 
 #: src/electron/main.tsx:315
 #~ msgid "Developer"
@@ -906,8 +921,9 @@ msgstr "删除未确认的交易"
 #~ msgid "Disconnect"
 #~ msgstr "Disconnect"
 
+#: src/components/offers/OfferManager.tsx:393
 #~ msgid "Display Offer Data"
-#~ msgstr ">>>>>>> tmp"
+#~ msgstr ""
 
 #: src/components/create/WalletCreateList.tsx:39
 #: src/components/did/WalletDIDSelect.tsx:25
@@ -931,13 +947,14 @@ msgstr "分布式身份认证"
 #~ msgid "Does your machine support parallel plotting?"
 #~ msgstr "Does your machine support parallel plotting?"
 
+#: src/components/offers/OfferImport.tsx:122
 #~ msgid "Drag & drop an offer file below to view its details"
-#~ msgstr ">>>>>>> tmp"
+#~ msgstr ""
 
 #: src/components/cat/WalletDID.tsx:426
 #: src/components/did/WalletDID.tsx:426
 msgid "Drag and drop attestation packet(s)"
-msgstr "拖放认证数据包"
+msgstr ""
 
 #: src/components/offers/OfferImport.tsx:141
 #~ msgid "Drag and drop offer file"
@@ -949,7 +966,7 @@ msgstr "拖放认证数据包"
 
 #: src/components/did/WalletDIDRecovery.tsx:109
 msgid "Drag and drop your recovery backup file"
-msgstr "拖放您的恢复备份文件"
+msgstr ""
 
 #: src/electron/main.tsx:274
 #~ msgid "Edit"
@@ -1025,8 +1042,10 @@ msgstr ""
 #~ msgid "Expected Time to Win"
 #~ msgstr ""
 
+#: src/components/offers/OfferShareDialog.tsx:232
+#: src/components/offers/OfferShareDialog.tsx:232
 #~ msgid "Failed to execute Keybase command: {stderr}"
-#~ msgstr ">>>>>>> tmp"
+#~ msgstr ""
 
 #: src/components/plot/PlotsFailed.tsx:34
 #~ msgid "Failed to open (invalid plots)"
@@ -1147,8 +1166,9 @@ msgstr "费用"
 #~ msgid "Fees Puzzle Hash"
 #~ msgstr ""
 
+#: src/components/offers/OfferSummary.tsx:122
 #~ msgid "Fees included in offer:"
-#~ msgstr ">>>>>>> tmp"
+#~ msgstr ""
 
 #: src/electron/main.tsx:266
 #: src/electron/main.tsx:467
@@ -1202,12 +1222,14 @@ msgstr "文件名"
 #~ msgid "Get Pool Login Link"
 #~ msgstr "Get Pool Login Link"
 
+#: src/components/offers/OfferShareDialog.tsx:715
+#: src/components/offers/OfferShareDialog.tsx:782
 #~ msgid "Go to #{KeybaseChannelName}"
 #~ msgstr ""
 
 #: src/components/offers/OfferShareDialog.tsx:865
 #~ msgid "Go to Offerpool"
-#~ msgstr ">>>>>>> tmp"
+#~ msgstr ""
 
 #: src/components/pool/PoolOverview.tsx:173
 #~ msgid "Grid view"
@@ -1219,7 +1241,7 @@ msgstr "文件名"
 
 #: src/components/WalletReceiveAddress.tsx:38
 msgid "HD or Hierarchical Deterministic keys are a type of public key/private key scheme where one private key can have a nearly infinite number of different public keys (and therefore wallet receive addresses) that will all ultimately come back to and be spendable by a single private key."
-msgstr "HD或等级确定钥匙是一种类型的公用钥匙/私人钥匙方案，其中一个私人钥匙可以拥有几乎无限数量的不同公用钥匙（因此钱包收到地址），所有这些都最终都会回来并可以用单个私人钥匙进行支出。"
+msgstr ""
 
 #: src/components/plot/overview/PlotOverviewPlots.tsx:49
 #~ msgid "Harvester ID"
@@ -1229,8 +1251,9 @@ msgstr "HD或等级确定钥匙是一种类型的公用钥匙/私人钥匙方案
 #~ msgid "Harvester Plots"
 #~ msgstr "Harvester Plots"
 
+#: src/components/offers/OfferShareDialog.tsx:491
 #~ msgid "Hashgreen DEX URL"
-#~ msgstr ">>>>>>> tmp"
+#~ msgstr ""
 
 #: src/components/fullNode/FullNode.jsx:60
 #~ msgid "Header Hash"
@@ -1284,16 +1307,17 @@ msgstr "IP地址"
 #~ msgid "If none selected, then it will default to the temporary directory."
 #~ msgstr "If none selected, then it will default to the temporary directory."
 
+#: src/components/offers/OfferShareDialog.tsx:414
 #~ msgid "If selected, your offer will be not be shared publicly."
 #~ msgstr ""
 
 #: src/components/offers/OfferManager.tsx:107
 #~ msgid "If you have already shared your offer file, you may need to submit a transaction to cancel the pending offer. Click \"Cancel on blockchain\" to submit a cancellation transaction."
-#~ msgstr ">>>>>>> tmp"
+#~ msgstr ""
 
 #: src/components/WalletSendTransactionResultDialog.tsx:41
 msgid "If you would like to speed up the transaction, please delete unconfirmed transactions and retry with a higher fee."
-msgstr "如果您想要加快交易速度，请删除未经确认的交易并以更高的费用重试"
+msgstr ""
 
 #: src/components/PasteMnemonic.tsx:86
 msgid "Import"
@@ -1311,15 +1335,20 @@ msgstr "使用助记词导入钱包"
 #~ msgid "In Progress"
 #~ msgstr "In Progress"
 
+#: src/components/offers/OfferEditorConditionsPanel.tsx:249
+#: src/components/offers/OfferViewer.tsx:459
 #~ msgid "In exchange for"
-#~ msgstr ">>>>>>> tmp"
+#~ msgstr ""
 
+#: src/components/offers/OfferShareDialog.tsx:403
+#: src/components/offers/OfferShareDialog.tsx:544
+#: src/components/offers/OfferShareDialog.tsx:892
 #~ msgid "In exchange for:"
 #~ msgstr ""
 
 #: src/components/offers/OfferEditorConditionsPanel.tsx:339
 #~ msgid "Including a fee in the offer can help expedite the transaction when the offer is accepted."
-#~ msgstr ">>>>>>> tmp"
+#~ msgstr ""
 
 #: src/components/WalletHistory.tsx:95
 msgid "Incoming"
@@ -1354,6 +1383,7 @@ msgstr "初始金额"
 msgid "Initialize a Rate Limited User Wallet:"
 msgstr "初始化费用限定型用户钱包："
 
+#: src/components/offers/OfferShareDialog.tsx:754
 #~ msgid "Install Keybase"
 #~ msgstr ""
 
@@ -1367,7 +1397,7 @@ msgstr "初始化费用限定型用户钱包："
 #~ msgid ""
 #~ "Insufficient funds available to create offer. Ensure that your\n"
 #~ "spendable balance is sufficient to cover the offer amount."
-#~ msgstr ">>>>>>> tmp"
+#~ msgstr ""
 
 #: src/components/create/createRLAdmin.jsx:217
 msgid "Interval"
@@ -1404,19 +1434,21 @@ msgstr "间隔"
 #~ msgid "Join a pool and get more consistent XTX farming rewards. Create a plot NFT and assign your new plots to a group."
 #~ msgstr "Join a pool and get more consistent XTX farming rewards. Create a plot NFT and assign your new plots to a group."
 
+#: src/components/offers/OfferShareDialog.tsx:771
 #~ msgid "Join {KeybaseTeamName}"
-#~ msgstr ">>>>>>> tmp"
+#~ msgstr ""
 
 #: src/components/plot/overview/PlotOverviewPlots.tsx:63
 #~ msgid "K-Size"
 #~ msgstr "K-Size"
 
+#: src/components/offers/OfferShareDialog.tsx:656
 #~ msgid "Keybase command failed {e}. If you haven't installed Keybase, you can download from https://keybase.io"
 #~ msgstr ""
 
 #: src/components/offers/OfferShareDialog.tsx:744
 #~ msgid "Keybase is a secure messaging and file sharing application. To share an offer in the Keybase {KeybaseTeamName} team, you must first have Keybase installed."
-#~ msgstr ">>>>>>> tmp"
+#~ msgstr ""
 
 #: src/components/app/AppKeyringMigrator.tsx:94
 #~ msgid "Keyring migration failed: {0}"
@@ -1463,7 +1495,7 @@ msgstr "间隔"
 
 #: src/components/WalletConnections.tsx:83
 msgid "List of connections is empty"
-msgstr "连接列表为空"
+msgstr ""
 
 #: src/components/pool/PoolOverview.tsx:173
 #~ msgid "List view"
@@ -1541,8 +1573,9 @@ msgstr "Loading..."
 #~ msgid "Manage Farming Rewards"
 #~ msgstr "Manage Farming Rewards"
 
+#: src/components/offers/OfferManager.tsx:505
 #~ msgid "Manage Offers"
-#~ msgstr ">>>>>>> tmp"
+#~ msgstr ""
 
 #: src/components/cat/WalletDID.tsx:805
 #: src/components/did/WalletDID.tsx:805
@@ -1555,16 +1588,16 @@ msgstr "管理恢复去中心化标识"
 
 #: src/components/WalletsManageTokens.tsx:147
 msgid "Manage token list"
-msgstr "管理代币列表"
+msgstr ""
 
 #: src/components/WalletHistory.tsx:172
 #: src/components/cat/WalletCATSend.tsx:231
 msgid "Memo"
-msgstr "备注"
+msgstr ""
 
 #: src/components/WalletHistory.tsx:366
 msgid "Memos"
-msgstr "备注"
+msgstr ""
 
 #: src/components/WalletSendTransactionResultDialog.tsx:19
 msgid "Mempool Full"
@@ -1778,15 +1811,21 @@ msgstr "确定"
 
 #: src/components/WalletHistory.tsx:186
 msgid "Offer Accepted"
-msgstr "报价已接受"
+msgstr ""
 
+#: src/components/offers/OfferDataDialog.tsx:42
+#: src/components/offers/OfferDataDialog.tsx:50
 #~ msgid "Offer Data"
 #~ msgstr ""
 
 #: src/components/offers/OfferViewer.tsx:183
 #~ msgid "Offer Identifier"
-#~ msgstr ">>>>>>> tmp"
+#~ msgstr ""
 
+#: src/components/offers/OfferShareDialog.tsx:345
+#: src/components/offers/OfferShareDialog.tsx:486
+#: src/components/offers/OfferShareDialog.tsx:703
+#: src/components/offers/OfferShareDialog.tsx:849
 #~ msgid "Offer Shared"
 #~ msgstr ""
 
@@ -1800,14 +1839,15 @@ msgstr "报价已接受"
 
 #: src/components/offers/OfferManager.tsx:300
 #~ msgid "Offered"
-#~ msgstr ">>>>>>> tmp"
+#~ msgstr ""
 
 #: src/components/trading/TradingOverview.jsx:412
 #~ msgid "Offers Created"
 #~ msgstr "Offers Created"
 
+#: src/components/offers/OfferManager.tsx:534
 #~ msgid "Offers you accepted"
-#~ msgstr ">>>>>>> tmp"
+#~ msgstr ""
 
 #: src/components/offers/OfferManager.tsx:529
 #~ msgid "Offers you created"
@@ -1838,8 +1878,9 @@ msgstr "只允许一个备份文件。"
 msgid "Outgoing"
 msgstr "支出"
 
+#: src/components/offers/OfferViewer.tsx:249
 #~ msgid "Parent Coin"
-#~ msgstr ">>>>>>> tmp"
+#~ msgstr ""
 
 #: src/components/app/AppKeyringMigrator.tsx:139
 #: src/components/app/AppKeyringMigrator.tsx:140
@@ -1950,7 +1991,7 @@ msgstr "请输入费用数字0。正费用目前在RL上还不支持。"
 #: src/components/cat/WalletDID.tsx:924
 #: src/components/did/WalletDID.tsx:924
 msgid "Please enter a coin"
-msgstr "请输入货币"
+msgstr ""
 
 #: src/components/cat/WalletDID.tsx:525
 #: src/components/cat/WalletDID.tsx:914
@@ -1975,8 +2016,8 @@ msgid "Please enter a puzzlehash"
 msgstr "请输入谜题哈希"
 
 #: src/components/cat/WalletCATCreateExisting.tsx:40
-#~ msgid "Please enter a valid CAT name"
-#~ msgstr "请输入有效的 CAT 名称"
+msgid "Please enter a valid CAT name"
+msgstr ""
 
 #: src/components/cat/WalletCATCreateExistingSimple.tsx:41
 msgid "Please enter a valid asset id"
@@ -2023,14 +2064,15 @@ msgstr "请输入一个正确的公钥"
 
 #: src/components/cat/WalletCATCreateExistingSimple.tsx:45
 msgid "Please enter a valid token name"
-msgstr "请输入有效的令牌名称"
+msgstr ""
 
+#: src/components/offers/OfferEditor.tsx:112
 #~ msgid "Please enter an amount for each row"
-#~ msgstr ">>>>>>> tmp"
+#~ msgstr ""
 
 #: src/components/WalletRenameDialog.tsx:49
 msgid "Please enter valid wallet name"
-msgstr "请输入有效的钱包名称"
+msgstr ""
 
 #: src/components/settings/ChangePassphrasePrompt.tsx:75
 #~ msgid "Please enter your current passphrase, and a new passphrase"
@@ -2289,7 +2331,7 @@ msgstr "请等待钱包同步"
 
 #: src/constants/WalletName.ts:32
 msgid "Pooling Wallet"
-msgstr "矿池钱包"
+msgstr ""
 
 #: src/components/WalletConnections.tsx:33
 msgid "Port"
@@ -2385,7 +2427,7 @@ msgstr "谜题哈希"
 
 #: src/constants/WalletName.ts:8
 msgid "RL Wallet"
-msgstr "RL 钱包"
+msgstr ""
 
 #: src/components/wallet/create/WalletCreate.jsx:246
 #~ msgid "RLListItems.title"
@@ -2408,9 +2450,13 @@ msgstr "费用限制信息"
 msgid "Rate Limited User Wallet Setup"
 msgstr "费用限定型用户钱包设置"
 
+#: src/components/WalletsSidebar.tsx:160
+msgid "Read the blog post for details"
+msgstr ""
+
 #: src/components/WalletHeader.tsx:60
 msgid "Receive"
-msgstr "接收"
+msgstr ""
 
 #: src/components/WalletReceiveAddress.tsx:35
 #: src/components/WalletReceiveAddressField.tsx:38
@@ -2421,6 +2467,7 @@ msgstr "接收地址"
 msgid "Recipient address is not a coloured wallet address. Please enter a coloured wallet address"
 msgstr ""
 
+#: src/components/cat/WalletCATCreateExisting.tsx:104
 #: src/components/cat/WalletDID.tsx:463
 #: src/components/did/WalletDID.tsx:463
 #: src/components/did/WalletDIDRecovery.tsx:124
@@ -2494,8 +2541,9 @@ msgstr "重命名钱包"
 #~ msgid "Report an Issue..."
 #~ msgstr "Report an Issue..."
 
+#: src/components/offers/OfferManager.tsx:323
 #~ msgid "Requested"
-#~ msgstr ">>>>>>> tmp"
+#~ msgstr ""
 
 #: src/components/offers/OfferEditor.tsx:195
 #~ msgid "Reset"
@@ -2594,6 +2642,7 @@ msgstr "在 Tail 数据库中搜索"
 #~ msgstr "Select Temporary Directory"
 
 #: src/components/WalletsList.tsx:32
+#: src/components/hero/WalletHeroWallets.tsx:47
 msgid "Select Wallet"
 msgstr "选择钱包"
 
@@ -2688,6 +2737,7 @@ msgstr "将你的公钥发送到你的费用限定型管理者钱包:"
 #~ msgid "Share Offer"
 #~ msgstr "分享报价"
 
+#: src/components/offers/OfferShareDialog.tsx:412
 #~ msgid "Share Privately"
 #~ msgstr ""
 
@@ -2697,7 +2747,7 @@ msgstr "将你的公钥发送到你的费用限定型管理者钱包:"
 
 #: src/components/offers/OfferShareDialog.tsx:739
 #~ msgid "Share on Keybase"
-#~ msgstr ">>>>>>> tmp"
+#~ msgstr ""
 
 #: src/components/offers/OfferShareDialog.tsx:396
 #~ msgid "Share on OfferBin"
@@ -2715,8 +2765,9 @@ msgstr "将你的公钥发送到你的费用限定型管理者钱包:"
 msgid "Show Asset Id"
 msgstr ""
 
+#: src/components/offers/OfferManager.tsx:379
 #~ msgid "Show Details"
-#~ msgstr ">>>>>>> tmp"
+#~ msgstr ""
 
 #: src/electron-starter.js:79
 #~ msgid "Show app"
@@ -2797,7 +2848,7 @@ msgstr "消费限额（单位时间可消费的奇亚币）：{0}"
 
 #: src/constants/WalletName.ts:5
 msgid "Standard Wallet"
-msgstr "标准钱包"
+msgstr ""
 
 #: src/components/app/AppState.tsx:161
 #~ msgid "Starting services"
@@ -2935,7 +2986,7 @@ msgstr "正在同步"
 #: src/components/did/WalletDID.tsx:789
 #: src/components/did/WalletDIDCreate.tsx:88
 msgid "The number of Backup IDs needed for recovery cannot exceed the number of Backup IDs added."
-msgstr "恢复所需的备份 ID 的数量不能超过添加的备份ID数量。"
+msgstr ""
 
 #: src/hooks/usePoolInfo.ts:59
 #~ msgid "The pool URL \"{normalizedUrl}\" is not working. Is it pool? Error: {0}"
@@ -3131,20 +3182,20 @@ msgid "To"
 msgstr "目标地址"
 
 #: src/components/cat/WalletCATCreateExisting.tsx:85
-#~ msgid "Token and Asset Issuance Limitations"
-#~ msgstr ""
+msgid "Token and Asset Issuance Limitations"
+msgstr ""
 
 #: src/components/cat/WalletCATCreateSimple.tsx:45
 msgid "Token has empty asset id"
-msgstr "代币有空资产ID"
+msgstr ""
 
 #: src/components/cat/WalletCATCreateSimple.tsx:41
 msgid "Token has empty name"
-msgstr "代币名称为空"
+msgstr ""
 
-#: src/components/WalletsSidebar.tsx:88
+#: src/components/WalletsSidebar.tsx:223
 msgid "Tokens"
-msgstr "代币"
+msgstr ""
 
 #: src/components/card/WalletCardTotalBalance.tsx:45
 #: src/components/rateLimited/WalletRateLimited.jsx:542
@@ -3213,7 +3264,7 @@ msgstr "总余额"
 
 #: src/components/WalletSendTransactionResultDialog.tsx:27
 msgid "Transaction has successfully been sent to a full node and included in the mempool."
-msgstr "交易已成功发送到一个完整的节点，并包含在备注库中。"
+msgstr ""
 
 #: src/components/WalletHistory.tsx:309
 msgid "Transactions"
@@ -3231,12 +3282,13 @@ msgstr "交易"
 #~ msgid "Unable to create plot NFT"
 #~ msgstr "Unable to create plot NFT"
 
+#: src/components/offers/OfferShareDialog.tsx:669
 #~ msgid "Unable to open Keybase. Install Keybase from https://keybase.io"
 #~ msgstr ""
 
 #: src/components/offers/OfferShareDialog.tsx:592
 #~ msgid "Unable to open browser. Install Keybase from https://keybase.io"
-#~ msgstr ">>>>>>> tmp"
+#~ msgstr ""
 
 #: src/components/plotNFT/PlotNFTCard.tsx:147
 #: src/components/pool/PoolOverview.tsx:63
@@ -3255,8 +3307,13 @@ msgstr "交易"
 #~ msgid "Unknown"
 #~ msgstr "Unknown"
 
+#: src/components/offers/OfferManager.tsx:284
+#: src/components/offers/OfferManager.tsx:307
+#: src/components/offers/OfferSummaryRow.tsx:67
+#: src/components/offers/OfferSummaryRow.tsx:68
+#: src/components/offers/OfferViewer.tsx:412
 #~ msgid "Unknown CAT"
-#~ msgstr ">>>>>>> tmp"
+#~ msgstr ""
 
 #: src/components/app/AppPassPrompt.tsx:83
 #~ msgid "Unlock Keyring"
@@ -3317,6 +3374,8 @@ msgstr "用户公钥"
 #~ msgid "View Pool Login Link"
 #~ msgstr "View Pool Login Link"
 
+#: src/components/offers/OfferImport.tsx:153
+#: src/components/offers/OfferManager.tsx:521
 #~ msgid "View an Offer"
 #~ msgstr ""
 
@@ -3326,7 +3385,7 @@ msgstr "用户公钥"
 
 #: src/components/offers/OfferShareDialog.tsx:368
 #~ msgid "View on OfferBin"
-#~ msgstr ">>>>>>> tmp"
+#~ msgstr ""
 
 #: src/components/rateLimited/WalletRateLimited.jsx:561
 msgid "View pending balances"
@@ -3336,6 +3395,7 @@ msgstr "查看处理中的余额"
 #~ msgid "View pending balances..."
 #~ msgstr "View pending balances..."
 
+#: src/components/offers/OfferViewer.tsx:557
 #~ msgid "Viewing offer"
 #~ msgstr ""
 
@@ -3345,7 +3405,7 @@ msgstr "查看处理中的余额"
 
 #: src/components/offers/OfferViewer.tsx:553
 #~ msgid "Viewing offer: {offerFilePath}"
-#~ msgstr ">>>>>>> tmp"
+#~ msgstr ""
 
 #: src/components/farm/card/FarmCardNotAvailable.tsx:26
 #: src/components/plot/PlotStatus.tsx:26
@@ -3383,18 +3443,18 @@ msgstr "钱包不存在"
 
 #: src/components/Wallet.tsx:50
 msgid "Wallet with type {0} not supported"
-msgstr "不支持类型 {0} 的钱包"
+msgstr ""
 
 #: src/components/Wallet.tsx:23
 msgid "Wallet {walletId} not found"
-msgstr "未找到钱包 {walletId}"
-
-#: src/components/wallet/Wallets.tsx:30
-#~ msgid "WalletItem.tacoWallet"
-#~ msgstr ""
+msgstr ""
 
 #: src/components/wallet/Wallets.tsx:34
 #~ msgid "WalletItem.ccWallet"
+#~ msgstr ""
+
+#: src/components/wallet/Wallets.tsx:30
+#~ msgid "WalletItem.tacoWallet"
 #~ msgstr ""
 
 #: src/components/wallet/Wallets.tsx:48
@@ -3437,12 +3497,17 @@ msgstr "未找到钱包 {walletId}"
 #~ msgid "Want to have a delay before the next plot starts?"
 #~ msgstr "Want to have a delay before the next plot starts?"
 
+#: src/components/WalletsSidebar.tsx:165
+msgid "Want to see your old balance for yourself?"
+msgstr ""
+
 #: src/components/plot/add/PlotAddNumberOfPlots.tsx:252
 #~ msgid "Warm start"
 #~ msgstr "Warm start"
 
+#: src/components/offers/OfferViewer.tsx:298
 #~ msgid "Warning"
-#~ msgstr ">>>>>>> tmp"
+#~ msgstr ""
 
 #: src/components/_selectKey_old/SelectKey.tsx:88
 #: src/components/_selectKey_old/SelectKey.tsx:119
@@ -3457,8 +3522,9 @@ msgstr "未找到钱包 {walletId}"
 #~ msgid "Warning: This key is used for your pool rewards address. By deleting this key you may lose access to any future pool rewards"
 #~ msgstr "Warning: This key is used for your pool rewards address. By deleting this key you may lose access to any future pool rewards"
 
+#: src/components/offers/OfferSummary.tsx:97
 #~ msgid "Warning: Verify that the offered CAT asset IDs match the asset IDs of the tokens you expect to receive."
-#~ msgstr ">>>>>>> tmp"
+#~ msgstr ""
 
 #: src/components/block/Block.jsx:194
 #~ msgid "Weight"
@@ -3475,6 +3541,14 @@ msgstr "未找到钱包 {walletId}"
 #: src/components/WalletAdd.tsx:76
 msgid "Welcome! The following words are used for your wallet backup. Without them, you will lose access to your wallet, keep them safe! Write down each word along with the order number next to them. (Order is important)"
 msgstr "欢迎使用奇亚! 下面的词语列表是你的钱包密语, 请务必严格完整的把它们记下来(保持顺序). 没有这段密语的话, 你就没办法找回钱包里的币. 千万也不要透露给别人."
+
+#: src/components/WalletsSidebar.tsx:134
+#~ msgid "We’ve made an upgrade to the CAT standard which requires all CATs to be reissued. You will be airdropped your new tokens as they are re-issued by the original issuers. The airdropped tokens will be based on the balance as of block height: 12345678"
+#~ msgstr ""
+
+#: src/components/WalletsSidebar.tsx:135
+msgid "We’ve made an upgrade to the CAT standard which requires all CATs to be reissued. You will be airdropped your new tokens as they are re-issued by the original issuers. The airdropped tokens will be based on the balance as of block height: <0/>"
+msgstr ""
 
 #: src/components/rateLimited/WalletRateLimited.jsx:315
 msgid "When you receive the setup info packet from your admin, enter it below to complete your Rate Limited Wallet setup:"
@@ -3507,8 +3581,9 @@ msgstr "当你从管理员那收到这个设置信息后, 请把它输入到下�
 #~ msgid "You can still create plots for this plot NFT, but you can not make changes until sync is complete."
 #~ msgstr "You can still create plots for this plot NFT, but you can not make changes until sync is complete."
 
+#: src/components/offers/OfferViewer.tsx:381
 #~ msgid "You created this offer"
-#~ msgstr ">>>>>>> tmp"
+#~ msgstr ""
 
 #: src/components/plot/add/PlotAddChooseSize.tsx:76
 #~ msgid "You do not need to be synced or connected to plot. Temporary files are created during the plotting process which exceed the size of the final plot files. Make sure you have enough space. <0>Learn more</0>"
@@ -3554,12 +3629,13 @@ msgstr "当你从管理员那收到这个设置信息后, 请把它输入到下�
 #~ msgid "You need {currencyCode} to join a pool."
 #~ msgstr "You need {currencyCode} to join a pool."
 
+#: src/components/offers/OfferEditorConditionsPanel.tsx:248
 #~ msgid "You will offer"
 #~ msgstr ""
 
 #: src/components/offers/OfferViewer.tsx:460
 #~ msgid "You will receive"
-#~ msgstr ">>>>>>> tmp"
+#~ msgstr ""
 
 #: src/components/plotNFT/PlotNFTAbsorbRewards.tsx:143
 #~ msgid "You will recieve <0/> to {0}"
@@ -3569,10 +3645,14 @@ msgstr "当你从管理员那收到这个设置信息后, 请把它输入到下�
 #~ msgid "You will recieve <0/> to {address}"
 #~ msgstr "You will receive <0/> to {address}"
 
+#: src/components/WalletsSidebar.tsx:131
+msgid "Your CAT tokens have been upgraded!"
+msgstr ""
+
 #: src/components/cat/WalletDID.tsx:326
 #: src/components/did/WalletDID.tsx:326
 msgid "Your DID requires at least {dids_num_req} attestation file{0} for recovery. Please upload additional files."
-msgstr "您的DID需要至少 {dids_num_req} 认证文件{0} 才能恢复。请上传其他文件。"
+msgstr ""
 
 #: src/components/farm/overview/FarmOverview.tsx:33
 #~ msgid "Your Farm Overview"
@@ -3610,11 +3690,15 @@ msgstr "您的DID需要至少 {dids_num_req} 认证文件{0} 才能恢复。请�
 #~ msgid "Your keys need to be migrated to a new keyring that is secured by a master passphrase."
 #~ msgstr "Your keys need to be migrated to a new keyring that is secured by a master passphrase."
 
+#: src/components/offers/OfferShareDialog.tsx:707
 #~ msgid "Your offer has been successfully posted to Keybase."
-#~ msgstr ">>>>>>> tmp"
+#~ msgstr ""
 
+#: src/components/offers/OfferShareDialog.tsx:402
+#: src/components/offers/OfferShareDialog.tsx:543
+#: src/components/offers/OfferShareDialog.tsx:891
 #~ msgid "Your offer:"
-#~ msgstr ">>>>>>> tmp"
+#~ msgstr ""
 
 #: src/components/app/AppKeyringMigrator.tsx:181
 #: src/components/settings/ChangePassphrasePrompt.tsx:211
@@ -3682,8 +3766,9 @@ msgstr "您粘贴的列表中未包含24个有效的助记词。"
 #~ msgid "{0, plural, one {Passphrases must be at least # character in length} other {Passphrases must be at least # characters in length}}"
 #~ msgstr "{0, plural, one {Passphrases must be at least # character in length} other {Passphrases must be at least # characters in length}}"
 
+#: src/components/offers/OfferShareDialog.tsx:853
 #~ msgid "{0}"
-#~ msgstr ">>>>>>> tmp"
+#~ msgstr ""
 
 #: src/components/farm/card/FarmCardBlockRewards.tsx:16
 #~ msgid "{0} Block Rewards"
@@ -3714,15 +3799,18 @@ msgstr "您粘贴的列表中未包含24个有效的助记词。"
 #~ msgid "{currencyCode} User Transaction Fees"
 #~ msgstr "{currencyCode} User Transaction Fees"
 
+#: src/components/offers/OfferSummary.tsx:125
 #~ msgid "{makerFee, plural, one {mojo} other {mojos}}"
-#~ msgstr ">>>>>>> tmp"
+#~ msgstr ""
 
 #: src/components/core/components/Amount/Amount.tsx:82
 #~ msgid "{mojo, plural, one {mojo} other {mojos}}"
 #~ msgstr "{mojo, plural, one {mojo} other {mojos}}"
 
+#: src/components/offers/OfferSummaryRow.tsx:41
+#: src/components/offers/OfferViewer.tsx:95
 #~ msgid "{mojos, plural, one {mojo} other {mojos}}"
-#~ msgstr ">>>>>>> tmp"
+#~ msgstr ""
 
 #: src/components/plot/add/PlotAddChoosePlotter.tsx:118
 #~ msgid "{warning}"

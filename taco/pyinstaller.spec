@@ -19,14 +19,14 @@ def solve_name_collision_problem(analysis):
     There is a collision between the `taco` file name (which is the executable)
     and the `taco` directory, which contains non-code resources like `english.txt`.
     We move all the resources in the zipped area so there is no
-    need to create the `taco` directory, since the names collide.
+    need to create the `chia` directory, since the names collide.
 
     Fetching data now requires going into a zip file, so it will be slower.
     It's best if files that are used frequently are cached.
 
     A sample large compressible file (1 MB of `/dev/zero`), seems to be
     about eight times slower.
-    
+
     Note that this hack isn't documented, but seems to work.
     """
 
@@ -72,10 +72,22 @@ hiddenimports.extend(entry_points)
 hiddenimports.extend(keyring_imports)
 
 binaries = [
+    (
+        f"{ROOT}/madmax/taco_plot",
+        "madmax"
+    ),
+    (
+        f"{ROOT}/madmax/taco_plot_k34",
+        "madmax"
+    )
 ]
 
 if not THIS_IS_MAC:
     binaries.extend([
+        (
+            f"{ROOT}/bladebit/bladebit",
+            "bladebit"
+        )
     ])
 
 if THIS_IS_WINDOWS:
@@ -101,6 +113,18 @@ if THIS_IS_WINDOWS:
         (
             "C:\\Windows\\System32\\vcruntime140_1.dll",
             ".",
+        ),
+        (
+            f"{ROOT}\\madmax\\taco_plot.exe",
+            "madmax"
+        ),
+        (
+            f"{ROOT}\\madmax\\taco_plot_k34.exe",
+            "madmax"
+        ),
+        (
+            f"{ROOT}\\bladebit\\bladebit.exe",
+            "bladebit"
         ),
     ]
 

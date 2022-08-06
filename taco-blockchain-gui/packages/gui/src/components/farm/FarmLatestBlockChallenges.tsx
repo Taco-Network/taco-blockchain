@@ -63,19 +63,6 @@ export default function FarmLatestBlockChallenges() {
         }
         pages
       />
-      <Typography variant="caption">
-        <Trans>
-          *Want to explore Taco’s blocks further? Check out{' '}
-          <Link
-            color="primary"
-            href="https://www.tacoexplorer.com/"
-            target="_blank"
-          >
-            Taco Explorer
-          </Link>{' '}
-          built by an open source developer.
-        </Trans>
-      </Typography>
     </Card>
   );
 }

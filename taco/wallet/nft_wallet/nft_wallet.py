@@ -257,7 +257,7 @@ class NFTWallet:
             child_coin,
             singleton_id,
             child_puzzle,
-            LineageProof(parent_coin.parent_coin_info, parent_inner_puzhash, uint64(parent_coin.amount)),
+            LineageProof(parent_coin.parent_coin_info, parent_inner_puzhash, parent_coin.amount),
             mint_height,
             in_transaction=in_transaction,
         )
@@ -408,13 +408,13 @@ class NFTWallet:
         nft_coin = NFTCoinInfo(
             nft_id=launcher_coin.name(),
             coin=eve_coin,
-            lineage_proof=LineageProof(parent_name=launcher_coin.parent_coin_info, amount=uint64(launcher_coin.amount)),
+            lineage_proof=LineageProof(parent_name=launcher_coin.parent_coin_info, amount=launcher_coin.amount),
             full_puzzle=eve_fullpuz,
             mint_height=uint32(0),
         )
         # Don't set fee, it is covered in the tx_record
         txs = await self.generate_signed_transaction(
-            [uint64(eve_coin.amount)],
+            [eve_coin.amount],
             [target_puzzle_hash],
             nft_coin=nft_coin,
             new_owner=did_id,
@@ -546,11 +546,13 @@ class NFTWallet:
         else:
             return puzzle_info
 
-    async def get_coins_to_offer(self, nft_id: bytes32, amount: uint64) -> Set[Coin]:
+    async def get_coins_to_offer(
+        self, nft_id: bytes32, amount: uint64, min_coin_amount: Optional[uint128] = None
+    ) -> Set[Coin]:
         nft_coin: Optional[NFTCoinInfo] = self.get_nft(nft_id)
         if nft_coin is None:
             raise ValueError("An asset ID was specified that this wallet doesn't track")
-        return set([nft_coin.coin])
+        return {nft_coin.coin}
 
     def match_puzzle_info(self, puzzle_driver: PuzzleInfo) -> bool:
         return (
@@ -907,7 +909,7 @@ class NFTWallet:
                     "0x"
                     + royalty_coin.parent_coin_info.hex()
                     + royalty_coin.puzzle_hash.hex()
-                    + bytes(uint64(royalty_coin.amount)).hex()
+                    + bytes(royalty_coin.amount).hex()
                 )
                 parent_spend_hex: str = "0x" + bytes(parent_spend).hex()
                 solver = Solver(
@@ -939,7 +941,7 @@ class NFTWallet:
             additional_bundles.append(did_bundle)
 
         nft_tx_record = await self.generate_signed_transaction(
-            [uint64(nft_coin_info.coin.amount)],
+            [nft_coin_info.coin.amount],
             puzzle_hashes_to_sign,
             fee,
             {nft_coin_info.coin},

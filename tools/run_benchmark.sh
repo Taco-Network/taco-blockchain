@@ -9,8 +9,6 @@ run_benchmark() {
    mv test-full-sync.log cpu.png cpu-usage.log plot-cpu.gnuplot "$2"
    python ./tools/test_full_sync.py analyze
    mv slow-batch-*.profile slow-batch-*.png "$2"
-   python ./taco/util/profiler.py profile-node >"$2/node-profile.txt"
-   mv profile-node "$2"
 }
 
 cd ..

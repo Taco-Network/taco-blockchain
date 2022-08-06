@@ -59,7 +59,7 @@ export default function ProfileAdd() {
   const openExternal = useOpenExternal();
 
   function handleClick() {
-    openExternal('https://faucet.taco-network.net/');
+    openExternal('https://faucet.taco.net/');
   }
 
   async function handleSubmit(data: CreateProfileData) {

@@ -1,15 +1,6 @@
-import dataclasses
 from typing import Any, Dict, Sequence, Union
 
-from taco.util.ints import uint16
-from taco.util.streamable import Streamable, recurse_jsonify, streamable
-
-
-@streamable
-@dataclasses.dataclass(frozen=True)
-class VersionedBlob(Streamable):
-    version: uint16
-    blob: bytes
+from taco.util.streamable import recurse_jsonify
 
 
 def format_bytes(bytes: int) -> str:

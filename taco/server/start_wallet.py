@@ -40,7 +40,7 @@ def service_kwargs_for_wallet(
     node = WalletNode(
         config,
         root_path,
-        constants=updated_constants,
+        consensus_constants=updated_constants,
         local_keychain=keychain,
     )
     peer_api = WalletNodeAPI(node)

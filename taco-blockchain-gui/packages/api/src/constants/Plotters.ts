@@ -32,7 +32,7 @@ export const bladebitDefaults: PlotterDefaults = {
   delay: 0,
 };
 
-export const chiaposOptions: PlotterOptions = {
+export const tacoposOptions: PlotterOptions = {
   kSizes: [25, 32, 33, 34, 35],
   haveNumBuckets: true,
   haveMadmaxNumBucketsPhase3: false,
@@ -47,8 +47,8 @@ export const chiaposOptions: PlotterOptions = {
   canSetBufferSize: true,
 };
 
-export const chiaposDefaults: PlotterDefaults = {
-  plotterName: PlotterName.CHIAPOS,
+export const tacoposDefaults: PlotterDefaults = {
+  plotterName: PlotterName.TACOPOS,
   plotSize: 32,
   numThreads: 2,
   numBuckets: 128,

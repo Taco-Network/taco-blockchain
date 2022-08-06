@@ -32,7 +32,7 @@ export const bladebitDefaults: PlotterDefaults = {
   delay: 0,
 };
 
-export const chiaposOptions: PlotterOptions = {
+export const tacoposOptions: PlotterOptions = {
   kSizes: [25, 32, 33, 34, 35],
   haveNumBuckets: true,
   haveMadmaxNumBucketsPhase3: false,
@@ -47,8 +47,8 @@ export const chiaposOptions: PlotterOptions = {
   canSetBufferSize: true,
 };
 
-export const chiaposDefaults: PlotterDefaults = {
-  plotterName: PlotterName.CHIAPOS,
+export const tacoposDefaults: PlotterDefaults = {
+  plotterName: PlotterName.TACOPOS,
   plotSize: 32,
   numThreads: 2,
   numBuckets: 128,
@@ -100,9 +100,9 @@ export const optionsForPlotter = (plotterName: PlotterName): PlotterOptions => {
       return bladebitOptions;
     case PlotterName.MADMAX:
       return madmaxOptions;
-    case PlotterName.CHIAPOS: // fallthrough
+    case PlotterName.TACOPOS: // fallthrough
     default:
-      return chiaposOptions;
+      return tacoposOptions;
   }
 };
 
@@ -112,8 +112,8 @@ export const defaultsForPlotter = (plotterName: PlotterName): PlotterDefaults =>
       return bladebitDefaults;
     case PlotterName.MADMAX:
       return madmaxDefaults;
-    case PlotterName.CHIAPOS: // fallthrough
+    case PlotterName.TACOPOS: // fallthrough
     default:
-      return chiaposDefaults;
+      return tacoposDefaults;
   }
 };
