@@ -6,6 +6,6 @@ export default function getWalletPrimaryTitle(wallet: Wallet): string {
     case WalletType.STANDARD_WALLET:
       return 'Taco';
     default:
-      return wallet.name;
+      return wallet.meta?.name ?? wallet.name;
   }
 }

@@ -9,15 +9,17 @@ from typing import Any, Callable, Dict, List, Optional, Tuple
 
 import aiosqlite
 
-import taco.server.ws_connection as ws
 from taco.consensus.constants import ConsensusConstants
 from taco.full_node.coin_store import CoinStore
 from taco.protocols import full_node_protocol
+from taco.rpc.rpc_server import default_get_connections
 from taco.seeder.crawl_store import CrawlStore
 from taco.seeder.peer_record import PeerRecord, PeerReliability
+from taco.server.outbound_message import NodeType
 from taco.server.server import TacoServer
+from taco.server.ws_connection import WSTacoConnection
 from taco.types.peer_info import PeerInfo
-from taco.util.path import mkdir, path_from_root
+from taco.util.path import path_from_root
 from taco.util.ints import uint32, uint64
 
 log = logging.getLogger(__name__)
@@ -28,7 +30,7 @@ class Crawler:
     coin_store: CoinStore
     connection: aiosqlite.Connection
     config: Dict
-    server: Optional[TacoServer]
+    _server: Optional[TacoServer]
     crawl_store: Optional[CrawlStore]
     log: logging.Logger
     constants: ConsensusConstants
@@ -37,6 +39,15 @@ class Crawler:
     peer_count: int
     with_peak: set
     minimum_version_count: int
+
+    @property
+    def server(self) -> TacoServer:
+        # This is a stop gap until the class usage is refactored such the values of
+        # integral attributes are known at creation of the instance.
+        if self._server is None:
+            raise RuntimeError("server not assigned")
+
+        return self._server
 
     def __init__(
         self,
@@ -48,7 +59,7 @@ class Crawler:
         self.initialized = False
         self.root_path = root_path
         self.config = config
-        self.server = None
+        self._server = None
         self._shut_down = False  # Set to true to close all infinite loops
         self.constants = consensus_constants
         self.state_changed_callback: Optional[Callable] = None
@@ -63,7 +74,7 @@ class Crawler:
         self.best_timestamp_per_peer: Dict[str, int] = {}
         crawler_db_path: str = config.get("crawler_db_path", "crawler.db")
         self.db_path = path_from_root(root_path, crawler_db_path)
-        mkdir(self.db_path.parent)
+        self.db_path.parent.mkdir(parents=True, exist_ok=True)
         self.bootstrap_peers = config["bootstrap_peers"]
         self.minimum_height = config["minimum_height"]
         self.other_peers_port = config["other_peers_port"]
@@ -78,11 +89,14 @@ class Crawler:
     def _set_state_changed_callback(self, callback: Callable):
         self.state_changed_callback = callback
 
+    def get_connections(self, request_node_type: Optional[NodeType]) -> List[Dict[str, Any]]:
+        return default_get_connections(server=self.server, request_node_type=request_node_type)
+
     async def create_client(self, peer_info, on_connect):
         return await self.server.start_client(peer_info, on_connect)
 
     async def connect_task(self, peer):
-        async def peer_action(peer: ws.WSTacoConnection):
+        async def peer_action(peer: WSTacoConnection):
 
             peer_info = peer.get_peer_info()
             version = peer.get_version()
@@ -324,13 +338,13 @@ class Crawler:
             self.log.error(f"Exception: {e}. Traceback: {traceback.format_exc()}.")
 
     def set_server(self, server: TacoServer):
-        self.server = server
+        self._server = server
 
-    def _state_changed(self, change: str):
+    def _state_changed(self, change: str, change_data: Optional[Dict[str, Any]] = None):
         if self.state_changed_callback is not None:
-            self.state_changed_callback(change)
+            self.state_changed_callback(change, change_data)
 
-    async def new_peak(self, request: full_node_protocol.NewPeak, peer: ws.WSTacoConnection):
+    async def new_peak(self, request: full_node_protocol.NewPeak, peer: WSTacoConnection):
         try:
             peer_info = peer.get_peer_info()
             tls_version = peer.get_tls_version()
@@ -345,7 +359,7 @@ class Crawler:
         except Exception as e:
             self.log.error(f"Exception: {e}. Traceback: {traceback.format_exc()}.")
 
-    async def on_connect(self, connection: ws.WSTacoConnection):
+    async def on_connect(self, connection: WSTacoConnection):
         pass
 
     def _close(self):

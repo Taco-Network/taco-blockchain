@@ -1,8 +1,10 @@
+from __future__ import annotations
+
 from typing import Any
 
 from taco.plot_sync.util import ErrorCodes, State
 from taco.protocols.harvester_protocol import PlotSyncIdentifier
-from taco.server.ws_connection import NodeType
+from taco.server.outbound_message import NodeType
 from taco.util.ints import uint64
 
 

@@ -1,7 +1,4 @@
-import React from 'react';
-import styled from 'styled-components';
-import { Trans } from '@lingui/macro';
-import { useNavigate } from 'react-router';
+import { useDeleteUnconfirmedTransactionsMutation } from '@taco/api-react';
 import {
   Button,
   TooltipTypography,
@@ -10,6 +7,7 @@ import {
   UnitFormat,
   CardKeyValue,
   Tooltip,
+  MenuItem,
   More,
   Loading,
   FormatLargeNumber,
@@ -18,33 +16,25 @@ import {
   useOpenDialog,
   mojoToTacoLocaleString,
 } from '@taco/core';
-import {
-  Box,
-  Grid,
-  Card,
-  CardContent,
-  Typography,
-  MenuItem,
-  ListItemIcon,
-} from '@mui/material';
-import {
-  Delete as DeleteIcon,
-  Link as LinkIcon,
-  Payment as PaymentIcon,
-} from '@mui/icons-material';
 import { Plot as PlotIcon } from '@taco/icons';
-import { useDeleteUnconfirmedTransactionsMutation } from '@taco/api-react';
-import type PlotNFT from '../../types/PlotNFT';
-import PlotNFTName from './PlotNFTName';
-import PlotNFTStatus from './PlotNFTState';
-import usePlotNFTDetails from '../../hooks/usePlotNFTDetails';
-import PoolJoin from '../pool/PoolJoin';
-import PoolAbsorbRewards from '../pool/PoolAbsorbRewards';
-import PlotNFTGraph from './PlotNFTGraph';
-import PlotNFTGetPoolLoginLinkDialog from './PlotNFTGetPoolLoginLinkDialog';
-import PlotNFTPayoutInstructionsDialog from './PlotNFTPayoutInstructionsDialog';
-import getPercentPointsSuccessfull from '../../util/getPercentPointsSuccessfull';
+import { Trans } from '@lingui/macro';
+import { Delete as DeleteIcon, Link as LinkIcon, Payment as PaymentIcon } from '@mui/icons-material';
+import { Box, Grid, Card, CardContent, Typography, ListItemIcon } from '@mui/material';
+import React from 'react';
+import { useNavigate } from 'react-router';
+import styled from 'styled-components';
+
 import usePayoutAddress from '../../hooks/usePayoutAddress';
+import usePlotNFTDetails from '../../hooks/usePlotNFTDetails';
+import type PlotNFT from '../../types/PlotNFT';
+import getPercentPointsSuccessfull from '../../util/getPercentPointsSuccessfull';
+import PoolAbsorbRewards from '../pool/PoolAbsorbRewards';
+import PoolJoin from '../pool/PoolJoin';
+import PlotNFTGetPoolLoginLinkDialog from './PlotNFTGetPoolLoginLinkDialog';
+import PlotNFTGraph from './PlotNFTGraph';
+import PlotNFTName from './PlotNFTName';
+import PlotNFTPayoutInstructionsDialog from './PlotNFTPayoutInstructionsDialog';
+import PlotNFTStatus from './PlotNFTState';
 
 const StyledCard = styled(Card)`
   display: flex;
@@ -60,8 +50,7 @@ const StyledCardContent = styled(CardContent)`
 `;
 
 const StyledSyncingFooter = styled(CardContent)`
-  background-color: ${({ theme }) =>
-    theme.palette.mode === 'dark' ? '#515151' : '#F6F6F6'};
+  background-color: ${({ theme }) => (theme.palette.mode === 'dark' ? '#515151' : '#F6F6F6')};
   padding: 2rem 3rem;
   text-align: center;
   borer-top: 1px solid #d8d6d6;
@@ -93,18 +82,12 @@ export default function PlotNFTCard(props: Props) {
   const { loading, payoutAddress } = usePayoutAddress(nft);
   const [deleteUnconfirmedTransactions] = useDeleteUnconfirmedTransactionsMutation();
 
-  const percentPointsSuccessful24 = getPercentPointsSuccessfull(
-    pointsAcknowledged24H,
-    pointsFound24H,
-  );
+  const percentPointsSuccessful24 = getPercentPointsSuccessfull(pointsAcknowledged24H, pointsFound24H);
 
   const navigate = useNavigate();
   const openDialog = useOpenDialog();
   const { isSelfPooling, isSynced, balance } = usePlotNFTDetails(nft);
-  const totalPointsFound24 = pointsFound24H.reduce(
-    (accumulator, item) => accumulator + item[1],
-    0,
-  );
+  const totalPointsFound24 = pointsFound24H.reduce((accumulator, item) => accumulator + item[1], 0);
 
   function handleAddPlot() {
     navigate('/dashboard/plot/add', {
@@ -120,12 +103,14 @@ export default function PlotNFTCard(props: Props) {
         title={<Trans>Confirmation</Trans>}
         confirmTitle={<Trans>Delete</Trans>}
         confirmColor="danger"
-        onConfirm={() => deleteUnconfirmedTransactions({
-          walletId,
-        }).unwrap()}
+        onConfirm={() =>
+          deleteUnconfirmedTransactions({
+            walletId,
+          }).unwrap()
+        }
       >
         <Trans>Are you sure you want to delete unconfirmed transactions?</Trans>
-      </ConfirmDialog>,
+      </ConfirmDialog>
     );
   }
 
@@ -146,19 +131,12 @@ export default function PlotNFTCard(props: Props) {
     isSelfPooling && {
       key: 'rewards',
       label: <Trans>Unclaimed Rewards</Trans>,
-      value: (
-        <UnitFormat
-          value={mojoToTacoLocaleString(balance)}
-          state={State.SUCCESS}
-        />
-      ),
+      value: <UnitFormat value={mojoToTacoLocaleString(balance)} state={State.SUCCESS} />,
     },
     {
       key: 'plotsCount',
       label: <Trans>Number of Plots</Trans>,
-      value: (
-        <FormatLargeNumber value={plotCount} />
-      ),
+      value: <FormatLargeNumber value={plotCount} />,
     },
     !isSelfPooling && {
       key: 'currentDifficulty',
@@ -166,11 +144,9 @@ export default function PlotNFTCard(props: Props) {
         <TooltipTypography
           title={
             <Trans>
-              This difficulty is an artifically lower difficulty than on the
-              real network, and is used when farming, in order to find more
-              proofs and send them to the pool. The more plots you have, the
-              higher difficulty you will have. However, the difficulty does not
-              affect rewards.
+              This difficulty is an artifically lower difficulty than on the real network, and is used when farming, in
+              order to find more proofs and send them to the pool. The more plots you have, the higher difficulty you
+              will have. However, the difficulty does not affect rewards.
             </Trans>
           }
         >
@@ -185,9 +161,8 @@ export default function PlotNFTCard(props: Props) {
         <TooltipTypography
           title={
             <Trans>
-              This is the total number of points this plotNFT has with this
-              pool, since the last payout. The pool will reset the points after
-              making a payout.
+              This is the total number of points this plotNFT has with this pool, since the last payout. The pool will
+              reset the points after making a payout.
             </Trans>
           }
         >
@@ -202,19 +177,16 @@ export default function PlotNFTCard(props: Props) {
         <TooltipTypography
           title={
             <Trans>
-              This is the total number of points your farmer has found for this
-              plot NFT. Each k32 plot will get around 10 points per day, so if
-              you have 10TiB, should should expect around 1000 points per day,
-              or 41 points per hour.
+              This is the total number of points your farmer has found for this plot NFT. Each k32 plot will get around
+              10 points per day, so if you have 10TiB, should should expect around 1000 points per day, or 41 points per
+              hour.
             </Trans>
           }
         >
           <Trans>Points Found Since Start</Trans>
         </TooltipTypography>
       ),
-      value: (
-        <FormatLargeNumber value={nft.poolState.pointsFoundSinceStart} />
-      ),
+      value: <FormatLargeNumber value={nft.poolState.pointsFoundSinceStart} />,
     },
     !isSelfPooling && {
       key: 'pointsFound24',
@@ -234,9 +206,7 @@ export default function PlotNFTCard(props: Props) {
       ),
       value: (
         <>
-          <FormatLargeNumber
-            value={Number(percentPointsSuccessful24 * 100).toFixed(2)}
-          />
+          <FormatLargeNumber value={Number(percentPointsSuccessful24 * 100).toFixed(2)} />
           {' %'}
         </>
       ),
@@ -253,70 +223,46 @@ export default function PlotNFTCard(props: Props) {
                 <PlotNFTName nft={nft} variant="h6" />
               </Box>
               <More>
-                {({ onClose }) => (
-                  <Box>
-                    <MenuItem
-                      onClick={() => {
-                        onClose();
-                        handleAddPlot();
-                      }}
-                    >
-                      <ListItemIcon>
-                        <PlotIcon />
-                      </ListItemIcon>
-                      <Typography variant="inherit" noWrap>
-                        <Trans>Add a Plot</Trans>
-                      </Typography>
-                    </MenuItem>
-                    {!isSelfPooling && (
-                      <MenuItem
-                        onClick={() => {
-                          onClose();
-                          handleGetPoolLoginLink();
-                        }}
-                      >
-                        <ListItemIcon>
-                          <LinkIcon />
-                        </ListItemIcon>
-                        <Typography variant="inherit" noWrap>
-                          <Trans>View Pool Login Link</Trans>
-                        </Typography>
-                      </MenuItem>
-                    )}
-                    {!isSelfPooling && (
-                      <MenuItem
-                        onClick={() => {
-                          onClose();
-                          handlePayoutInstructions();
-                        }}
-                      >
-                        <ListItemIcon>
-                          <PaymentIcon />
-                        </ListItemIcon>
-                        <Typography variant="inherit" noWrap>
-                          <Trans>Edit Payout Instructions</Trans>
-                        </Typography>
-                      </MenuItem>
-                    )}
-                    <MenuItem
-                      onClick={() => {
-                        onClose();
-                        handleDeleteUnconfirmedTransactions();
-                      }}
-                    >
-                      <ListItemIcon>
-                        <DeleteIcon />
-                      </ListItemIcon>
-                      <Typography variant="inherit" noWrap>
-                        <Trans>Delete Unconfirmed Transactions</Trans>
-                      </Typography>
-                    </MenuItem>
-                  </Box>
+                <MenuItem onClick={handleAddPlot} close>
+                  <ListItemIcon>
+                    <PlotIcon />
+                  </ListItemIcon>
+                  <Typography variant="inherit" noWrap>
+                    <Trans>Add a Plot</Trans>
+                  </Typography>
+                </MenuItem>
+                {!isSelfPooling && (
+                  <MenuItem onClick={handleGetPoolLoginLink} close>
+                    <ListItemIcon>
+                      <LinkIcon />
+                    </ListItemIcon>
+                    <Typography variant="inherit" noWrap>
+                      <Trans>View Pool Login Link</Trans>
+                    </Typography>
+                  </MenuItem>
                 )}
+                {!isSelfPooling && (
+                  <MenuItem onClick={handlePayoutInstructions} close>
+                    <ListItemIcon>
+                      <PaymentIcon />
+                    </ListItemIcon>
+                    <Typography variant="inherit" noWrap>
+                      <Trans>Edit Payout Instructions</Trans>
+                    </Typography>
+                  </MenuItem>
+                )}
+                <MenuItem onClick={handleDeleteUnconfirmedTransactions} close>
+                  <ListItemIcon>
+                    <DeleteIcon />
+                  </ListItemIcon>
+                  <Typography variant="inherit" noWrap>
+                    <Trans>Delete Unconfirmed Transactions</Trans>
+                  </Typography>
+                </MenuItem>
               </More>
             </Flex>
             <StyledInvisibleContainer>
-              <Typography component='div' variant="body2" noWrap>
+              <Typography component="div" variant="body2" noWrap>
                 {!!poolUrl && (
                   <Flex alignItems="center" gap={1}>
                     <Typography variant="body2" color="textSecondary">
@@ -336,9 +282,7 @@ export default function PlotNFTCard(props: Props) {
               <CardKeyValue rows={rows} hideDivider />
             </Flex>
 
-            {!isSelfPooling && !!totalPointsFound24 && (
-              <PlotNFTGraph points={pointsFound24H} />
-            )}
+            {!isSelfPooling && !!totalPointsFound24 && <PlotNFTGraph points={pointsFound24H} />}
           </Flex>
 
           <Flex flexDirection="column" gap={1}>
@@ -369,12 +313,7 @@ export default function PlotNFTCard(props: Props) {
                 <Grid container xs={6} item>
                   <PoolAbsorbRewards nft={nft}>
                     {({ absorb, disabled }) => (
-                      <Button
-                        variant="outlined"
-                        onClick={absorb}
-                        disabled={disabled}
-                        fullWidth
-                      >
+                      <Button variant="outlined" onClick={absorb} disabled={disabled} fullWidth>
                         <Flex flexDirection="column" gap={0}>
                           <Typography variant="body1">
                             <Trans>Claim Rewards</Trans>
@@ -389,20 +328,10 @@ export default function PlotNFTCard(props: Props) {
               <Grid container xs={isSelfPooling ? 6 : 12} item>
                 <PoolJoin nft={nft}>
                   {({ join, disabled }) => (
-                    <Button
-                      variant="contained"
-                      onClick={join}
-                      disabled={disabled}
-                      color="primary"
-                      fullWidth
-                    >
+                    <Button variant="contained" onClick={join} disabled={disabled} color="primary" fullWidth>
                       <Flex flexDirection="column" gap={1}>
                         <Typography variant="body1">
-                          {isSelfPooling ? (
-                            <Trans>Join Pool</Trans>
-                          ) : (
-                            <Trans>Change Pool</Trans>
-                          )}
+                          {isSelfPooling ? <Trans>Join Pool</Trans> : <Trans>Change Pool</Trans>}
                         </Typography>
                       </Flex>
                     </Button>
@@ -418,8 +347,7 @@ export default function PlotNFTCard(props: Props) {
           <Flex alignItems="center">
             <Typography variant="body2">
               <Trans>
-                You can still create plots for this plot NFT, but you can not
-                make changes until sync is complete.
+                You can still create plots for this plot NFT, but you can not make changes until sync is complete.
               </Trans>
             </Typography>
           </Flex>

@@ -1,22 +1,16 @@
-import React, { type ReactNode, useState } from 'react';
-import { Trans } from '@lingui/macro';
-import { Box, IconButton, InputBase } from '@mui/material';
 import { WalletType } from '@taco/api';
-import {
-  Button,
-  useColorModeValue,
-  Spinner,
-  Flex,
-  Tooltip,
-  useTrans,
-} from '@taco/core';
-import styled from 'styled-components';
+import { Button, useColorModeValue, Spinner, Flex, Tooltip, useTrans } from '@taco/core';
+import { Trans } from '@lingui/macro';
 import { Add, KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
+import SearchIcon from '@mui/icons-material/Search';
+import { Box, IconButton, InputBase } from '@mui/material';
+import React, { type ReactNode, useState } from 'react';
+import { useNavigate } from 'react-router';
 import { useToggle } from 'react-use';
+import styled from 'styled-components';
+
 import useWalletsList from '../hooks/useWalletsList';
 import WalletTokenCard from './WalletTokenCard';
-import { useNavigate } from 'react-router';
-import SearchIcon from '@mui/icons-material/Search';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -68,8 +62,7 @@ const StyledButtonContainer = styled(Box)`
 `;
 
 const StyledMainButton = styled(Button)`
-  border-radius: ${({ theme }) =>
-    `${theme.spacing(2)} ${theme.spacing(2)} 0 0`};
+  border-radius: ${({ theme }) => `${theme.spacing(2)} ${theme.spacing(2)} 0 0`};
   border: ${({ theme }) => `1px solid ${useColorModeValue(theme, 'border')}`};
   background-color: ${({ theme }) => theme.palette.action.hover};
   height: ${({ theme }) => theme.spacing(6)};
@@ -81,7 +74,7 @@ const StyledMainButton = styled(Button)`
   }
 `;
 
-const StyledBody = styled(Box)`
+const StyledBody = styled(({ expanded, ...rest }) => <Box {...rest} />)`
   pointer-events: auto;
   background-color: ${({ theme }) => theme.palette.background.default};
   transition: all 0.25s ease-out;
@@ -127,10 +120,7 @@ export default function WalletsManageTokens(props: WalletsManageTokensProps) {
   const t = useTrans();
   const navigate = useNavigate();
   const [search, setSearch] = useState('');
-  const { list, hide, show, isLoading } = useWalletsList(search, [
-    WalletType.STANDARD_WALLET,
-    WalletType.CAT,
-  ]);
+  const { list, hide, show, isLoading } = useWalletsList(search, [WalletType.STANDARD_WALLET, WalletType.CAT]);
 
   function handleAddToken(event) {
     event.preventDefault();
@@ -142,7 +132,7 @@ export default function WalletsManageTokens(props: WalletsManageTokensProps) {
   return (
     <StyledRoot>
       <StyledButtonContainer>
-        <StyledMainButton onClick={toggle} fullWidth>
+        <StyledMainButton onClick={toggle} data-testid="WalletsManageTokens-manage-token-list" fullWidth>
           <StyledButtonText>
             <Trans>Manage token list</Trans>
             <StyledExpandButtonContainer>
@@ -161,7 +151,7 @@ export default function WalletsManageTokens(props: WalletsManageTokensProps) {
                 </SearchIconWrapper>
                 <StyledInputBase
                   value={search}
-                  onChange={event => setSearch(event.target.value)}
+                  onChange={(event) => setSearch(event.target.value)}
                   placeholder={t('Search...')}
                 />
               </Search>
@@ -179,13 +169,8 @@ export default function WalletsManageTokens(props: WalletsManageTokensProps) {
               <Spinner center />
             ) : (
               <Flex gap={1} flexDirection="column" width="100%">
-                {list?.map(list => (
-                  <WalletTokenCard
-                    item={list}
-                    key={list.id}
-                    onHide={hide}
-                    onShow={show}
-                  />
+                {list?.map((list) => (
+                  <WalletTokenCard item={list} key={list.id} onHide={hide} onShow={show} />
                 ))}
               </Flex>
             )}

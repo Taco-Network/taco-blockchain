@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import logging
 from datetime import datetime
 from pathlib import Path
@@ -9,11 +11,14 @@ from chiapos import DiskPlotter
 
 from taco.daemon.keychain_proxy import KeychainProxy, connect_to_keychain_and_validate, wrap_local_keychain
 from taco.plotting.util import stream_plot_info_ph, stream_plot_info_pk
-from taco.types.blockchain_format.proof_of_space import ProofOfSpace
+from taco.types.blockchain_format.proof_of_space import (
+    calculate_plot_id_ph,
+    calculate_plot_id_pk,
+    generate_plot_public_key,
+)
 from taco.types.blockchain_format.sized_bytes import bytes32
 from taco.util.bech32m import decode_puzzle_hash
 from taco.util.keychain import Keychain
-from taco.util.path import mkdir
 from taco.wallet.derive_keys import master_sk_to_farmer_sk, master_sk_to_local_sk, master_sk_to_pool_sk
 
 log = logging.getLogger(__name__)
@@ -61,9 +66,8 @@ class PlotKeysResolver:
         if self.resolved_keys is not None:
             return self.resolved_keys
 
-        keychain_proxy: Optional[KeychainProxy] = None
         if self.connect_to_daemon:
-            keychain_proxy = await connect_to_keychain_and_validate(self.root_path, self.log)
+            keychain_proxy: Optional[KeychainProxy] = await connect_to_keychain_and_validate(self.root_path, self.log)
         else:
             keychain_proxy = wrap_local_keychain(Keychain(), log=self.log)
 
@@ -84,6 +88,8 @@ class PlotKeysResolver:
                 pool_public_key = await self.get_pool_public_key(keychain_proxy)
 
         self.resolved_keys = PlotKeys(farmer_public_key, pool_public_key, self.pool_contract_address)
+        if keychain_proxy is not None:
+            await keychain_proxy.close()
         return self.resolved_keys
 
     async def get_sk(self, keychain_proxy: Optional[KeychainProxy] = None) -> Optional[Tuple[PrivateKey, bytes]]:
@@ -164,15 +170,15 @@ async def create_plots(
 
     tmp_dir_created = False
     if not args.tmp_dir.exists():
-        mkdir(args.tmp_dir)
+        args.tmp_dir.mkdir(parents=True, exist_ok=True)
         tmp_dir_created = True
 
     tmp2_dir_created = False
     if not args.tmp2_dir.exists():
-        mkdir(args.tmp2_dir)
+        args.tmp2_dir.mkdir(parents=True, exist_ok=True)
         tmp2_dir_created = True
 
-    mkdir(args.final_dir)
+    args.final_dir.mkdir(parents=True, exist_ok=True)
 
     created_plots: Dict[bytes32, Path] = {}
     existing_plots: Dict[bytes32, Path] = {}
@@ -187,17 +193,17 @@ async def create_plots(
         # The plot public key is the combination of the harvester and farmer keys
         # New plots will also include a taproot of the keys, for extensibility
         include_taproot: bool = keys.pool_contract_puzzle_hash is not None
-        plot_public_key = ProofOfSpace.generate_plot_public_key(
+        plot_public_key = generate_plot_public_key(
             master_sk_to_local_sk(sk).get_g1(), keys.farmer_public_key, include_taproot
         )
 
         # The plot id is based on the harvester, farmer, and pool keys
         if keys.pool_public_key is not None:
-            plot_id: bytes32 = ProofOfSpace.calculate_plot_id_pk(keys.pool_public_key, plot_public_key)
+            plot_id: bytes32 = calculate_plot_id_pk(keys.pool_public_key, plot_public_key)
             plot_memo: bytes32 = stream_plot_info_pk(keys.pool_public_key, keys.farmer_public_key, sk)
         else:
             assert keys.pool_contract_puzzle_hash is not None
-            plot_id = ProofOfSpace.calculate_plot_id_ph(keys.pool_contract_puzzle_hash, plot_public_key)
+            plot_id = calculate_plot_id_ph(keys.pool_contract_puzzle_hash, plot_public_key)
             plot_memo = stream_plot_info_ph(keys.pool_contract_puzzle_hash, keys.farmer_public_key, sk)
 
         if args.plotid is not None:
@@ -207,10 +213,6 @@ async def create_plots(
         if args.memo is not None:
             log.info(f"Debug memo: {args.memo}")
             plot_memo = bytes32.fromhex(args.memo)
-
-        # Uncomment next two lines if memo is needed for dev debug
-        plot_memo_str: str = plot_memo.hex()
-        log.info(f"Memo: {plot_memo_str}")
 
         dt_string = datetime.now().strftime("%Y-%m-%d-%H-%M")
 

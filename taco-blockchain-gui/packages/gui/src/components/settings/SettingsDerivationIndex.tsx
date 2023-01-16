@@ -1,20 +1,10 @@
-import React, { useEffect } from 'react';
-import { Trans, t } from '@lingui/macro';
-import { useForm } from 'react-hook-form';
 import { SyncingStatus } from '@taco/api';
-import {
-  useExtendDerivationIndexMutation,
-  useGetCurrentDerivationIndexQuery,
-} from '@taco/api-react';
-import {
-  AlertDialog,
-  ButtonLoading,
-  Flex,
-  Form,
-  TextField,
-  useOpenDialog,
-} from '@taco/core';
+import { useExtendDerivationIndexMutation, useGetCurrentDerivationIndexQuery } from '@taco/api-react';
+import { AlertDialog, ButtonLoading, Flex, Form, TextField, useOpenDialog } from '@taco/core';
 import { useWalletState } from '@taco/wallets';
+import { Trans, t } from '@lingui/macro';
+import React, { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
 
 type FormData = {
   index: string;
@@ -22,8 +12,7 @@ type FormData = {
 
 export default function SettingsDerivationIndex() {
   const { state, isLoading: isLoadingWalletState } = useWalletState();
-  const { data, isLoading: isLoadingCurrentDerivationIndex } =
-    useGetCurrentDerivationIndexQuery();
+  const { data, isLoading: isLoadingCurrentDerivationIndex } = useGetCurrentDerivationIndexQuery();
   const [extendDerivationIndex] = useExtendDerivationIndexMutation();
   const openDialog = useOpenDialog();
 
@@ -42,8 +31,7 @@ export default function SettingsDerivationIndex() {
   }, [index]);
 
   const { isSubmitting } = methods.formState;
-  const isLoading =
-    isLoadingCurrentDerivationIndex || isLoadingWalletState || isSubmitting;
+  const isLoading = isLoadingCurrentDerivationIndex || isLoadingWalletState || isSubmitting;
   const canSubmit = !isLoading && state === SyncingStatus.SYNCED;
 
   async function handleSubmit(values: FormData) {
@@ -63,17 +51,14 @@ export default function SettingsDerivationIndex() {
 
     await openDialog(
       <AlertDialog>
-        <Trans>
-          Successfully updated the derivation index. Your balances may take a
-          while to update.
-        </Trans>
-      </AlertDialog>,
+        <Trans>Successfully updated the derivation index. Your balances may take a while to update.</Trans>
+      </AlertDialog>
     );
   }
 
   return (
     <Form methods={methods} onSubmit={handleSubmit} noValidate>
-      <Flex gap={2} row>
+      <Flex gap={2}>
         <TextField
           name="index"
           type="number"
@@ -85,6 +70,7 @@ export default function SettingsDerivationIndex() {
               step: 100,
             },
           }}
+          data-testid="SettingsDerivationIndex-index"
           fullWidth
         />
         <ButtonLoading
@@ -94,6 +80,7 @@ export default function SettingsDerivationIndex() {
           loading={!canSubmit}
           variant="outlined"
           color="secondary"
+          data-testid="SettingsDerivationIndex-save"
         >
           <Trans>Save</Trans>
         </ButtonLoading>

@@ -1,4 +1,5 @@
 import { ServiceName } from '@taco/api';
+
 import useService, { ServiceState } from './useService';
 
 type Options = {
@@ -11,7 +12,8 @@ function getServiceKeepState(service: ServiceName, options: Options): ServiceSta
   const { keepRunning, keepStopped } = options;
   if (keepRunning && keepRunning.includes(service)) {
     return 'running';
-  } else if (keepStopped && keepStopped.includes(service)) {
+  }
+  if (keepStopped && keepStopped.includes(service)) {
     return 'stopped';
   }
   return undefined;
@@ -34,7 +36,7 @@ function getServiceOptions(service: ServiceName, services: ServiceName[], option
 
 export default function useMonitorServices(
   services: ServiceName[],
-  options: Options = {},
+  options: Options = {}
 ): {
   isLoading: boolean;
   error?: Error | unknown;
@@ -42,45 +44,31 @@ export default function useMonitorServices(
   stopping: ServiceName[];
   running: ServiceName[];
 } {
-  const walletState = useService(
-    ServiceName.WALLET, 
-    getServiceOptions(ServiceName.WALLET, services, options),
-  );
+  const walletState = useService(ServiceName.WALLET, getServiceOptions(ServiceName.WALLET, services, options));
 
-  const fullNodeState = useService(
-    ServiceName.FULL_NODE,
-    getServiceOptions(ServiceName.FULL_NODE, services, options),
-  );
+  const fullNodeState = useService(ServiceName.FULL_NODE, getServiceOptions(ServiceName.FULL_NODE, services, options));
 
-  const farmerState = useService(
-    ServiceName.FARMER,
-    getServiceOptions(ServiceName.FARMER, services, options),
-  );
+  const farmerState = useService(ServiceName.FARMER, getServiceOptions(ServiceName.FARMER, services, options));
 
-  const harvesterState = useService(
-    ServiceName.HARVESTER,
-    getServiceOptions(ServiceName.HARVESTER, services, options),
-  );
+  const harvesterState = useService(ServiceName.HARVESTER, getServiceOptions(ServiceName.HARVESTER, services, options));
 
-  const simulatorState = useService(
-    ServiceName.SIMULATOR, 
-    getServiceOptions(ServiceName.SIMULATOR, services, options),
-  );
+  const simulatorState = useService(ServiceName.SIMULATOR, getServiceOptions(ServiceName.SIMULATOR, services, options));
 
-  const plotterState = useService(
-    ServiceName.PLOTTER,
-    getServiceOptions(ServiceName.PLOTTER, services, options),
-  );
+  const plotterState = useService(ServiceName.PLOTTER, getServiceOptions(ServiceName.PLOTTER, services, options));
 
-  const timelordState = useService(
-    ServiceName.TIMELORD,
-    getServiceOptions(ServiceName.TIMELORD, services, options),
-  );
+  const timelordState = useService(ServiceName.TIMELORD, getServiceOptions(ServiceName.TIMELORD, services, options));
 
   const introducerState = useService(
     ServiceName.INTRODUCER,
-    getServiceOptions(ServiceName.INTRODUCER, services, options),
+    getServiceOptions(ServiceName.INTRODUCER, services, options)
   );
+
+  const datalayerState = useService(ServiceName.DATALAYER, getServiceOptions(ServiceName.DATALAYER, services, options));
+
+  const datalayerServerState = useService(ServiceName.DATALAYER_SERVER, {
+    ...getServiceOptions(ServiceName.DATALAYER_SERVER, services, options),
+    disableWait: true,
+  });
 
   const states = [
     walletState,
@@ -91,14 +79,16 @@ export default function useMonitorServices(
     plotterState,
     timelordState,
     introducerState,
+    datalayerState,
+    datalayerServerState,
   ];
 
   const isLoading = !!states.find((state) => state.isLoading);
   const error = states.find((state) => state.error)?.error;
-  
-  const starting = states.filter(state => state.state === 'starting');
-  const stopping = states.filter(state => state.state === 'stopping');
-  const running = states.filter(state => state.state === 'running');
+
+  const starting = states.filter((state) => state.state === 'starting');
+  const stopping = states.filter((state) => state.state === 'stopping');
+  const running = states.filter((state) => state.state === 'running');
 
   return {
     isLoading,

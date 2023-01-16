@@ -1,5 +1,6 @@
-import React from 'react';
+import { Back, Flex, FormatLargeNumber, Loading, Logo } from '@taco/core';
 import { Trans } from '@lingui/macro';
+import { ChevronRight as ChevronRightIcon, EnergySavingsLeaf as EcoIcon, Add as AddIcon } from '@mui/icons-material';
 import {
   Box,
   Button,
@@ -11,24 +12,24 @@ import {
   ListItemText,
   ListItemSecondaryAction,
 } from '@mui/material';
+import React from 'react';
+import { useSelector } from 'react-redux';
+import { Switch, Route, useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import { ChevronRight as ChevronRightIcon, EnergySavingsLeaf as EcoIcon, Add as AddIcon } from '@mui/icons-material';
-import {  useSelector } from 'react-redux';
-import { Back, Flex, FormatLargeNumber, Loading, Logo } from '@taco/core';
-import StandardWallet from '../standard/WalletStandard';
-import { CreateWalletView } from '../create/WalletCreate';
-import WalletCAT from '../cat/WalletCAT';
-import RateLimitedWallet from '../rateLimited/WalletRateLimited';
-import DistributedWallet from '../did/WalletDID';
-import type { RootState } from '../../../modules/rootReducer';
-import WalletType from '../../../constants/WalletType';
-import WalletName from '../../../constants/WalletName';
-import LayoutMain from '../../layout/LayoutMain';
-import LayoutHero from '../../layout/LayoutHero';
+
 import config from '../../../config/config';
-import { Switch, Route, useHistory, useRouteMatch, useParams } from 'react-router-dom';
+import WalletName from '../../../constants/WalletName';
+import WalletType from '../../../constants/WalletType';
 import useTrans from '../../../hooks/useTrans';
+import type { RootState } from '../../../modules/rootReducer';
+import LayoutHero from '../../layout/LayoutHero';
+import LayoutMain from '../../layout/LayoutMain';
 import WalletsList from '../WalletsList';
+import WalletCAT from '../cat/WalletCAT';
+import { CreateWalletView } from '../create/WalletCreate';
+import DistributedWallet from '../did/WalletDID';
+import RateLimitedWallet from '../rateLimited/WalletRateLimited';
+import StandardWallet from '../standard/WalletStandard';
 import WalletHeroLayout from './WalletHeroLayout';
 
 const StyledListItem = styled(ListItem)`
@@ -38,31 +39,27 @@ const StyledListItem = styled(ListItem)`
 const { multipleWallets, asteroid } = config;
 
 export default function Wallets() {
-  const history = useHistory();
+  const navigate = useNavigate();
   const { walletId } = useParams();
-  const { path, ...rest } = useRouteMatch();
   const trans = useTrans();
   const wallets = useSelector((state: RootState) => state.wallet_state.wallets);
   const loading = !wallets;
 
   function handleChange(_, newValue) {
     if (asteroid && newValue === 'create') {
-      history.push('/dashboard/wallets/create/simple');
+      navigate('/dashboard/wallets/create/simple');
       return;
     }
 
-    history.push(`/dashboard/wallets/${newValue}`);
+    navigate(`/dashboard/wallets/${newValue}`);
   }
 
-
   function handleAddCustomToken() {
-    history.push(`/wallets/add`);
+    navigate(`/wallets/add`);
   }
 
   return (
-    <WalletHeroLayout
-      title={<Trans>Add Token</Trans>}
-    >
+    <WalletHeroLayout title={<Trans>Add Token</Trans>}>
       {!wallets ? (
         <Loading center />
       ) : (
@@ -77,7 +74,7 @@ export default function Wallets() {
                 <Flex flexGrow={1} alignItems="center">
                   <Flex flexGrow={1} gap={3} alignItems="center">
                     <token.icon width={32} />
-                  
+
                     <ListItemText
                       primary={token.name}
                     />
@@ -90,12 +87,7 @@ export default function Wallets() {
           </List>
         </Card>
       )}
-      <Button
-        onClick={handleAddCustomToken}
-        variant="outlined"
-        size="large"
-        fullWidth
-      >
+      <Button onClick={handleAddCustomToken} variant="outlined" size="large" fullWidth>
         <Trans>Add Custom Token</Trans>
       </Button>
     </WalletHeroLayout>

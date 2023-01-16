@@ -1,6 +1,6 @@
 # @taco/api-react
 
-![Alt text](https://www.taco.net/img/taco_logo.svg)
+![Alt text](https://www.taconetwork.net/img/taco_logo.svg)
 
 This library provides react hooks on the top of @taco/api and uses [RTK Query](https://redux-toolkit.js.org/rtk-query/overview) under do hood.
 It is designed to simplify common cases for loading data in a web application, eliminating the need to hand-write data fetching & caching logic yourself. Providing much more benefits:

@@ -1,7 +1,8 @@
-import React from 'react';
-import isElectron from 'is-electron';
-import { Trans } from '@lingui/macro';
 import { AlertDialog, useOpenDialog } from '@taco/core';
+import { dialog } from '@electron/remote';
+import { Trans } from '@lingui/macro';
+import isElectron from 'is-electron';
+import React from 'react';
 
 type Options = {
   defaultPath?: string;
@@ -9,13 +10,12 @@ type Options = {
 };
 
 export default function useSelectDirectory(
-  defaultOptions?: Options,
+  defaultOptions?: Options
 ): (options?: Options) => Promise<string | undefined> {
   const openDialog = useOpenDialog();
 
   async function handleSelect(options?: Options): Promise<string | undefined> {
     if (isElectron()) {
-      const {dialog} = window.require('@electron/remote');
       // @ts-ignore
       const result = await dialog.showOpenDialog({
         properties: ['openDirectory', 'showHiddenFiles'],
@@ -30,7 +30,7 @@ export default function useSelectDirectory(
     openDialog(
       <AlertDialog>
         <Trans>This feature is available only from the GUI.</Trans>
-      </AlertDialog>,
+      </AlertDialog>
     );
   }
 

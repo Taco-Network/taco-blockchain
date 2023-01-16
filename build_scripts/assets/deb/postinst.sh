@@ -3,5 +3,4 @@
 
 set -e
 
-ln -s /usr/lib/taco-blockchain/resources/app.asar.unpacked/daemon/taco /usr/bin/taco || true
-ln -s /usr/lib/taco-blockchain/resources/app.asar.unpacked/daemon /opt/taco || true
+ln -s /opt/taco/resources/app.asar.unpacked/daemon/taco /usr/bin/taco || true

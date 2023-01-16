@@ -1,14 +1,9 @@
-import React from 'react';
-import { Trans } from '@lingui/macro';
-import {
-  Card,
-  FormatBytes,
-  Loading,
-  Table,
-} from '@taco/core';
-import { Tooltip } from '@mui/material';
 import { Connection, ServiceConnectionName } from '@taco/api';
 import { useGetWalletConnectionsQuery } from '@taco/api-react';
+import { Card, FormatBytes, Loading, Table } from '@taco/core';
+import { Trans } from '@lingui/macro';
+import { Tooltip } from '@mui/material';
+import React from 'react';
 
 const cols = [
   {
@@ -36,19 +31,9 @@ const cols = [
     field(row: Connection) {
       return (
         <>
-          <FormatBytes
-            value={row.bytesWritten}
-            unit="MiB"
-            removeUnit
-            fixedDecimals
-          />
+          <FormatBytes value={row.bytesWritten} unit="MiB" removeUnit fixedDecimals />
           /
-          <FormatBytes
-            value={row.bytesRead}
-            unit="MiB"
-            removeUnit
-            fixedDecimals
-          />
+          <FormatBytes value={row.bytesRead} unit="MiB" removeUnit fixedDecimals />
         </>
       );
     },
@@ -69,16 +54,17 @@ export type WalletConnectionsProps = {
 
 export default function WalletConnections(props: WalletConnectionsProps) {
   const { walletId } = props;
-  const { data: connections, isLoading } = useGetWalletConnectionsQuery({
-    walletId,
-  }, {
-    pollingInterval: 10000,
-  });
+  const { data: connections, isLoading } = useGetWalletConnectionsQuery(
+    {
+      walletId,
+    },
+    {
+      pollingInterval: 10000,
+    }
+  );
 
   return (
-    <Card
-      title={<Trans>Connections</Trans>}
-    >
+    <Card title={<Trans>Wallet Connections</Trans>}>
       {isLoading ? (
         <Loading center />
       ) : !connections?.length ? (

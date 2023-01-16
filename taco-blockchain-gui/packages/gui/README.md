@@ -1,5 +1,5 @@
 # taco-blockchain
-![Alt text](https://www.taco.net/img/taco_logo.svg)
+![Alt text](https://www.taconetwork.net/img/taco_logo.svg)
 
 ![GitHub contributors](https://img.shields.io/github/contributors/Taco-Network/taco-blockchain?logo=GitHub)
 

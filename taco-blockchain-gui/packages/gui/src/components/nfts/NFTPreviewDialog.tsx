@@ -1,9 +1,10 @@
-import React from 'react';
-import { Flex } from '@taco/core';
 import { type NFTInfo } from '@taco/api';
+import { Flex } from '@taco/core';
 import { Dialog, Paper } from '@mui/material';
-import NFTPreview from './NFTPreview';
 import { styled } from '@mui/styles';
+import React from 'react';
+
+import NFTPreview from './NFTPreview';
 
 const StyledNFTPreviewBackground = styled(Paper)({
   padding: '2rem',
@@ -42,7 +43,7 @@ export default function NFTPreviewDialog(props: NFTPreviewDialogProps) {
         height="100%"
         fit="contain"
         background={StyledNFTPreviewBackground}
-        hideStatusBar={true}
+        hideStatusBar
       />
     </Dialog>
   );

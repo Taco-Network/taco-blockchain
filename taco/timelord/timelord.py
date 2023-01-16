@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import asyncio
 import dataclasses
 import io
@@ -16,8 +18,10 @@ from taco.consensus.constants import ConsensusConstants
 from taco.consensus.pot_iterations import calculate_sp_iters, is_overflow_block
 from taco.protocols import timelord_protocol
 from taco.protocols.protocol_message_types import ProtocolMessageTypes
+from taco.rpc.rpc_server import default_get_connections
 from taco.server.outbound_message import NodeType, make_msg
 from taco.server.server import TacoServer
+from taco.server.ws_connection import WSTacoConnection
 from taco.timelord.iters_from_block import iters_from_block
 from taco.timelord.timelord_state import LastState
 from taco.timelord.types import Chain, IterationType, StateType
@@ -61,6 +65,15 @@ def prove_bluebox_slow(payload):
 
 
 class Timelord:
+    @property
+    def server(self) -> TacoServer:
+        # This is a stop gap until the class usage is refactored such the values of
+        # integral attributes are known at creation of the instance.
+        if self._server is None:
+            raise RuntimeError("server not assigned")
+
+        return self._server
+
     def __init__(self, root_path, config: Dict, constants: ConsensusConstants):
         self.config = config
         self.root_path = root_path
@@ -68,7 +81,7 @@ class Timelord:
         self._shut_down = False
         self.free_clients: List[Tuple[str, asyncio.StreamReader, asyncio.StreamWriter]] = []
         self.ip_whitelist = self.config["vdf_clients"]["ip"]
-        self.server: Optional[TacoServer] = None
+        self._server: Optional[TacoServer] = None
         self.chain_type_to_stream: Dict[Chain, Tuple[str, asyncio.StreamReader, asyncio.StreamWriter]] = {}
         self.chain_start_time: Dict = {}
         # Chains that currently don't have a vdf_client.
@@ -151,6 +164,12 @@ class Timelord:
                 self.main_loop = asyncio.create_task(self._manage_discriminant_queue_sanitizer())
         log.info(f"Started timelord, listening on port {self.get_vdf_server_port()}")
 
+    def get_connections(self, request_node_type: Optional[NodeType]) -> List[Dict[str, Any]]:
+        return default_get_connections(server=self.server, request_node_type=request_node_type)
+
+    async def on_connect(self, connection: WSTacoConnection):
+        pass
+
     def get_vdf_server_port(self) -> Optional[uint16]:
         if self.vdf_server is not None:
             return self.vdf_server.sockets[0].getsockname()[1]
@@ -176,7 +195,7 @@ class Timelord:
             self.state_changed_callback(change, change_data)
 
     def set_server(self, server: TacoServer):
-        self.server = server
+        self._server = server
 
     async def _handle_client(self, reader: asyncio.StreamReader, writer: asyncio.StreamWriter):
         async with self.lock:
@@ -468,7 +487,7 @@ class Timelord:
                     rc_info,
                     rc_proof,
                 )
-                if self.server is not None:
+                if self._server is not None:
                     msg = make_msg(ProtocolMessageTypes.new_signage_point_vdf, response)
                     await self.server.send_to_all([msg], NodeType.FULL_NODE)
                 # Cleanup the signage point from memory.
@@ -581,7 +600,7 @@ class Timelord:
                         icc_proof,
                     )
                     msg = make_msg(ProtocolMessageTypes.new_infusion_point_vdf, response)
-                    if self.server is not None:
+                    if self._server is not None:
                         await self.server.send_to_all([msg], NodeType.FULL_NODE)
 
                     self.proofs_finished = self._clear_proof_list(iteration)
@@ -789,7 +808,7 @@ class Timelord:
                 rc_sub_slot,
                 SubSlotProofs(cc_proof, icc_ip_proof, rc_proof),
             )
-            if self.server is not None:
+            if self._server is not None:
                 msg = make_msg(
                     ProtocolMessageTypes.new_end_of_sub_slot_vdf,
                     timelord_protocol.NewEndOfSubSlotVDF(eos_bundle),
@@ -1048,7 +1067,7 @@ class Timelord:
                     response = timelord_protocol.RespondCompactProofOfTime(
                         vdf_info, vdf_proof, header_hash, height, field_vdf
                     )
-                    if self.server is not None:
+                    if self._server is not None:
                         message = make_msg(ProtocolMessageTypes.respond_compact_proof_of_time, response)
                         await self.server.send_to_all([message], NodeType.FULL_NODE)
                     self.state_changed(
@@ -1167,7 +1186,7 @@ class Timelord:
                         picked_info.height,
                         picked_info.field_vdf,
                     )
-                    if self.server is not None:
+                    if self._server is not None:
                         message = make_msg(ProtocolMessageTypes.respond_compact_proof_of_time, response)
                         await self.server.send_to_all([message], NodeType.FULL_NODE)
                 except Exception as e:

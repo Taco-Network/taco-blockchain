@@ -1,58 +1,48 @@
-import React from 'react';
+import { useGenerateMnemonicMutation, useAddPrivateKeyMutation, useLogInMutation } from '@taco/api-react';
+import { ButtonLoading, Form, TextField, Flex, Loading, Logo, useShowError } from '@taco/core';
 import { Trans } from '@lingui/macro';
-import {
-  TextField,
-  Typography,
-  Grid,
-  Container,
-} from '@mui/material';
-import { useGenerateMnemonicMutation, useAddKeyMutation, useLogInMutation } from '@taco/api-react';
+import { TextField as TextFieldMaterial, Typography, Grid, Container } from '@mui/material';
+import React from 'react';
+import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router';
 import { useEffectOnce } from 'react-use';
-import { ButtonLoading, Flex, Loading, Logo, useShowError } from '@taco/core';
 
-const MnemonicField = (props: any) => (
-  <Grid item xs={2}>
-    <TextField
-      variant="filled"
-      margin="normal"
-      color="primary"
-      id={props.id}
-      label={props.index}
-      name="email"
-      autoComplete="email"
-      value={props.word}
-      inputProps={{
-        readOnly: true,
-      }}
-      fullWidth
-      autoFocus
-    />
-  </Grid>
-);
+type FormData = {
+  label: string;
+};
 
 export default function WalletAdd() {
   const navigate = useNavigate();
   const [generateMnemonic, { data: words, isLoading }] = useGenerateMnemonicMutation();
-  const [addKey, { isLoading: isAddKeyLoading }] = useAddKeyMutation();
-  const [logIn, { isLoading: isLogInLoading }] = useLogInMutation();
+  const [addPrivateKey] = useAddPrivateKeyMutation();
+  const [logIn] = useLogInMutation();
+  const methods = useForm<FormData>({
+    defaultValues: {
+      label: '',
+    },
+  });
   const showError = useShowError();
+  const {
+    formState: { isSubmitting },
+  } = methods;
 
   useEffectOnce(() => {
     generateMnemonic();
   });
 
-  const isProcessing = isAddKeyLoading || isLogInLoading;
+  const canSubmit = !!words && !isSubmitting;
 
-  async function handleNext() {
-    if (!words || isProcessing) {
+  async function handleSubmit(values: FormData) {
+    if (!canSubmit) {
       return;
     }
 
+    const { label } = values;
+
     try {
-      const fingerprint = await addKey({
-        mnemonic: words,
-        type: 'new_wallet',
+      const fingerprint = await addPrivateKey({
+        mnemonic: words.join(' '),
+        ...(label && { label: label.trim() }), // omit `label` if label is undefined/empty. backend returns an error if label is set and undefined/empty
       }).unwrap();
 
       await logIn({
@@ -67,47 +57,75 @@ export default function WalletAdd() {
 
   return (
     <Container maxWidth="lg">
-      <Flex flexDirection="column" gap={3} alignItems="center">
-        <Logo />
-        <Typography variant="h4" component="h1" gutterBottom>
-          <Trans>New Wallet</Trans>
-        </Typography>
-        <Typography variant="subtitle1" align="center">
-          <Trans>
-            Welcome! The following words are used for your wallet backup.
-            Without them, you will lose access to your wallet, keep them safe!
-            Write down each word along with the order number next to them.
-            (Order is important)
-          </Trans>
-        </Typography>
-        {!isLoading && words ? (
-          <Grid container spacing={2}>
-            {words.map((word: string, index: number) => (
-              <MnemonicField
-                key={index}
-                word={word}
-                id={`id_${index + 1}`}
-                index={index + 1}
-              />
-            ))}
+      <Form methods={methods} onSubmit={handleSubmit}>
+        <Flex flexDirection="column" gap={3} alignItems="center">
+          <Logo />
+          <Typography variant="h4" component="h1" gutterBottom>
+            <Trans>New Wallet</Trans>
+          </Typography>
+          <Typography variant="subtitle1" align="center">
+            <Trans>
+              Welcome! The following words are used for your wallet backup. Without them, you will lose access to your
+              wallet, keep them safe! Write down each word along with the order number next to them. (Order is
+              important)
+            </Trans>
+          </Typography>
+          {!isLoading && words ? (
+            <Flex flexDirection="column" gap={3}>
+              <Grid container spacing={2} rowSpacing={3}>
+                {words.map((word: string, index: number) => (
+                  <Grid key={index} xs={6} sm={4} md={2} item>
+                    <TextFieldMaterial
+                      variant="filled"
+                      color="primary"
+                      id={`id_${index}`}
+                      label={index + 1}
+                      name="email"
+                      autoComplete="email"
+                      value={word}
+                      inputProps={{
+                        readOnly: true,
+                      }}
+                      fullWidth
+                      autoFocus
+                    />
+                  </Grid>
+                ))}
+              </Grid>
+              <Grid container>
+                <Grid xs={0} md={4} item />
+                <Grid xs={12} md={4} item>
+                  <TextField
+                    name="label"
+                    label={<Trans>Wallet Name</Trans>}
+                    inputProps={{
+                      readOnly: isSubmitting,
+                    }}
+                    fullWidth
+                  />
+                </Grid>
+              </Grid>
+            </Flex>
+          ) : (
+            <Loading />
+          )}
+          <Grid container>
+            <Grid xs={0} md={4} item />
+            <Grid xs={12} md={4} item>
+              <ButtonLoading
+                type="submit"
+                variant="contained"
+                color="primary"
+                disabled={!canSubmit}
+                loading={isSubmitting}
+                fullWidth
+              >
+                <Trans>Next</Trans>
+              </ButtonLoading>
+            </Grid>
           </Grid>
-        ) : (
-          <Loading />
-        )}
-        <Container maxWidth="xs">
-          <ButtonLoading
-            onClick={handleNext}
-            type="submit"
-            variant="contained"
-            color="primary"
-            disabled={!words}
-            loading={isProcessing}
-            fullWidth
-          >
-            <Trans>Next</Trans>
-          </ButtonLoading>
-        </Container>
-      </Flex>
+        </Flex>
+      </Form>
     </Container>
   );
 }

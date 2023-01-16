@@ -1,21 +1,21 @@
-import React from 'react';
-import { useRouteMatch, useHistory } from 'react-router-dom';
-import { Trans } from '@lingui/macro';
-import { Grid } from '@mui/material';
-import { Restore as RestoreIcon, Add as AddIcon } from '@mui/icons-material';
 import { Back, Flex } from '@taco/core';
+import { Trans } from '@lingui/macro';
+import { Restore as RestoreIcon, Add as AddIcon } from '@mui/icons-material';
+import { Grid } from '@mui/material';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import WalletCreateCard from '../create/WalletCreateCard';
 
 export default function WalletDIDSelect() {
-  const history = useHistory();
-  const { url } = useRouteMatch();
+  const navigate = useNavigate();
 
   function handleCreateDIDWallet() {
-    history.push(`${url}/create`);
+    navigate(`create`);
   }
 
   function handleRecoveryDIDWallet() {
-    history.push(`${url}/recovery`);
+    navigate(`recovery`);
   }
 
   return (

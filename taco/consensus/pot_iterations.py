@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from taco.consensus.constants import ConsensusConstants
 from taco.consensus.pos_quality import _expected_plot_size
 from taco.types.blockchain_format.sized_bytes import bytes32

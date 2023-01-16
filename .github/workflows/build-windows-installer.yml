@@ -1,4 +1,4 @@
-name: Build Installer - Windows 10
+name: 📦🚀 Build Installer - Windows 10
 
 on:
   push:
@@ -11,11 +11,6 @@ on:
   pull_request:
     branches:
       - '**'
-
-concurrency:
-  # SHA is added to the end if on `main` to let all main workflows run
-  group: ${{ github.ref }}-${{ github.workflow }}-${{ github.event_name }}-${{ (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/') || startsWith(github.ref, 'refs/heads/long_lived/')) && github.sha || '' }}
-  cancel-in-progress: true
 
 jobs:
   build:
@@ -34,40 +29,24 @@ jobs:
         fetch-depth: 0
         submodules: recursive
 
+    - name: Set Env
+      if: github.event_name == 'release' && github.event.action == 'published'
+      shell: bash
+      run: |
+        PRE_RELEASE=$(jq -r '.release.prerelease' "$GITHUB_EVENT_PATH")
+        RELEASE_TAG=$(jq -r '.release.tag_name' "$GITHUB_EVENT_PATH")
+        echo "RELEASE=true" >>$GITHUB_ENV
+        echo "PRE_RELEASE=$PRE_RELEASE" >>$GITHUB_ENV
+        echo "RELEASE_TAG=$RELEASE_TAG" >>$GITHUB_ENV
+        if [ $PRE_RELEASE = false ]; then
+          echo "FULL_RELEASE=true" >>$GITHUB_ENV
+        else
+          echo "FULL_RELEASE=false" >>$GITHUB_ENV
+        fi
+
     - name: Set git urls to https instead of ssh
       run: |
         git config --global url."https://github.com/".insteadOf ssh://git@github.com/
-
-    - name: Get npm cache directory
-      id: npm-cache
-      run: |
-        echo "::set-output name=dir::$(npm config get cache)"
-
-    - name: Cache npm
-      uses: actions/cache@v3
-      with:
-        path: ${{ steps.npm-cache.outputs.dir }}
-        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-node-
-
-    - name: Setup Node 16.x
-      uses: actions/setup-node@v2.4.1
-      with:
-        node-version: '16.x'
-
-    - name: Get pip cache dir
-      id: pip-cache
-      run: |
-        echo "::set-output name=dir::$(pip cache dir)"
-
-    - name: Cache pip
-      uses: actions/cache@v3
-      with:
-        path: ${{ steps.pip-cache.outputs.dir }}
-        key: ${{ runner.os }}-pip-${{ hashFiles('**/setup.py') }}
-        restore-keys: |
-          ${{ runner.os }}-pip-
 
     - uses: actions/setup-python@v3
       name: Install Python ${{ matrix.python-version }}
@@ -78,29 +57,6 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: '16.x'
-
-    - name: Test for secrets access
-      id: check_secrets
-      shell: bash
-      run: |
-        unset HAS_SIGNING_SECRET
-        unset HAS_AWS_SECRET
-
-        if [ -n "$SIGNING_SECRET" ]; then HAS_SIGNING_SECRET='true' ; fi
-        echo "::set-output name=HAS_SIGNING_SECRET::${HAS_SIGNING_SECRET}"
-
-        if [ -n "$AWS_SECRET" ]; then HAS_AWS_SECRET='true' ; fi
-        echo ::set-output name=HAS_AWS_SECRET::${HAS_AWS_SECRET}
-      env:
-        SIGNING_SECRET: "${{ secrets.WIN_CODE_SIGN_CERT }}"
-        AWS_SECRET: "${{ secrets.INSTALLER_UPLOAD_KEY }}"
-
-    - name: Decode code signing cert into an encrypted file
-      if: steps.check_secrets.outputs.HAS_SIGNING_SECRET
-      uses: kitek/decode-base64-into-file-action@1.0
-      with:
-        encoded-value: ${{ secrets.WIN_CODE_SIGN_CERT }}
-        destination-file: .\taco-blockchain-gui\win_code_sign_cert.p12
 
     # Create our own venv outside of the git directory JUST for getting the ACTUAL version so that install can't break it
     - name: Get version number
@@ -135,6 +91,7 @@ jobs:
 
       # Get the most recent release from bladebit
     - uses: actions/github-script@v6
+      if: '!github.event.release.prerelease'
       id: 'latest-bladebit'
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -147,11 +104,24 @@ jobs:
           return release.data.tag_name;
 
     - name: Get latest bladebit plotter
+      if: '!github.event.release.prerelease'
       run: |
         mkdir "$env:GITHUB_WORKSPACE\bladebit"
         Invoke-WebRequest https://github.com/Chia-Network/bladebit/releases/download/${{ steps.latest-bladebit.outputs.result }}/bladebit-${{ steps.latest-bladebit.outputs.result }}-windows-x86-64.zip -OutFile "$env:GITHUB_WORKSPACE\bladebit\bladebit.zip"
         Expand-Archive -Path "$env:GITHUB_WORKSPACE\bladebit\bladebit.zip" -DestinationPath "$env:GITHUB_WORKSPACE\bladebit\"
         rm "$env:GITHUB_WORKSPACE\bladebit\bladebit.zip"
+
+    - name: Get latest prerelease bladebit plotter
+      if: env.PRE_RELEASE == 'true'
+      shell: bash
+      run: |
+        PRERELEASE_URL=$(curl -Ls -H "Accept: application/vnd.github+json" "https://api.github.com/repos/Chia-Network/bladebit/releases" | jq -r 'map(select(.prerelease)) | first.assets[] | select(.browser_download_url | endswith("windows-x86-64.zip")).browser_download_url')
+        mkdir $GITHUB_WORKSPACE\\bladebit
+        ls
+        echo $PRERELEASE_URL
+        curl -L "$PRERELEASE_URL" --output $GITHUB_WORKSPACE\\bladebit\\bladebit.zip
+        unzip $GITHUB_WORKSPACE\\bladebit\\bladebit.zip -d $GITHUB_WORKSPACE\\bladebit\\
+        rm $GITHUB_WORKSPACE\\bladebit\\bladebit.zip
 
     - name: Run install script
       env:
@@ -159,24 +129,23 @@ jobs:
       run: |
         .\Install.ps1 -d
 
-    - name: Build Windows installer with build_scripts\build_windows.ps1
+    - name: Build GUI
+      continue-on-error: false
+      run: |
+        cd .\build_scripts
+        .\build_windows-1-gui.ps1
+
+    - name: Build Windows installer
       env:
         TACO_INSTALLER_VERSION: ${{ steps.version_number.outputs.TACO_INSTALLER_VERSION }}
-        WIN_CODE_SIGN_PASS: ${{ secrets.WIN_CODE_SIGN_PASS }}
         HAS_SECRET: ${{ steps.check_secrets.outputs.HAS_SIGNING_SECRET }}
+        CSC_KEY_PASSWORD: ${{ secrets.WIN_CODE_SIGN_PASS }}
       run: |
         $env:path="C:\Program` Files` (x86)\Microsoft` Visual` Studio\2019\Enterprise\SDK\ScopeCppSDK\vc15\VC\bin\;$env:path"
         $env:path="C:\Program` Files` (x86)\Windows` Kits\10\App` Certification` Kit;$env:path"
-        git -C .\taco-blockchain-gui status
         .\venv\Scripts\Activate.ps1
         cd .\build_scripts
-        .\build_windows.ps1
-
-    - name: Upload Windows exe's to artifacts
-      uses: actions/upload-artifact@v3
-      with:
-        name: Windows-Exe
-        path: ${{ github.workspace }}\taco-blockchain-gui\Taco-win32-x64\
+        .\build_windows-2-installer.ps1
 
     - name: Upload Installer to artifacts
       uses: actions/upload-artifact@v3
@@ -184,9 +153,9 @@ jobs:
         name: taco-installers-windows-exe-intel
         path: ${{ github.workspace }}\taco-blockchain-gui\release-builds\
 
-    - name: Create Checksums
-      env:
-        TACO_INSTALLER_VERSION: ${{ steps.version_number.outputs.TACO_INSTALLER_VERSION }}
+    - name: Remove Windows exe and installer to exclude from cache
       run: |
-         certutil.exe -hashfile ${{ github.workspace }}\taco-blockchain-gui\release-builds\windows-installer\TacoSetup-${{ steps.version_number.outputs.TACO_INSTALLER_VERSION }}.exe SHA256 > ${{ github.workspace }}\taco-blockchain-gui\release-builds\windows-installer\TacoSetup-${{ steps.version_number.outputs.TACO_INSTALLER_VERSION }}.exe.sha256
-         ls ${{ github.workspace }}\taco-blockchain-gui\release-builds\windows-installer\
+        Remove-Item .\taco-blockchain-gui\packages\gui\dist -Recurse -Force
+        Remove-Item .\taco-blockchain-gui\packages\gui\daemon -Recurse -Force
+        Remove-Item .\taco-blockchain-gui\Taco-win32-x64 -Recurse -Force
+        Remove-Item .\taco-blockchain-gui\release-builds -Recurse -Force

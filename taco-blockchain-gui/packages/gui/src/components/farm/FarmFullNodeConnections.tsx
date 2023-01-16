@@ -1,17 +1,13 @@
-import React from 'react';
-import { Trans } from '@lingui/macro';
-import styled from 'styled-components';
-import { Link, Typography, Tooltip, IconButton } from '@mui/material';
-import { Delete as DeleteIcon } from '@mui/icons-material';
-import {
-  Table,
-  Card,
-  FormatBytes,
-  FormatConnectionStatus,
-} from '@taco/core';
-import { useGetFarmerFullNodeConnectionsQuery, useIsServiceRunningQuery } from '@taco/api-react';
 import type { Connection } from '@taco/api';
 import { ServiceName } from '@taco/api';
+import { useGetFarmerFullNodeConnectionsQuery, useService } from '@taco/api-react';
+import { Table, Card, FormatBytes, FormatConnectionStatus } from '@taco/core';
+import { Trans } from '@lingui/macro';
+import { Delete as DeleteIcon } from '@mui/icons-material';
+import { Link, Typography, Tooltip, IconButton } from '@mui/material';
+import React from 'react';
+import styled from 'styled-components';
+
 import FarmCloseConnection from './FarmCloseConnection';
 
 const StyledIconButton = styled(IconButton)`
@@ -44,19 +40,9 @@ const cols = [
     field(row: Connection) {
       return (
         <>
-          <FormatBytes
-            value={row.bytesWritten}
-            unit="KiB"
-            removeUnit
-            fixedDecimals
-          />
+          <FormatBytes value={row.bytesWritten} unit="KiB" removeUnit fixedDecimals />
           /
-          <FormatBytes
-            value={row.bytesRead}
-            unit="KiB"
-            removeUnit
-            fixedDecimals
-          />
+          <FormatBytes value={row.bytesRead} unit="KiB" removeUnit fixedDecimals />
         </>
       );
     },
@@ -80,11 +66,7 @@ const cols = [
 
 export default function FarmFullNodeConnections() {
   const { data: connections = [] } = useGetFarmerFullNodeConnectionsQuery();
-  const { data: isRunning, isLoading } = useIsServiceRunningQuery({
-    service: ServiceName.FARMER,
-  }, {
-    pollingInterval: 1000,
-  });
+  const { isRunning, isLoading } = useService(ServiceName.FARMER);
 
   return (
     <Card
@@ -94,15 +76,11 @@ export default function FarmFullNodeConnections() {
       tooltip={
         <Trans>
           {'The full node that your farmer is connected to is below. '}
-          <Link
-            target="_blank"
-            href="https://github.com/Taco-Network/taco-blockchain/wiki/Network-Architecture"
-          >
+          <Link target="_blank" href="https://github.com/Taco-Network/taco-blockchain/wiki/Network-Architecture">
             Learn more
           </Link>
         </Trans>
       }
-      interactive
       transparent
     >
       <Typography variant="caption" color="textSecondary">

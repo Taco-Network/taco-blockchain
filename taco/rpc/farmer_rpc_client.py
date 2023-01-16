@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import Any, Dict, List, Optional
 
 from taco.rpc.farmer_rpc_api import PlotInfoRequestData, PlotPathRequestData

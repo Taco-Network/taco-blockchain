@@ -1,5 +1,6 @@
 import React from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
+
 import icon from '../../assets/img/taco_circle.svg';
 
 const GlobalStyle = createGlobalStyle`
@@ -71,7 +72,7 @@ const Spacer = styled.div`
   margin-bottom: 1rem;
 `;
 
-const url = 'https://taco.net';
+const url = 'https://taconetwork.net';
 
 type Props = {
   version: string;
@@ -91,17 +92,14 @@ export default function About(props: Props) {
     versions,
   } = props;
 
-  const currentYear = (new Date).getFullYear();
+  const currentYear = new Date().getFullYear();
 
   return (
     <html>
       <head>
         <base href="./" />
         <meta charSet="utf-8" />
-        <meta
-          name="viewport"
-          content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes"
-        />
+        <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes" />
         <title>About {productName}</title>
       </head>
       <body>
@@ -146,10 +144,7 @@ export default function About(props: Props) {
           )}
         </VersionsTable>
 
-        <BugReport
-          href="https://github.com/Taco-Network/taco-blockchain/issues"
-          target="_blank"
-        >
+        <BugReport href="https://github.com/Taco-Network/taco-blockchain/issues" target="_blank">
           Report an issue
         </BugReport>
         {'{{CSS}}'}

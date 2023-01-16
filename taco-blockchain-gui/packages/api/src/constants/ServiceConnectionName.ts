@@ -1,5 +1,5 @@
-import ServiceName from "./ServiceName";
-import ServiceHumanName from "./ServiceHumanName";
+import ServiceHumanName from './ServiceHumanName';
+import ServiceName from './ServiceName';
 
 export default {
   1: ServiceHumanName[ServiceName.FULL_NODE],
@@ -9,4 +9,5 @@ export default {
   5: ServiceHumanName[ServiceName.INTRODUCER],
   6: ServiceHumanName[ServiceName.WALLET],
   7: ServiceHumanName[ServiceName.PLOTTER],
+  8: ServiceHumanName[ServiceName.DATALAYER],
 };

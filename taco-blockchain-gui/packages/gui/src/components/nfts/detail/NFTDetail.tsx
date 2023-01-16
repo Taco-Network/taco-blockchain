@@ -1,26 +1,24 @@
-import React, { useMemo } from 'react';
-import { Trans } from '@lingui/macro';
-import { Back, Flex, LayoutDashboardSub, Loading } from '@taco/core';
 import type { NFTInfo, Wallet } from '@taco/api';
 import { useGetNFTWallets } from '@taco/api-react';
+import { Back, Flex, LayoutDashboardSub, Loading } from '@taco/core';
+import { Trans } from '@lingui/macro';
 import { Box, Typography } from '@mui/material';
+import React, { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
-import NFTPreview from '../NFTPreview';
+
 import useFetchNFTs from '../../../hooks/useFetchNFTs';
 import useNFTMetadata from '../../../hooks/useNFTMetadata';
-import NFTRankings from '../NFTRankings';
-import NFTProperties from '../NFTProperties';
 import NFTDetails from '../NFTDetails';
+import NFTPreview from '../NFTPreview';
+import NFTProperties from '../NFTProperties';
+import NFTRankings from '../NFTRankings';
 
 /* ========================================================================== */
 
 export default function NFTDetail() {
   const { nftId } = useParams();
-  const { wallets: nftWallets, isLoading: isLoadingWallets } =
-    useGetNFTWallets();
-  const { nfts, isLoading: isLoadingNFTs } = useFetchNFTs(
-    nftWallets.map((wallet: Wallet) => wallet.id),
-  );
+  const { wallets: nftWallets, isLoading: isLoadingWallets } = useGetNFTWallets();
+  const { nfts, isLoading: isLoadingNFTs } = useFetchNFTs(nftWallets.map((wallet: Wallet) => wallet.id));
 
   const nft: NFTInfo | undefined = useMemo(() => {
     if (!nfts) {
@@ -28,7 +26,7 @@ export default function NFTDetail() {
     }
     return nfts.find((nft: NFTInfo) => nft.$nftId === nftId);
   }, [nfts, nftId]);
-  const { metadata, isLoading: isLoadingMetadata } = useNFTMetadata(nft);
+  const { metadata, isLoading: isLoadingMetadata } = useNFTMetadata([nft]);
   const isLoading = isLoadingWallets || isLoadingNFTs || isLoadingMetadata;
 
   if (isLoading) {
@@ -38,9 +36,7 @@ export default function NFTDetail() {
   return (
     <LayoutDashboardSub>
       <Flex flexDirection="column" gap={2}>
-        <Back variant="h5">
-          {metadata?.name ?? <Trans>Title Not Available</Trans>}
-        </Back>
+        <Back variant="h5">{metadata?.name ?? <Trans>Title Not Available</Trans>}</Back>
         <Box
           border={1}
           borderColor="grey.300"
@@ -73,7 +69,7 @@ export default function NFTDetail() {
                   <Trans>Description</Trans>
                 </Typography>
 
-                <Typography>
+                <Typography sx={{ whiteSpace: 'pre-line' }}>
                   {metadata?.description ?? <Trans>Not Available</Trans>}
                 </Typography>
               </Flex>
@@ -83,12 +79,10 @@ export default function NFTDetail() {
                     <Trans>Collection</Trans>
                   </Typography>
 
-                  <Typography>
-                    {metadata?.collection?.name ?? <Trans>Not Available</Trans>}
-                  </Typography>
+                  <Typography>{metadata?.collection?.name ?? <Trans>Not Available</Trans>}</Typography>
                 </Flex>
               )}
-              {(nft?.seriesTotal ?? 0) > 1 && (
+              {(nft?.editionTotal ?? 0) > 1 && (
                 <Flex flexDirection="column" gap={1}>
                   <Typography variant="h6">
                     <Trans>Edition Number</Trans>
@@ -96,7 +90,7 @@ export default function NFTDetail() {
 
                   <Typography>
                     <Trans>
-                      {nft.seriesNumber} of {nft.seriesTotal}
+                      {nft.editionNumber} of {nft.editionTotal}
                     </Trans>
                   </Typography>
                 </Flex>

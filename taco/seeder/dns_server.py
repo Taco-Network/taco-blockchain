@@ -11,7 +11,7 @@ import aiosqlite
 from dnslib import A, AAAA, SOA, NS, MX, CNAME, RR, DNSRecord, QTYPE, DNSHeader
 
 from taco.util.taco_logging import initialize_logging
-from taco.util.path import mkdir, path_from_root
+from taco.util.path import path_from_root
 from taco.util.config import load_config
 from taco.util.default_root import DEFAULT_ROOT_PATH
 
@@ -80,7 +80,7 @@ class DNSServer:
 
         crawler_db_path: str = config.get("crawler_db_path", "crawler.db")
         self.db_path = path_from_root(root_path, crawler_db_path)
-        mkdir(self.db_path.parent)
+        self.db_path.parent.mkdir(parents=True, exist_ok=True)
 
     async def start(self):
         # self.crawl_db = await aiosqlite.connect(self.db_path)

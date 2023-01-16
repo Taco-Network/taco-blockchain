@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { Trans } from '@lingui/macro';
 import { tacoToMojo, AlertDialog, Amount, Fee, Back, ButtonLoading, Card, Flex, Form } from '@taco/core';
+import { Trans } from '@lingui/macro';
 import { Box, Grid } from '@mui/material';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router';
 
@@ -56,7 +56,6 @@ export default function WalletCATCreateNew() {
       const amountMojos = tacoToMojo(amount || '0');
       const feeMojos = tacoToMojo(fee || '0');
 
-
       /*
       const response = await dispatch(create_cc_action(amountMojos, feeMojos));
       if (response && response.data && response.data.success === true) {
@@ -77,27 +76,15 @@ export default function WalletCATCreateNew() {
         <Card>
           <Grid spacing={2} container>
             <Grid xs={12} md={6} item>
-              <Amount
-                name="amount"
-                variant="outlined"
-                fullWidth
-              />
+              <Amount name="amount" variant="outlined" fullWidth />
             </Grid>
             <Grid xs={12} md={6} item>
-              <Fee
-                variant="outlined"
-                fullWidth
-              />
+              <Fee variant="outlined" fullWidth />
             </Grid>
           </Grid>
         </Card>
         <Box>
-          <ButtonLoading
-            type="submit"
-            variant="contained"
-            color="primary"
-            loading={loading}
-          >
+          <ButtonLoading type="submit" variant="contained" color="primary" loading={loading}>
             <Trans>Create</Trans>
           </ButtonLoading>
         </Box>

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from dataclasses import dataclass, field
 from typing import Dict, List, Union
 
@@ -48,8 +50,8 @@ class Delta:
 
     def __str__(self) -> str:
         return (
-            f"valid {self.valid}, invalid {self.invalid}, keys missing: {self.keys_missing}, "
-            f"duplicates: {self.duplicates}"
+            f"[valid {self.valid}, invalid {self.invalid}, keys missing: {self.keys_missing}, "
+            f"duplicates: {self.duplicates}]"
         )
 
     def clear(self) -> None:

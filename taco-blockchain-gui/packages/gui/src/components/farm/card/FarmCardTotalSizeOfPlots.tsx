@@ -1,7 +1,7 @@
-import React from 'react';
-import { Trans } from '@lingui/macro';
-import { FormatBytes, CardSimple } from '@taco/core';
 import { useGetTotalHarvestersSummaryQuery } from '@taco/api-react';
+import { FormatBytes, CardSimple } from '@taco/core';
+import { Trans } from '@lingui/macro';
+import React from 'react';
 
 export default function FarmCardTotalSizeOfPlots() {
   const { totalPlotSize, isLoading } = useGetTotalHarvestersSummaryQuery();

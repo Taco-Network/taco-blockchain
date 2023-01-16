@@ -1,27 +1,20 @@
-import React, { useState } from 'react';
-import { Trans } from '@lingui/macro';
 import { Amount, Form, AlertDialog, Back, Card, Flex, ButtonLoading, tacoToMojo } from '@taco/core';
-import {
-  Typography,
-  Button,
-  Box,
-  TextField,
-  Tooltip,
-} from '@mui/material';
-import {
-  createState,
-} from '../../../modules/createWallet';
-import { useDispatch } from 'react-redux';
-import { create_did_action } from '../../../modules/message';
-import { openDialog } from '../../../modules/dialog';
-import { useForm, Controller, useFieldArray } from 'react-hook-form';
+import { Trans } from '@lingui/macro';
 import { Help as HelpIcon } from '@mui/icons-material';
+import { Typography, Button, Box, TextField, Tooltip } from '@mui/material';
 import { divide } from 'lodash';
-import { useHistory } from 'react-router';
+import React, { useState } from 'react';
+import { useForm, Controller, useFieldArray } from 'react-hook-form';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router';
+
+import { createState } from '../../../modules/createWallet';
+import { openDialog } from '../../../modules/dialog';
+import { create_did_action } from '../../../modules/message';
 
 export default function WalletDIDCreate() {
   const dispatch = useDispatch();
-  const history = useHistory();
+  const navigate = useNavigate();
   const methods = useForm();
   const [loading, setLoading] = useState<boolean>(false);
   const { control } = methods;
@@ -35,59 +28,48 @@ export default function WalletDIDCreate() {
       setLoading(true);
       const didArray = data.backup_dids?.map((item) => item.backupid) ?? [];
       let uniqDidArray = Array.from(new Set(didArray));
-      uniqDidArray = uniqDidArray.filter(item => item !== "")
+      uniqDidArray = uniqDidArray.filter((item) => item !== '');
       const amount_val = tacoToMojo(data.amount);
-      if (
-        amount_val === '' ||
-        Number(amount_val) === 0 ||
-        !Number(amount_val) ||
-        isNaN(Number(amount_val))
-      ) {
+      if (amount_val === '' || Number(amount_val) === 0 || !Number(amount_val) || isNaN(Number(amount_val))) {
         dispatch(
           openDialog(
             <AlertDialog>
               <Trans>Please enter a valid numeric amount.</Trans>
             </AlertDialog>
-          ),
+          )
         );
         return;
       }
-      if (
-        (amount_val) % 2 !== 0
-      ) {
+      if (amount_val % 2 !== 0) {
         dispatch(
           openDialog(
             <AlertDialog>
               <Trans>Amount must be an even amount.</Trans>
             </AlertDialog>
-          ),
+          )
         );
         return;
       }
       const num_of_backup_ids_needed = data.num_needed;
-      if (
-        num_of_backup_ids_needed === '' ||
-        isNaN(Number(num_of_backup_ids_needed))
-      ) {
+      if (num_of_backup_ids_needed === '' || isNaN(Number(num_of_backup_ids_needed))) {
         dispatch(
           openDialog(
             <AlertDialog>
-              <Trans>Please enter a valid integer of 0 or greater for the number of Backup IDs needed for recovery.</Trans>
+              <Trans>
+                Please enter a valid integer of 0 or greater for the number of Backup IDs needed for recovery.
+              </Trans>
             </AlertDialog>
-          ),
+          )
         );
         return;
       }
-      if (
-        num_of_backup_ids_needed > uniqDidArray.length
-      )
-      {
+      if (num_of_backup_ids_needed > uniqDidArray.length) {
         dispatch(
           openDialog(
             <AlertDialog>
               <Trans>The number of Backup IDs needed for recovery cannot exceed the number of Backup IDs added.</Trans>
             </AlertDialog>
-          ),
+          )
         );
         return;
       }
@@ -95,7 +77,7 @@ export default function WalletDIDCreate() {
       await dispatch(createState(true, true));
       const response = await dispatch(create_did_action(amount_plus, uniqDidArray, num_of_backup_ids_needed));
       if (response && response.data && response.data.success === true) {
-        history.push(`/dashboard/wallets/${response.data.wallet_id}`);
+        navigate(`/dashboard/wallets/${response.data.wallet_id}`);
       }
     } finally {
       setLoading(false);
@@ -112,26 +94,17 @@ export default function WalletDIDCreate() {
           <Flex flexDirection="column" gap={3}>
             <Flex flexDirection="column" gap={1}>
               <Flex alignItems="center" gap={1}>
-                <Typography variant="subtitle1">
-                  Enter amount
-                </Typography>
+                <Typography variant="subtitle1">Enter amount</Typography>
                 <Tooltip title="The amount of Taco you enter must correspond to an even amount of mojos. One additional mojo will be added to the total amount for security purposes.">
                   <HelpIcon style={{ color: '#c8c8c8', fontSize: 12 }} />
                 </Tooltip>
               </Flex>
               <Flex alignItems="center" gap={1}>
                 <Flex flexGrow={1}>
-                  <Amount
-                    name="amount"
-                    variant="outlined"
-                    defaultValue=""
-                    fullWidth
-                  >
+                  <Amount name="amount" variant="outlined" defaultValue="" fullWidth>
                     {() => (
                       <Flex display="flex" gap={1} alignItems="center">
-                        <div>
-                          + 1 mojo
-                        </div>
+                        <div>+ 1 mojo</div>
                         <Tooltip title="This additional mojo will be added to the total amount for security purposes.">
                           <HelpIcon style={{ color: '#c8c8c8', fontSize: 12 }} />
                         </Tooltip>
@@ -143,9 +116,7 @@ export default function WalletDIDCreate() {
             </Flex>
             <Flex flexDirection="column" gap={1}>
               <Flex alignItems="center" gap={1}>
-                <Typography variant="subtitle1">
-                  Enter number of Backup IDs needed for recovery
-                </Typography>
+                <Typography variant="subtitle1">Enter number of Backup IDs needed for recovery</Typography>
                 <Tooltip title="This number must be an integer greater than or equal to 0. It cannot exceed the number of Backup IDs added. You will be able to change this number as well as your list of Backup IDs.">
                   <HelpIcon style={{ color: '#c8c8c8', fontSize: 12 }} />
                 </Tooltip>
@@ -167,9 +138,7 @@ export default function WalletDIDCreate() {
             <Flex flexDirection="column" gap={1}>
               <Box display="flex">
                 <Box flexGrow={6}>
-                  <Typography variant="subtitle1">
-                    Add Backup IDs (optional):
-                  </Typography>
+                  <Typography variant="subtitle1">Add Backup IDs (optional):</Typography>
                 </Box>
               </Box>
               {fields.map((item, index) => (
@@ -186,11 +155,7 @@ export default function WalletDIDCreate() {
                       color="secondary"
                     />
                   </Box>
-                  <Button
-                    onClick={() => remove(index)}
-                    variant="contained"
-                    color="danger"
-                  >
+                  <Button onClick={() => remove(index)} variant="contained" color="danger">
                     <Trans>Delete</Trans>
                   </Button>
                 </Flex>
@@ -209,12 +174,7 @@ export default function WalletDIDCreate() {
           </Flex>
         </Card>
         <Box>
-          <ButtonLoading
-            type="submit"
-            variant="contained"
-            color="primary"
-            loading={loading}
-          >
+          <ButtonLoading type="submit" variant="contained" color="primary" loading={loading}>
             <Trans>Create</Trans>
           </ButtonLoading>
         </Box>

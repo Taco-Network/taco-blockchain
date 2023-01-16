@@ -1,8 +1,8 @@
 export { default as useDarkMode } from './useDarkMode';
+export { default as useHiddenList } from './useHiddenList';
 export { default as useCurrencyCode } from './useCurrencyCode';
 export { default as useIsSimulator } from './useIsSimulator';
 export { default as useLocale } from './useLocale';
-export { default as useLocalStorage } from './useLocalStorage';
 export { default as useMode } from './useMode';
 export { default as useOpenDialog } from './useOpenDialog';
 export { default as useOpenExternal } from './useOpenExternal';

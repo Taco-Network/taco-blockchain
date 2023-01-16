@@ -1,44 +1,72 @@
-import { app, dialog, net, shell, ipcMain, BrowserWindow, IncomingMessage, Menu, session, nativeImage } from 'electron';
-import { initialize } from '@electron/remote/main';
+import crypto from 'crypto';
+import fs from 'fs';
 import path from 'path';
-import React from 'react';
 import url from 'url';
+
+import { initialize } from '@electron/remote/main';
+import axios from 'axios';
+import {
+  app,
+  dialog,
+  net,
+  shell,
+  ipcMain,
+  BrowserWindow,
+  IncomingMessage,
+  Menu,
+  nativeImage,
+  protocol,
+} from 'electron';
+import windowStateKeeper from 'electron-window-state';
+import React from 'react';
+
 // import os from 'os';
 // import installExtension, { REDUX_DEVTOOLS, REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer';
 import ReactDOMServer from 'react-dom/server';
 import { ServerStyleSheet, StyleSheetManager } from 'styled-components';
+
 // handle setupevents as quickly as possible
 import '../config/env';
-import handleSquirrelEvent from './handleSquirrelEvent';
-import loadConfig from '../util/loadConfig';
-import manageDaemonLifetime from '../util/manageDaemonLifetime';
-import tacoEnvironment from '../util/tacoEnvironment';
-import { i18n } from '../config/locales';
-import About from '../components/about/About';
 import packageJson from '../../package.json';
 import AppIcon from '../assets/img/taco64x64.png';
+import About from '../components/about/About';
+import { i18n } from '../config/locales';
+import tacoEnvironment from '../util/tacoEnvironment';
+import computeHash from '../util/computeHash';
+import loadConfig from '../util/loadConfig';
+import manageDaemonLifetime from '../util/manageDaemonLifetime';
+import { setUserDataDir } from '../util/userData';
+import { parseExtensionFromUrl } from '../util/utils';
+import handleSquirrelEvent from './handleSquirrelEvent';
 
-
+const isPlaywrightTesting = process.env.PLAYWRIGHT_TESTS === 'true';
 const NET = 'mainnet';
 
 app.disableHardwareAcceleration();
+app.commandLine.appendSwitch('disable-http-cache');
 
 initialize();
 
 const appIcon = nativeImage.createFromPath(path.join(__dirname, AppIcon));
-let isSimulator = process.env.LOCAL_TEST === 'true';
-const isDev = process.env.NODE_ENV === 'development';
+let thumbCacheFolder = path.join(app.getPath('cache'), app.getName());
+
+if (!fs.existsSync(thumbCacheFolder)) {
+  fs.mkdirSync(thumbCacheFolder);
+}
+
+let cacheLimitSize: number = 1024;
+
+const validatingProgress = {};
+
+// Set the userData directory to its location within TACO_ROOT/gui
+setUserDataDir();
 
 function renderAbout(): string {
   const sheet = new ServerStyleSheet();
   const about = ReactDOMServer.renderToStaticMarkup(
     <StyleSheetManager sheet={sheet.instance}>
-      <About
-        packageJson={packageJson}
-        versions={process.versions}
-        version={app.getVersion()}
-      />
-    </StyleSheetManager>,
+      <About packageJson={packageJson} versions={process.versions} version={app.getVersion()} />
+    </StyleSheetManager>
   );
 
   const tags = sheet.getStyleTags();
@@ -64,7 +92,7 @@ function openAbout() {
 
   aboutWindow.webContents.setWindowOpenHandler((details) => {
     shell.openExternal(details.url);
-    return { action: 'deny' }
+    return { action: 'deny' };
   });
 
   aboutWindow.once('closed', () => {
@@ -76,6 +104,20 @@ function openAbout() {
   openedWindows.add(aboutWindow);
 
   // aboutWindow.webContents.openDevTools({ mode: 'detach' });
+}
+
+export function getChecksum(path: string) {
+  return new Promise((resolve, reject) => {
+    const hash = crypto.createHash('sha256');
+    const input = fs.createReadStream(path);
+    input.on('error', reject);
+    input.on('data', (chunk) => {
+      hash.update(chunk);
+    });
+    input.on('close', () => {
+      resolve(hash.digest('hex'));
+    });
+  });
 }
 
 if (!handleSquirrelEvent()) {
@@ -110,21 +152,9 @@ if (!handleSquirrelEvent()) {
     return true;
   };
 
-  let mainWindow = null;
+  let mainWindow: BrowserWindow | null = null;
 
   const createMenu = () => Menu.buildFromTemplate(getMenuTemplate());
-
-  function toggleSimulatorMode() {
-    isSimulator = !isSimulator;
-
-    if (mainWindow) {
-      mainWindow.webContents.send('simulator-mode', isSimulator);
-    }
-
-    if (app) {
-      app.applicationMenu = createMenu();
-    }
-  }
 
   // if any of these checks return false, don't do any other initialization since the app is quitting
   if (ensureSingleInstance() && ensureCorrectEnvironment()) {
@@ -137,6 +167,7 @@ if (!handleSquirrelEvent()) {
      ************************************************************ */
     let decidedToClose = false;
     let isClosing = false;
+    let mainWindowLaunchTasks: ((window: BrowserWindow) => void)[] = [];
 
     const createWindow = async () => {
       if (manageDaemonLifetime(NET)) {
@@ -156,10 +187,10 @@ if (!handleSquirrelEvent()) {
           request.setHeader(header, value as any);
         });
 
-        let err: any | undefined = undefined;
-        let statusCode: number | undefined = undefined;
-        let statusMessage: string | undefined = undefined;
-        let responseBody: string | undefined = undefined;
+        let err: any | undefined;
+        let statusCode: number | undefined;
+        let statusMessage: string | undefined;
+        let responseBody: string | undefined;
 
         try {
           responseBody = await new Promise((resolve, reject) => {
@@ -180,13 +211,12 @@ if (!handleSquirrelEvent()) {
 
             request.on('error', (error: any) => {
               reject(error);
-            })
+            });
 
             request.write(requestData);
             request.end();
           });
-        }
-        catch (e) {
+        } catch (e) {
           console.error(e);
           err = e;
         }
@@ -194,127 +224,345 @@ if (!handleSquirrelEvent()) {
         return { err, statusCode, statusMessage, responseBody };
       });
 
-      ipcMain.handle('fetchBinaryContent', async (_event, requestOptions = {}, requestHeaders = {}, requestData?: any) => {
-        const { maxSize = Infinity , ...rest } = requestOptions;
-        const request = net.request(rest);
-
-        Object.entries(requestHeaders).forEach(([header, value]: [string, any]) => {
-          request.setHeader(header, value);
+      function getRemoteFileSize(url: string): Promise<number> {
+        return new Promise((resolve, reject) => {
+          axios({
+            method: 'get',
+            url,
+          })
+            .then((response) => {
+              resolve(Number(response.headers['content-length']));
+            })
+            .catch((e) => {
+              reject(e.message);
+            });
         });
+      }
 
-        let error: Error | undefined;
-        let statusCode: number | undefined;
-        let statusMessage: string | undefined;
-        let contentType: string | undefined;
-        let encoding = 'binary';
-        let data: string | undefined;
+      const allRequests: any = {};
 
-        const buffers: Buffer[] = [];
-        let totalLength = 0;
+      ipcMain.handle('abortFetchingBinary', (_event, uri: string) => {
+        if (allRequests[uri]) {
+          allRequests[uri].abort();
+          delete allRequests[uri];
+        }
+      });
 
-        try {
-          data = await new Promise((resolve, reject) => {
-            request.on('response', (response: IncomingMessage) => {
-              statusCode = response.statusCode;
-              statusMessage = response.statusMessage;
+      ipcMain.handle('removeCachedFile', (_event, file: string) => {
+        const filePath = path.join(thumbCacheFolder, file);
+        if (fs.existsSync(filePath)) {
+          fs.unlinkSync(filePath);
+        }
+      });
 
-              const rawContentType = response.headers['content-type'];
-              if (rawContentType) {
-                if (Array.isArray(rawContentType)) {
-                  contentType = rawContentType[0];
-                }
-                else {
-                  contentType = rawContentType;
-                }
+      function shouldCacheFile(filePath: string) {
+        const stats = fs.statSync(filePath);
+        const allowWriteCache = getCacheSize() + stats.size < cacheLimitSize * 1024 * 1024;
+        return allowWriteCache;
+      }
 
-                if (contentType) {
-                  // extract charset from contentType
-                  const charsetMatch = contentType.match(/charset=([^;]+)/);
-                  if (charsetMatch) {
-                    encoding = charsetMatch[1];
+      ipcMain.handle('getSvgContent', (_event, file) => {
+        if (file) {
+          const fileOnDisk = path.join(thumbCacheFolder, file);
+          if (fs.existsSync(fileOnDisk)) {
+            return fs.readFileSync(fileOnDisk, { encoding: 'utf8' });
+          }
+          return null;
+        }
+        console.error('Error getting svg file...', file);
+      });
+
+      ipcMain.handle(
+        'fetchBinaryContent',
+        async (_event, requestOptions = {}, requestHeaders = {}, requestData?: any) => {
+          const { maxSize = Infinity, ...rest } = requestOptions;
+
+          let wasCached = false;
+
+          if (allRequests[rest.uri]) {
+            /* request already exists */
+            return;
+          }
+
+          allRequests[rest.url] = net.request(rest);
+
+          const nftIdUrl = `${rest.nftId}_${rest.url}`;
+          const fileOnDisk = path.join(thumbCacheFolder, computeHash(nftIdUrl, { encoding: 'utf-8' }));
+
+          const fileStream = fs.createWriteStream(fileOnDisk);
+
+          Object.entries(requestHeaders).forEach(([header, value]: [string, any]) => {
+            allRequests[rest.uri].setHeader(header, value);
+          });
+
+          let error: Error | undefined;
+          let statusCode: number | undefined;
+          let statusMessage: string | undefined;
+          let contentType: string | undefined;
+          let encoding = 'binary';
+          let dataObject: { isValid?: boolean; content: string } = {
+            content: '',
+          };
+
+          const buffers: Buffer[] = [];
+          let totalLength = 0;
+
+          try {
+            let fileSize: number;
+            fileSize = await getRemoteFileSize(rest.url);
+            dataObject = await new Promise((resolve, reject) => {
+              /* GET FILE SIZE */
+              allRequests[rest.url].on('response', (response: IncomingMessage) => {
+                statusCode = response.statusCode;
+                statusMessage = response.statusMessage;
+
+                const rawContentType = response.headers['content-type'];
+                if (rawContentType) {
+                  if (Array.isArray(rawContentType)) {
+                    contentType = rawContentType[0];
+                  } else {
+                    contentType = rawContentType;
+                  }
+
+                  if (contentType) {
+                    // extract charset from contentType
+                    const charsetMatch = contentType.match(/charset=([^;]+)/);
+                    if (charsetMatch) {
+                      encoding = charsetMatch[1];
+                    }
                   }
                 }
+
+                response.on('data', (chunk) => {
+                  buffers.push(chunk);
+
+                  fileStream.write(chunk);
+
+                  totalLength += chunk.byteLength;
+
+                  if (fileSize > 0) {
+                    mainWindow?.webContents.send('fetchBinaryContentProgress', {
+                      nftIdUrl,
+                      progress: totalLength / fileSize,
+                    });
+                  }
+                  if (totalLength > maxSize || fileSize > maxSize) {
+                    if (allRequests[rest.url]) {
+                      allRequests[rest.url].abort();
+                      if (fs.existsSync(fileOnDisk)) {
+                        fs.unlinkSync(fileOnDisk);
+                      }
+                    }
+                    reject(new Error('Response too large'));
+                  }
+                });
+
+                response.on('end', () => {
+                  let content;
+                  // special case for iso-8859-1, which is mapped to 'latin1' in node
+                  if (encoding.toLowerCase() === 'iso-8859-1') {
+                    encoding = 'latin1';
+                  }
+                  try {
+                    content = Buffer.concat(buffers).toString(encoding as BufferEncoding);
+                  } catch (e: any) {
+                    console.error(`Failed to convert data to string using encoding ${encoding}: ${e.message}`);
+                  }
+                  fileStream.end();
+                  getChecksum(fileOnDisk).then((checksum) => {
+                    const isValid = (checksum as string).replace(/^0x/, '') === rest.dataHash.replace(/^0x/, '');
+                    if (rest.forceCache) {
+                      /* should we cache it or delete it? */
+                      if (shouldCacheFile(fileOnDisk)) {
+                        wasCached = true;
+                      } else if (fs.existsSync(fileOnDisk)) {
+                        fs.unlinkSync(fileOnDisk);
+                      }
+                      mainWindow?.webContents.send('fetchBinaryContentDone', {
+                        nftIdUrl,
+                        valid: isValid,
+                      });
+                      const extension = parseExtensionFromUrl(rest.url);
+                      resolve({
+                        isValid,
+                        content: extension === 'svg' ? content : '',
+                      });
+                    } else {
+                      resolve({ isValid, content });
+                    }
+                  });
+                  delete allRequests[rest.url];
+                });
+
+                response.on('error', (e: string) => {
+                  fileStream.end();
+                  reject(new Error(e));
+                });
+              });
+
+              allRequests[rest.url].on('error', (error: any) => {
+                reject(error);
+              });
+
+              if (requestData) {
+                allRequests[rest.url].write(requestData);
               }
 
-              response.on('data', (chunk) => {
-                buffers.push(chunk);
-
-                totalLength += chunk.byteLength;
-
-                if (totalLength > maxSize) {
-                  reject(new Error('Response too large'));
-                  request.abort();
-                }
-              });
-
-              response.on('end', () => {
-                resolve(Buffer.concat(buffers).toString(encoding as BufferEncoding));
-              });
-
-              response.on('error', (e: string) => {
-                reject(new Error(e));
-              });
+              allRequests[rest.url].end();
             });
+          } catch (e: any) {
+            error = e;
+          }
 
-            request.on('error', (error: any) => {
-              reject(error);
-            })
-
-            if (requestData) {
-              request.write(requestData);
-            }
-
-            request.end();
-          });
-        } catch (e: any) {
-          error = e;
+          return {
+            error,
+            statusCode,
+            statusMessage,
+            encoding,
+            dataObject,
+            wasCached,
+          };
         }
+      );
 
-        return { error, statusCode, statusMessage, encoding, data };
-      });
+      ipcMain.handle('showMessageBox', async (_event, options) => dialog.showMessageBox(mainWindow, options));
 
-      ipcMain.handle('showMessageBox', async (_event, options) => {
-        return await dialog.showMessageBox(mainWindow, options);
-      });
+      ipcMain.handle('showOpenDialog', async (_event, options) => dialog.showOpenDialog(options));
 
-      ipcMain.handle('showOpenDialog', async (_event, options) => {
-        return await dialog.showOpenDialog(options);
-      });
-
-      ipcMain.handle('showSaveDialog', async (_event, options) => {
-        return await dialog.showSaveDialog(options);
-      });
+      ipcMain.handle('showSaveDialog', async (_event, options) => dialog.showSaveDialog(options));
 
       ipcMain.handle('download', async (_event, options) => {
-        return await mainWindow.webContents.downloadURL(options.url);
+        if (mainWindow) {
+          return mainWindow.webContents.downloadURL(options.url);
+        }
+        console.error('mainWindow was not initialized');
       });
 
+      ipcMain.handle('processLaunchTasks', async (_event) => {
+        const tasks = [...mainWindowLaunchTasks];
+
+        mainWindowLaunchTasks = [];
+
+        tasks.forEach((task) => task(mainWindow!));
+      });
+
+      /* ========================== CACHE FOLDER ================================ */
+      function getCacheSize() {
+        let folderSize: number = 0;
+        const files = fs.readdirSync(thumbCacheFolder);
+
+        files
+          .filter(
+            (file) =>
+              /* skip files that start with a dot */
+              !file.match(/^\./)
+          )
+          .forEach((file) => {
+            const stats = fs.statSync(path.join(thumbCacheFolder, file));
+            folderSize += stats.size;
+          });
+        return folderSize;
+      }
+      ipcMain.handle('getDefaultCacheFolder', (_event) => thumbCacheFolder);
+
+      ipcMain.handle('setCacheFolder', (_event, newFolder) => {
+        thumbCacheFolder = newFolder;
+      });
+
+      ipcMain.handle('selectCacheFolder', async (_event) =>
+        dialog.showOpenDialog({
+          properties: ['openDirectory'],
+          defaultPath: thumbCacheFolder,
+        })
+      );
+
+      ipcMain.handle('changeCacheFolderFromTo', async (_event, [from, to]) => {
+        const fromFolder = from || thumbCacheFolder;
+        if (fs.existsSync(fromFolder)) {
+          const fileStats = fs.statSync(fromFolder);
+          if (fileStats.isDirectory()) {
+            const files = fs.readdirSync(fromFolder);
+            files.forEach((file) => {
+              if (fs.lstatSync(path.join(fromFolder, file)).isFile()) {
+                fs.renameSync(path.join(fromFolder, file), path.join(to, file));
+              }
+            });
+          }
+        }
+
+        thumbCacheFolder = to;
+      });
+
+      ipcMain.handle('getCacheSize', async (_event) => getCacheSize());
+
+      ipcMain.handle(
+        'isNewFolderEmtpy',
+        (_event, selectedFolder) =>
+          fs.readdirSync(selectedFolder).filter(
+            (file) =>
+              /* skip files that start with a dot */
+              !file.match(/^\./)
+          ).length
+      );
+
+      ipcMain.handle('adjustCacheLimitSize', async (_event, { newSize, cacheInstances }) => {
+        if (newSize) {
+          cacheLimitSize = newSize;
+        }
+        let overSize = getCacheSize() - newSize * 1024 * 1024; /* MiB! */
+
+        if (overSize > 0) {
+          const removedEntries: any[] = [];
+          for (let cnt = 0; cnt < cacheInstances.length; cnt++) {
+            const fileString = cacheInstances[cnt].video || cacheInstances[cnt].image || cacheInstances[cnt].binary;
+            if (fileString) {
+              const filePath = path.join(thumbCacheFolder, fileString);
+              if (fs.existsSync(filePath)) {
+                const fileStats = fs.statSync(filePath);
+                fs.unlinkSync(filePath);
+                overSize -= fileStats.size;
+                removedEntries.push(cacheInstances[cnt]);
+              }
+            }
+            if (overSize < 0) break;
+          }
+          mainWindow?.webContents.send('removedFromLocalStorage', {
+            removedEntries,
+            occupied: getCacheSize(),
+          });
+        }
+      });
+
+      /* ======================================================================== */
+
       decidedToClose = false;
+      const mainWindowState = windowStateKeeper({
+        defaultWidth: 1200,
+        defaultHeight: 1200,
+      });
       mainWindow = new BrowserWindow({
-        width: 1200,
-        height: 1200,
+        x: mainWindowState.x,
+        y: mainWindowState.y,
+        width: mainWindowState.width,
+        height: mainWindowState.height,
         minWidth: 500,
         minHeight: 500,
         backgroundColor: '#ffffff',
-        show: false,
+        show: isPlaywrightTesting,
         webPreferences: {
           preload: `${__dirname}/preload.js`,
           nodeIntegration: true,
           contextIsolation: false,
-          nativeWindowOpen: true
+          nativeWindowOpen: true,
+          webSecurity: true,
         },
       });
 
-      if(process.platform === 'linux') {
+      mainWindowState.manage(mainWindow);
+
+      if (process.platform === 'linux') {
         mainWindow.setIcon(appIcon);
       }
-
-      /*
-      if (isSimulator || isDev) {
-        await app.whenReady();
-        installExtension(REDUX_DEVTOOLS);
-        installExtension(REACT_DEVELOPER_TOOLS);
-      }*/
 
       mainWindow.once('ready-to-show', () => {
         mainWindow.show();
@@ -343,15 +591,12 @@ if (!handleSquirrelEvent()) {
           isClosing = true;
           const choice = dialog.showMessageBoxSync({
             type: 'question',
-            buttons: [
-              i18n._(/* i18n */ {id: 'No'}),
-              i18n._(/* i18n */ {id: 'Yes'}),
-            ],
-            title: i18n._(/* i18n */ {id: 'Confirm'}),
+            buttons: [i18n._(/* i18n */ { id: 'No' }), i18n._(/* i18n */ { id: 'Yes' })],
+            title: i18n._(/* i18n */ { id: 'Confirm' }),
             message: i18n._(
               /* i18n */ {
                 id: 'Are you sure you want to quit?',
-              },
+              }
             ),
           });
           if (choice == 0) {
@@ -361,7 +606,10 @@ if (!handleSquirrelEvent()) {
           isClosing = false;
           decidedToClose = true;
           mainWindow.webContents.send('exit-daemon');
-          mainWindow.setBounds({height: 500, width: 500});
+          // save the window state and unmange so we don't restore the mini exiting state
+          mainWindowState.saveState(mainWindow);
+          mainWindowState.unmanage(mainWindow);
+          mainWindow.setBounds({ height: 500, width: 500 });
           mainWindow.center();
           ipcMain.on('daemon-exited', (event, args) => {
             mainWindow.close();
@@ -371,25 +619,40 @@ if (!handleSquirrelEvent()) {
         }
       });
 
-
-
       const startUrl =
-      process.env.NODE_ENV === 'development'
-        ? 'http://localhost:3000'
-        : url.format({
-          pathname: path.join(__dirname, '/../renderer/index.html'),
-          protocol: 'file:',
-          slashes: true,
-        });
+        process.env.NODE_ENV === 'development'
+          ? 'http://localhost:3000'
+          : url.format({
+              pathname: path.join(__dirname, '/../renderer/index.html'),
+              protocol: 'file:',
+              slashes: true,
+            });
 
       mainWindow.loadURL(startUrl);
-      require("@electron/remote/main").enable(mainWindow.webContents)
-
+      require('@electron/remote/main').enable(mainWindow.webContents);
     };
 
     const appReady = async () => {
       createWindow();
       app.applicationMenu = createMenu();
+      protocol.registerFileProtocol('cached', (request: any, callback: (obj: any) => void) => {
+        const filePath: string = path.join(thumbCacheFolder, request.url.replace(/^cached:\/\//, ''));
+        callback({ path: filePath });
+      });
+      mainWindow?.webContents.executeJavaScript('localStorage.getItem("cacheLimitSize");', true).then((stringValue) => {
+        try {
+          cacheLimitSize = stringValue ? JSON.parse(stringValue) : cacheLimitSize;
+        } catch (e) {
+          console.log(e);
+        }
+      });
+      mainWindow?.webContents.executeJavaScript('localStorage.getItem("cacheFolder");', true).then((stringValue) => {
+        try {
+          thumbCacheFolder = stringValue ? JSON.parse(stringValue) : thumbCacheFolder;
+        } catch (e) {
+          console.log(e);
+        }
+      });
     };
 
     app.on('ready', appReady);
@@ -398,13 +661,41 @@ if (!handleSquirrelEvent()) {
       app.quit();
     });
 
+    app.on('open-file', (event, path) => {
+      event.preventDefault();
+
+      // App may have been launched with a file to open. Make sure we have a
+      // main window before trying to open a file.
+      if (!mainWindow) {
+        mainWindowLaunchTasks.push((window: BrowserWindow) => {
+          window.webContents.send('open-file', path);
+        });
+      } else {
+        mainWindow?.webContents.send('open-file', path);
+      }
+    });
+
+    app.on('open-url', (event, url) => {
+      event.preventDefault();
+
+      // App may have been launched with a URL to open. Make sure we have a
+      // main window before trying to open a URL.
+      if (!mainWindow) {
+        mainWindowLaunchTasks.push((window: BrowserWindow) => {
+          window.webContents.send('open-url', url);
+        });
+      } else {
+        mainWindow?.webContents.send('open-url', url);
+      }
+    });
+
     ipcMain.on('load-page', (_, arg: { file: string; query: string }) => {
       mainWindow.loadURL(
         require('url').format({
           pathname: path.join(__dirname, arg.file),
           protocol: 'file:',
           slashes: true,
-        }) + arg.query,
+        }) + arg.query
       );
     });
 
@@ -412,10 +703,15 @@ if (!handleSquirrelEvent()) {
       i18n.activate(locale);
       app.applicationMenu = createMenu();
     });
+  }
 
-    ipcMain.on('isSimulator', (event) => {
-      event.returnValue = isSimulator;
-    });
+  function validatingInProgress(uri: string, action: string) {
+    if (action === 'stop') {
+      delete validatingProgress[uri];
+    }
+    if (action === 'start') {
+      validatingProgress[uri] = true;
+    }
   }
 
   const getMenuTemplate = () => {
@@ -474,18 +770,15 @@ if (!handleSquirrelEvent()) {
             submenu: [
               {
                 label: i18n._(/* i18n */ { id: 'Developer Tools' }),
-                accelerator:
-                  process.platform === 'darwin'
-                    ? 'Alt+Command+I'
-                    : 'Ctrl+Shift+I',
+                accelerator: process.platform === 'darwin' ? 'Alt+Command+I' : 'Ctrl+Shift+I',
                 click: () => mainWindow.toggleDevTools(),
               },
-              {
-                label: isSimulator
-                  ? i18n._(/* i18n */ { id: 'Disable Simulator' })
-                  : i18n._(/* i18n */ { id: 'Enable Simulator' }),
-                click: () => toggleSimulatorMode(),
-              },
+              // {
+              // label: isSimulator
+              //  ? i18n._(/* i18n */ { id: 'Disable Simulator' })
+              //   : i18n._(/* i18n */ { id: 'Enable Simulator' }),
+              // click: () => toggleSimulatorMode(),
+              // },
             ],
           },
           {
@@ -505,8 +798,7 @@ if (!handleSquirrelEvent()) {
           },
           {
             label: i18n._(/* i18n */ { id: 'Full Screen' }),
-            accelerator:
-              process.platform === 'darwin' ? 'Ctrl+Command+F' : 'F11',
+            accelerator: process.platform === 'darwin' ? 'Ctrl+Command+F' : 'F11',
             click: () => mainWindow.setFullScreen(!mainWindow.isFullScreen()),
           },
         ],
@@ -532,33 +824,25 @@ if (!handleSquirrelEvent()) {
           {
             label: i18n._(/* i18n */ { id: 'Taco Blockchain Wiki' }),
             click: () => {
-              openExternal(
-                'https://github.com/Taco-Network/taco-blockchain/wiki',
-              );
+              openExternal('https://github.com/Taco-Network/taco-blockchain/wiki');
             },
           },
           {
             label: i18n._(/* i18n */ { id: 'Frequently Asked Questions' }),
             click: () => {
-              openExternal(
-                'https://github.com/Taco-Network/taco-blockchain/wiki/FAQ',
-              );
+              openExternal('https://github.com/Taco-Network/taco-blockchain/wiki/FAQ');
             },
           },
           {
             label: i18n._(/* i18n */ { id: 'Release Notes' }),
             click: () => {
-              openExternal(
-                'https://github.com/Taco-Network/taco-blockchain/releases',
-              );
+              openExternal('https://github.com/Taco-Network/taco-blockchain/releases');
             },
           },
           {
             label: i18n._(/* i18n */ { id: 'Contribute on GitHub' }),
             click: () => {
-              openExternal(
-                'https://github.com/Taco-Network/taco-blockchain/blob/main/CONTRIBUTING.md',
-              );
+              openExternal('https://github.com/Taco-Network/taco-blockchain/blob/main/CONTRIBUTING.md');
             },
           },
           {
@@ -567,9 +851,7 @@ if (!handleSquirrelEvent()) {
           {
             label: i18n._(/* i18n */ { id: 'Report an Issue...' }),
             click: () => {
-              openExternal(
-                'https://github.com/Taco-Network/taco-blockchain/issues',
-              );
+              openExternal('https://github.com/Taco-Network/taco-blockchain/issues');
             },
           },
           {
@@ -651,7 +933,7 @@ if (!handleSquirrelEvent()) {
               role: 'stopspeaking',
             },
           ],
-        },
+        }
       );
 
       // Window menu (MacOS)
@@ -685,7 +967,7 @@ if (!handleSquirrelEvent()) {
           click() {
             openAbout();
           },
-        },
+        }
       );
     }
 

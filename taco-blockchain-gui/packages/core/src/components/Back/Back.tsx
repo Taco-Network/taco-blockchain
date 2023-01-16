@@ -1,12 +1,13 @@
-import React, { ReactNode } from 'react';
-import { Typography, IconButton } from '@mui/material';
 import { Trans } from '@lingui/macro';
 import { ArrowBackIosNew } from '@mui/icons-material';
-import { useNavigate } from 'react-router-dom';
+import { Typography, IconButton } from '@mui/material';
+import React, { ReactNode } from 'react';
 import { useFormContext } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
+
 import useOpenDialog from '../../hooks/useOpenDialog';
-import Flex from '../Flex';
 import ConfirmDialog from '../ConfirmDialog';
+import Flex from '../Flex';
 
 export type BackProps = {
   children?: ReactNode;
@@ -15,10 +16,11 @@ export type BackProps = {
   variant?: string;
   form?: boolean;
   iconStyle?: any;
+  alignItems?: 'flex-start' | 'center' | 'flex-end' | 'stretch' | 'baseline';
 };
 
 export default function Back(props: BackProps) {
-  const { children, variant, to, goBack, form = false, iconStyle } = props;
+  const { children, variant, to, goBack, form = false, iconStyle, alignItems = 'center' } = props;
   const navigate = useNavigate();
   const openDialog = useOpenDialog();
   const formContext = useFormContext();
@@ -36,7 +38,7 @@ export default function Back(props: BackProps) {
             confirmColor="danger"
           >
             <Trans>You have made changes. Do you want to discard them?</Trans>
-          </ConfirmDialog>,
+          </ConfirmDialog>
         ));
 
       if (!canGoBack) {
@@ -55,7 +57,7 @@ export default function Back(props: BackProps) {
   }
 
   return (
-    <Flex gap={1} alignItems="center">
+    <Flex gap={1} alignItems={alignItems}>
       <IconButton onClick={handleGoBack} sx={iconStyle}>
         <ArrowBackIosNew />
       </IconButton>
@@ -67,7 +69,7 @@ export default function Back(props: BackProps) {
 
 Back.defaultProps = {
   children: undefined,
-  variant: "body2",
+  variant: 'body2',
   goBack: true,
   to: undefined,
 };

@@ -1,22 +1,21 @@
-import React, { ReactNode } from 'react';
-import { Menu, MenuProps } from '@mui/material';
 import { MoreVert as MoreVertIcon } from '@mui/icons-material';
+import React, { ReactNode } from 'react';
+
 import IconButton from '../IconButton';
+import { Menu, MenuProps } from '../Menu';
 
-// anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-// transformOrigin={{ vertical: "top", horizontal: "right" }}
-
-type Props = MenuProps & {
-  children: ({ onClose }: { onClose: () => void }) => ReactNode;
+export type MoreProps = Omit<MenuProps, 'open'> & {
+  children?: ReactNode;
   disabled?: boolean;
 };
 
-export default function More(props: Props) {
-  const { children, disabled, ...rest } = props;
+export default function More(props: MoreProps) {
+  const { children, disabled = false, ...rest } = props;
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = !!anchorEl;
 
   function handleClick(event: React.MouseEvent<HTMLElement>) {
+    event.stopPropagation();
     setAnchorEl(event.currentTarget);
   }
 
@@ -29,21 +28,9 @@ export default function More(props: Props) {
       <IconButton aria-label="more" aria-haspopup="true" onClick={handleClick} disabled={disabled}>
         <MoreVertIcon />
       </IconButton>
-      <Menu
-        anchorEl={anchorEl}
-        keepMounted
-        onClose={handleClose}
-        {...rest}
-        open={open}
-      >
-        {children({
-          onClose: handleClose,
-        })}
+      <Menu anchorEl={anchorEl} onClose={handleClose} {...rest} open={open}>
+        {children}
       </Menu>
     </>
   );
 }
-
-More.defaultProps = {
-  disabled: false,
-};

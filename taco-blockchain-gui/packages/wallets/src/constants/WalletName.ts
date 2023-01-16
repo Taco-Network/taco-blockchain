@@ -1,5 +1,5 @@
-import { defineMessage } from '@lingui/macro';
 import { WalletType } from '@taco/api';
+import { defineMessage } from '@lingui/macro';
 
 const WalletName = {
   [WalletType.STANDARD_WALLET]: defineMessage({
@@ -35,6 +35,9 @@ const WalletName = {
   [WalletType.NFT]: defineMessage({
     message: 'NFT Wallet',
   }),
-}
+  [WalletType.DATA_LAYER]: defineMessage({
+    message: 'Datalayer Wallet',
+  }),
+};
 
 export default WalletName;

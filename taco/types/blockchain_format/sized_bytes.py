@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from taco.util.byte_types import SizedBytes
 
 

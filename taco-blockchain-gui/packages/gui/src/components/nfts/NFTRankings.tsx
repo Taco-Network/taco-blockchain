@@ -1,9 +1,10 @@
-import React, { useMemo } from 'react';
 import type { NFTAttribute } from '@taco/api';
-import { Trans } from '@lingui/macro';
 import { Flex } from '@taco/core';
-import { styled, useTheme } from '@mui/material/styles';
+import { Trans } from '@lingui/macro';
 import { Grid, Typography, LinearProgress } from '@mui/material';
+import { styled } from '@mui/material/styles';
+import React, { useMemo } from 'react';
+
 import isRankingAttribute from '../../util/isRankingAttribute';
 
 const BorderLinearProgress = styled(LinearProgress)(() => ({
@@ -23,13 +24,7 @@ export type NFTRankingsProps = {
 };
 
 export function NFTRanking(props: NFTRankingProps) {
-  const {
-    attribute,
-    size = 'regular',
-    color = 'secondary',
-    progressColor = 'primary',
-  } = props;
-  const theme = useTheme();
+  const { attribute, size = 'regular', color = 'secondary', progressColor = 'primary' } = props;
   const { name, trait_type, value, min_value = 0, max_value } = attribute;
   const title = trait_type ?? name;
   const percentage = (value - min_value) / (max_value - min_value);
@@ -39,26 +34,16 @@ export function NFTRanking(props: NFTRankingProps) {
     <Grid xs={12} sm={6} item>
       <Flex flexDirection="column" gap={0.5}>
         <Flex justifyContent="space-between" gap={0.5}>
-          <Typography
-            variant={size === 'small' ? 'caption' : 'body2'}
-            color={color}
-          >
+          <Typography variant={size === 'small' ? 'caption' : 'body2'} color={color}>
             {title}
           </Typography>
-          <Typography
-            variant={size === 'small' ? 'caption' : 'body2'}
-            color="textSecondary"
-          >
+          <Typography variant={size === 'small' ? 'caption' : 'body2'} color="textSecondary">
             <Trans>
               {value} of {max_value}
             </Trans>
           </Typography>
         </Flex>
-        <BorderLinearProgress
-          variant="determinate"
-          value={progress}
-          color={progressColor}
-        />
+        <BorderLinearProgress variant="determinate" value={progress} color={progressColor} />
       </Flex>
     </Grid>
   );
@@ -68,7 +53,10 @@ export default function NFTRankings(props: NFTRankingsProps) {
   const { attributes } = props;
 
   const rankingsAttributes = useMemo(() => {
-    return attributes?.filter(isRankingAttribute);
+    if (Array.isArray(attributes)) {
+      return attributes.filter(isRankingAttribute);
+    }
+    return [];
   }, [attributes]);
 
   if (!rankingsAttributes?.length) {
@@ -81,13 +69,11 @@ export default function NFTRankings(props: NFTRankingsProps) {
         <Trans>Rankings</Trans>
       </Typography>
       <Grid spacing={2} container>
-        {rankingsAttributes.map((attribute, index) => {
-          return (
-            <React.Fragment key={`${attribute?.name}-${index}`}>
-              <NFTRanking attribute={attribute} />
-            </React.Fragment>
-          );
-        })}
+        {rankingsAttributes.map((attribute, index) => (
+          <React.Fragment key={`${attribute?.name}-${index}`}>
+            <NFTRanking attribute={attribute} />
+          </React.Fragment>
+        ))}
       </Grid>
     </Flex>
   );

@@ -1,5 +1,6 @@
 # -*- mode: python ; coding: utf-8 -*-
 import importlib
+import os
 import pathlib
 import platform
 import sysconfig
@@ -19,7 +20,7 @@ def solve_name_collision_problem(analysis):
     There is a collision between the `taco` file name (which is the executable)
     and the `taco` directory, which contains non-code resources like `english.txt`.
     We move all the resources in the zipped area so there is no
-    need to create the `chia` directory, since the names collide.
+    need to create the `taco` directory, since the names collide.
 
     Fetching data now requires going into a zip file, so it will be slower.
     It's best if files that are used frequently are cached.
@@ -55,6 +56,7 @@ version_data = copy_metadata(get_distribution("taco-blockchain"))[0]
 block_cipher = None
 
 SERVERS = [
+    "data_layer",
     "wallet",
     "full_node",
     "harvester",
@@ -71,18 +73,25 @@ hiddenimports = []
 hiddenimports.extend(entry_points)
 hiddenimports.extend(keyring_imports)
 
-binaries = [
-    (
-        f"{ROOT}/madmax/taco_plot",
-        "madmax"
-    ),
-    (
-        f"{ROOT}/madmax/taco_plot_k34",
-        "madmax"
-    )
-]
+binaries = []
 
-if not THIS_IS_MAC:
+if os.path.exists(f"{ROOT}/madmax/taco_plot"):
+    binaries.extend([
+        (
+            f"{ROOT}/madmax/taco_plot",
+            "madmax"
+        )
+    ])
+
+if os.path.exists(f"{ROOT}/madmax/taco_plot_k34",):
+    binaries.extend([
+        (
+            f"{ROOT}/madmax/taco_plot_k34",
+            "madmax"
+        )
+    ])
+
+if os.path.exists(f"{ROOT}/bladebit/bladebit"):
     binaries.extend([
         (
             f"{ROOT}/bladebit/bladebit",
@@ -192,6 +201,7 @@ for server in SERVERS:
 
 add_binary("start_crawler", f"{ROOT}/taco/seeder/start_crawler.py", COLLECT_ARGS)
 add_binary("start_seeder", f"{ROOT}/taco/seeder/dns_server.py", COLLECT_ARGS)
+add_binary("start_data_layer_http", f"{ROOT}/taco/data_layer/data_layer_server.py", COLLECT_ARGS)
 
 COLLECT_KWARGS = dict(
     strip=False,

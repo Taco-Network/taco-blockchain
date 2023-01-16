@@ -1,20 +1,16 @@
-import React from 'react';
-import { Trans } from '@lingui/macro';
-import {
-  Back,
-  Card,
-  Dropzone,
-  Flex,
-  useOpenDialog,
-  useSerializedNavigationState,
-  useShowError,
-} from '@taco/core';
-import { Button, Grid, Typography } from '@mui/material';
-import { useGetOfferSummaryMutation } from '@taco/api-react';
+import fs, { Stats } from 'fs';
+
 import { type OfferSummaryRecord } from '@taco/api';
+import { useGetOfferSummaryMutation } from '@taco/api-react';
+import { Back, Card, Dropzone, Flex, useOpenDialog, useSerializedNavigationState, useShowError } from '@taco/core';
+import { Trans } from '@lingui/macro';
+import { Button, Grid, Typography } from '@mui/material';
+import { IpcRenderer } from 'electron';
+import React from 'react';
+import { useHotkeys } from 'react-hotkeys-hook';
+
 import OfferDataEntryDialog from './OfferDataEntryDialog';
 import { offerContainsAssetOfType } from './utils';
-import fs, { Stats } from 'fs';
 
 function SelectOfferFile() {
   const { navigate } = useSerializedNavigationState();
@@ -24,29 +20,15 @@ function SelectOfferFile() {
   const [isParsing, setIsParsing] = React.useState<boolean>(false);
 
   function parseOfferData(
-    data: string,
-  ): [
-    offerData: string | undefined,
-    leadingText: string | undefined,
-    trailingText: string | undefined,
-  ] {
+    data: string
+  ): [offerData: string | undefined, leadingText: string | undefined, trailingText: string | undefined] {
     // Parse raw offer data looking for the bech32-encoded offer data and any surrounding text.
-    const matches = data.match(
-      /(?<leading>.*)(?<offer>offer1[qpzry9x8gf2tvdw0s3jn54khce6mua7l]+)(?<trailing>.*)/s,
-    );
-    return [
-      matches?.groups?.offer,
-      matches?.groups?.leading,
-      matches?.groups?.trailing,
-    ];
+    const matches = data.match(/(?<leading>.*)(?<offer>offer1[qpzry9x8gf2tvdw0s3jn54khce6mua7l]+)(?<trailing>.*)/s);
+    return [matches?.groups?.offer, matches?.groups?.leading, matches?.groups?.trailing];
   }
 
-  async function parseOfferSummary(
-    rawOfferData: string,
-    offerFilePath: string | undefined,
-  ) {
-    const [offerData /*, leadingText, trailingText*/] =
-      parseOfferData(rawOfferData);
+  async function parseOfferSummary(rawOfferData: string, offerFilePath: string | undefined) {
+    const [offerData /* , leadingText, trailingText */] = parseOfferData(rawOfferData);
     let offerSummary: OfferSummaryRecord | undefined;
 
     if (offerData) {
@@ -129,41 +111,58 @@ function SelectOfferFile() {
     const dialogOptions = {
       filters: [{ name: 'Offer Files', extensions: ['offer'] }],
     } as Electron.OpenDialogOptions;
-    const ipcRenderer = (window as any).ipcRenderer;
-    const { canceled, filePaths } = await ipcRenderer?.invoke(
-      'showOpenDialog',
-      dialogOptions,
-    );
+    const { ipcRenderer } = window as any;
+    const { canceled, filePaths } = await ipcRenderer.invoke('showOpenDialog', dialogOptions);
     if (!canceled && filePaths?.length) {
       handleOpen(filePaths[0]);
     }
   }
 
+  async function pasteParse(text: string) {
+    try {
+      await parseOfferSummary(text, undefined);
+    } catch (e) {
+      errorDialog(e);
+    } finally {
+      setIsParsing(false);
+    }
+  }
+
+  const isMac = /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform);
+  const hotKey = isMac ? 'cmd+v' : 'ctrl+v';
+
+  useHotkeys(hotKey, () => {
+    navigator.clipboard
+      .readText()
+      .then((text) => {
+        pasteParse(text);
+      })
+      .catch((err) => {
+        console.log('Error during paste from clipboard', err);
+      });
+  });
+
   return (
     <Card>
-      <Flex justifyContent="space-between">
-        <Typography variant="subtitle1">
-          <Trans>Drag & drop an offer file below to view its details</Trans>
-        </Typography>
+      <Flex justifyContent="flex-end">
         <Flex flexDirection="row" gap={3}>
-          <Button
-            variant="outlined"
-            color="secondary"
-            onClick={handlePasteOfferData}
-          >
+          <Button variant="outlined" color="secondary" onClick={handlePasteOfferData}>
             <Trans>Paste Offer Data</Trans>
           </Button>
-          <Button
-            variant="outlined"
-            color="primary"
-            onClick={handleSelectOfferFile}
-          >
+          <Button variant="outlined" color="primary" onClick={handleSelectOfferFile}>
             <Trans>Select Offer File</Trans>
           </Button>
         </Flex>
       </Flex>
       <Dropzone maxFiles={1} onDrop={handleDrop} processing={isParsing}>
-        <Trans>Drag and drop offer file</Trans>
+        <Flex flexDirection="column" alignItems="center">
+          <Typography color="textSecondary" variant="h5">
+            <Trans>Drag & Drop an Offer File</Trans>
+          </Typography>
+          <Typography color="textSecondary" variant="h6">
+            {isMac ? <Trans>or Paste (⌘V) an Offer blob</Trans> : <Trans>or Paste (Ctrl-V) an Offer blob</Trans>}
+          </Typography>
+        </Flex>
       </Dropzone>
     </Card>
   );

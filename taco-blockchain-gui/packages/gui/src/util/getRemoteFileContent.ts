@@ -1,16 +1,38 @@
-export default async function getRemoteFileContent(
-  url: string,
-  maxSize?: number,
-): Promise<{ data: string; encoding: string }> {
-  const ipcRenderer = (window as any).ipcRenderer;
+export enum FileType {
+  Binary = 'binary',
+  Video = 'video',
+  Image = 'image',
+  Metadata = 'metadata',
+}
+
+export type RemoteFileContent = {
+  uri: string;
+  maxSize?: number;
+  forceCache?: boolean;
+  nftId?: string;
+  type?: FileType;
+  dataHash?: string;
+};
+
+export default async function getRemoteFileContent(props: RemoteFileContent): Promise<{
+  data: string;
+  encoding: string;
+  wasCached: boolean;
+  isValid: boolean;
+}> {
+  const { ipcRenderer } = window as any;
   const requestOptions = {
-    url,
-    maxSize,
+    url: props.uri,
+    maxSize: props.maxSize,
+    forceCache: props.forceCache,
+    nftId: props.nftId,
+    type: props.type,
+    dataHash: props.dataHash,
   };
 
-  const { data, statusCode, encoding, error } = await ipcRenderer?.invoke(
+  const { dataObject, statusCode, encoding, error, wasCached } = await ipcRenderer?.invoke(
     'fetchBinaryContent',
-    requestOptions,
+    requestOptions
   );
 
   if (error) {
@@ -18,8 +40,13 @@ export default async function getRemoteFileContent(
   }
 
   if (statusCode !== 200) {
-    throw new Error(error.message || `Failed to fetch content from ${url}`);
+    throw new Error(error?.message || `Failed to fetch content from ${url}`);
   }
 
-  return { data, encoding };
+  return {
+    data: dataObject.content,
+    isValid: dataObject.isValid,
+    encoding,
+    wasCached,
+  };
 }

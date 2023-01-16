@@ -1,77 +1,22 @@
-import React, { ReactNode } from 'react';
-import { linearGradientDef } from '@nivo/core';
-import { ResponsiveLine } from '@nivo/line';
+import { TransactionType, WalletType } from '@taco/api';
+import type { Transaction } from '@taco/api';
+import { useGetWalletBalanceQuery } from '@taco/api-react';
+import { mojoToTaco, mojoToCAT, blockHeightToTimestamp } from '@taco/core';
 import BigNumber from 'bignumber.js';
 import { orderBy, groupBy, map } from 'lodash';
-import { /* Typography, */ Paper } from '@mui/material';
+import React, { ReactNode } from 'react';
+import { useMeasure } from 'react-use';
 import styled from 'styled-components';
-import { useGetWalletBalanceQuery } from '@taco/api-react';
-import { TransactionType } from '@taco/api';
-import type { Transaction } from '@taco/api';
-import { mojoToTaco, blockHeightToTimestamp } from '@taco/core';
+import { VictoryChart, VictoryAxis, VictoryArea, VictoryTooltip, VictoryVoronoiContainer } from 'victory';
+
 import useWalletTransactions from '../hooks/useWalletTransactions';
-
-/*
-const HOUR_SECONDS = 60 * 60;
-
-const StyledRoot = styled.div`
-  // border-radius: 1rem;
-  // background-color: #303030;
-  // padding: 1rem;
-`;
-*/
+import WalletGraphTooltip from './WalletGraphTooltip';
 
 const StyledGraphContainer = styled.div`
   position: relative;
   min-height: 80px;
-  height: ${({ height }) =>
-    typeof height === 'string' ? height : `${height}px`};
+  height: ${({ height }) => (typeof height === 'string' ? height : `${height}px`)};
 `;
-
-const StyledTooltip = styled(Paper)`
-  padding: 0.25rem 0.5rem;
-  display: none;
-`;
-
-/*
-const StyledMaxTypography = styled(Typography)`
-  position: absolute;
-  left: 0;
-  top: 0.1rem;
-  font-size: 0.625rem;
-`;
-
-const StyledMinTypography = styled(Typography)`
-  position: absolute;
-  left: 0;
-  bottom: 0.1rem;
-  font-size: 0.625rem;
-`;
-
-const StyledMiddleTypography = styled(Typography)`
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translate(0, -50%);
-  font-size: 0.625rem;
-`;
-*/
-
-// https://github.com/plouc/nivo/issues/308#issuecomment-451280930
-const theme = {
-  tooltip: {
-    container: {
-      color: 'rgba(0, 0, 0, 0.87)',
-    },
-  },
-  axis: {
-    ticks: {
-      text: {
-        fill: 'rgba(255,255,255,0.5)',
-      },
-    },
-  },
-};
 
 type Aggregate = {
   interval: number; // interval second
@@ -79,58 +24,12 @@ type Aggregate = {
   offset?: number;
 };
 
-/*
-type Point = {
-  value: number;
-  timestamp: number;
-};
-
-function aggregatePoints(
-  points: Point[],
-  interval: number, // interval second
-  count: number, // number of intervals
-  offset: number = 0,
-) {
-  let current = Date.now() / 1000;
-
-  const items = [];
-
-  for (let i = -count; i < 0; i += 1) {
-    const start = current + i * interval - offset;
-    const end = current + (i + 1) * interval - offset;
-
-    const item = {
-      start,
-      end,
-      timestamp: start,
-      value: 0,
-    };
-
-    points.forEach((pointItem) => {
-      const { timestamp, value } = pointItem;
-
-      if (timestamp > start && timestamp <= end) {
-        item.value += value;
-      }
-    });
-
-    items.push(item);
-  }
-
-  return items;
-}
-*/
-
-function generateTransactionGraphData(
-  transactions: Transaction[],
-): {
+function generateTransactionGraphData(transactions: Transaction[]): {
   value: BigNumber;
   timestamp: number;
 }[] {
   // use only confirmed transactions
-  const confirmedTransactions = transactions.filter(
-    (transaction) => transaction.confirmed,
-  );
+  const confirmedTransactions = transactions.filter((transaction) => transaction.confirmed);
 
   const [peakTransaction] = confirmedTransactions;
 
@@ -141,12 +40,9 @@ function generateTransactionGraphData(
   }>((transaction) => {
     const { type, confirmedAtHeight, amount, feeAmount } = transaction;
 
-    const isOutgoing = [
-      TransactionType.OUTGOING,
-      TransactionType.OUTGOING_TRADE,
-    ].includes(type);
+    const isOutgoing = [TransactionType.OUTGOING, TransactionType.OUTGOING_TRADE].includes(type);
 
-    const total = BigNumber(amount).plus(BigNumber(feeAmount));
+    const total = new BigNumber(amount).plus(new BigNumber(feeAmount));
     const value = isOutgoing ? total.negated() : total;
 
     return {
@@ -171,13 +67,18 @@ function generateTransactionGraphData(
   // order by timestamp
   results = orderBy(results, ['timestamp'], ['desc']);
 
+  if (results.length === 1) {
+    results.push({ timestamp: 0, value: new BigNumber(0) });
+  }
+
   return results;
 }
 
 function prepareGraphPoints(
   balance: number,
   transactions: Transaction[],
-  aggregate?: Aggregate,
+  walletType: WalletType,
+  _aggregate?: Aggregate
 ): {
   x: number;
   y: number;
@@ -201,41 +102,56 @@ function prepareGraphPoints(
 
   const points = [
     {
-      x: peakTransaction.confirmedAtHeight,
-      y: BigNumber.max(0, mojoToTaco(start)).toNumber(), // max 21,000,000 safe to number
-      tooltip: mojoToTaco(balance).toString(), // bignumber is not supported by react
+      x: blockHeightToTimestamp(peakTransaction.confirmedAtHeight, peakTransaction),
+      y: BigNumber.max(0, (walletType === WalletType.CAT ? mojoToCAT(start) : mojoToTaco(start)).toNumber()), // max 21,000,000 safe to number
+      tooltip: (walletType === WalletType.CAT ? mojoToCAT(balance) : mojoToTaco(balance)).toString(), // bignumber is not supported by react
     },
   ];
 
   data.forEach((item) => {
     const { timestamp, value } = item;
 
-    start = start - value;
+    start -= value.toNumber();
+
+    const isAlreadyUsed = points.some((point) => point.x === timestamp);
+    if (isAlreadyUsed) {
+      return;
+    }
 
     points.push({
       x: timestamp,
-      y: BigNumber.max(0, mojoToTaco(start)).toNumber(), // max 21,000,000 safe to number
-      tooltip: mojoToTaco(start).toString, // bignumber is not supported by react
+      y: BigNumber.max(0, (walletType === WalletType.CAT ? mojoToCAT(start) : mojoToTaco(start)).toNumber()), // max 21,000,000 safe to number
+      tooltip: walletType === WalletType.CAT ? mojoToCAT(start) : mojoToTaco(start).toString(), // bignumber is not supported by react
     });
   });
 
   return points.reverse();
 }
 
-type Props = {
+function LinearGradient() {
+  return (
+    <linearGradient id="graph-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stopColor="rgba(92, 170, 98, 40%)" />
+      <stop offset="100%" stopColor="rgba(92, 170, 98, 0%)" />
+    </linearGradient>
+  );
+}
+
+export type WalletGraphProps = {
   walletId: number;
+  walletType: WalletType;
+  unit?: string;
   height?: number | string;
 };
 
-export default function WalletGraph(props: Props) {
-  const { walletId, height } = props;
+export default function WalletGraph(props: WalletGraphProps) {
+  const { walletId, walletType, unit = '', height = 150 } = props;
   const { transactions, isLoading: isWalletTransactionsLoading } = useWalletTransactions(walletId, 50, 0, 'RELEVANCE');
-  const {
-    data: walletBalance,
-    isLoading: isWalletBalanceLoading,
-  } = useGetWalletBalanceQuery({
+  const { data: walletBalance, isLoading: isWalletBalanceLoading } = useGetWalletBalanceQuery({
     walletId,
   });
+
+  const [ref, containerSize] = useMeasure();
 
   const isLoading = isWalletTransactionsLoading || isWalletBalanceLoading || !transactions;
   if (isLoading || !walletBalance) {
@@ -249,90 +165,49 @@ export default function WalletGraph(props: Props) {
 
   const balance = walletBalance.confirmedWalletBalance;
 
-  const points = prepareGraphPoints(balance, confirmedTransactions, {
+  const data = prepareGraphPoints(balance, confirmedTransactions, walletType, {
     interval: 60 * 60,
     count: 24,
     offset: 0,
   });
 
-  const data = [{
-    id: 'Points',
-    data: points,
-  }];
-
-  const min = points.length ? Math.min(...points.map((item) => item.y)) : 0;
-  const max = Math.max(min, ...points.map((item) => item.y));
-  // const middle = max / 2;
+  const min = data.length ? Math.min(...data.map((item) => item.y)) : 0;
+  const max = Math.max(min, ...data.map((item) => item.y));
 
   return (
-    <StyledGraphContainer height={height}>
-      <ResponsiveLine
-        margin={{ left: 0, top: 2, bottom: 2, right: 0 }}
-        data={data}
-        theme={theme}
-        yScale={{
-          type: 'linear',
-          stacked: true,
-          min: 0,
-          max,
-        }}
-        tooltip={({ point }) => (
-          <StyledTooltip>
-            {point?.data?.tooltip}
-          </StyledTooltip>
-        )}
-        xScale={{
-          type: 'point',
-        }}
-        colors={{ scheme: 'accent' }}
-        axisTop={null}
-        axisRight={null}
-        axisBottom={
-          null /* {
-          tickValues: "every 1 second",
-          tickSize: 5,
-          tickPadding: 5,
-          tickRotation: 0,
-          format: "%S.%L",
-          legend: "Time",
-          legendOffset: 36,
-          legendPosition: "middle"
-        } */
-        }
-        axisLeft={null}
-        pointSize={0}
-        pointBorderWidth={0}
-        useMesh={true}
-        curve="monotoneX"
-        defs={[
-          linearGradientDef('gradientA', [
-            { offset: 0, color: 'inherit' },
-            { offset: 100, color: 'inherit', opacity: 0 },
-          ]),
-        ]}
-        fill={[{ match: '*', id: 'gradientA' }]}
-        areaOpacity={0.3}
-        enableGridX={false}
-        enableGridY={false}
-        enableArea
-      />
-      {/*
-      <StyledMaxTypography variant="body2" color="textSecondary">
-        <FormatLargeNumber value={max} />
-      </StyledMaxTypography>
-
-      <StyledMinTypography variant="body2" color="textSecondary">
-        <FormatLargeNumber value={min} />
-      </StyledMinTypography>
-
-      <StyledMiddleTypography variant="body2" color="textSecondary">
-        <FormatLargeNumber value={middle} />
-      </StyledMiddleTypography>
-      */}
+    <StyledGraphContainer height={height} ref={ref}>
+      <VictoryChart
+        animate={{ duration: 300, onLoad: { duration: 0 } }}
+        width={containerSize.width || 1}
+        height={containerSize.height || 1}
+        domain={{ y: [0, max] }}
+        padding={0}
+        domainPadding={{ x: 0, y: 1 }}
+        containerComponent={<VictoryVoronoiContainer />}
+      >
+        <VictoryArea
+          data={data}
+          interpolation="monotoneX"
+          style={{
+            data: {
+              stroke: '#5DAA62',
+              strokeWidth: 2,
+              strokeLinecap: 'round',
+              fill: 'url(#graph-gradient)',
+            },
+          }}
+          labels={() => ''}
+          labelComponent={<VictoryTooltip flyoutComponent={<WalletGraphTooltip suffix={unit} />} />}
+        />
+        <VictoryAxis
+          style={{
+            axis: { stroke: 'transparent' },
+            ticks: { stroke: 'transparent' },
+            tickLabels: { fill: 'transparent' },
+          }}
+        />
+        <LinearGradient />
+      </VictoryChart>
     </StyledGraphContainer>
   );
 }
-
-WalletGraph.defaultProps = {
-  height: 150,
-};

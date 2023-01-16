@@ -1,18 +1,13 @@
-import React from 'react';
+import { AdvancedOptions, ButtonSelected, CardStep, Flex, TextField, Checkbox, TooltipIcon } from '@taco/core';
 import { Trans } from '@lingui/macro';
-import { useFormContext } from 'react-hook-form';
+import { FormControl, FormControlLabel, Typography } from '@mui/material';
 import { useLocalStorage, writeStorage } from '@rehooks/local-storage';
-import {
-  AdvancedOptions,
-  ButtonSelected,
-  CardStep,
-  Flex,
-  TextField,
-} from '@taco/core';
-import { Typography } from '@mui/material';
+import React from 'react';
+import { useFormContext } from 'react-hook-form';
+
+import PlotLocalStorageKeys from '../../../constants/plotLocalStorage';
 import useSelectDirectory from '../../../hooks/useSelectDirectory';
 import Plotter from '../../../types/Plotter';
-import PlotLocalStorageKeys from '../../../constants/plotLocalStorage';
 
 type Props = {
   step: number;
@@ -20,9 +15,10 @@ type Props = {
 };
 
 export default function PlotAddSelectTemporaryDirectory(props: Props) {
-  const { step } = props;
+  const { step, plotter } = props;
   const selectDirectory = useSelectDirectory();
   const { setValue, watch } = useFormContext();
+  const op = plotter.options;
 
   const workspaceLocation = watch('workspaceLocation');
   const hasWorkspaceLocation = !!workspaceLocation;
@@ -52,8 +48,8 @@ export default function PlotAddSelectTemporaryDirectory(props: Props) {
     <CardStep step={step} title={<Trans>Select Temporary Directory</Trans>}>
       <Typography variant="subtitle1">
         <Trans>
-          Select the temporary destination for the folder where you would like
-          the plot to be stored. We recommend you use a fast drive.
+          Select the temporary destination for the folder where you would like the plot to be stored. We recommend you
+          use a fast drive.
         </Trans>
       </Typography>
 
@@ -79,20 +75,27 @@ export default function PlotAddSelectTemporaryDirectory(props: Props) {
           }}
           required
         />
-        <ButtonSelected
-          onClick={handleSelect}
-          size="large"
-          variant="outlined"
-          selected={hasWorkspaceLocation}
-          nowrap
-        >
-          {hasWorkspaceLocation ? (
-            <Trans>Selected</Trans>
-          ) : (
-            <Trans>Browse</Trans>
-          )}
+        <ButtonSelected onClick={handleSelect} size="large" variant="outlined" selected={hasWorkspaceLocation} nowrap>
+          {hasWorkspaceLocation ? <Trans>Selected</Trans> : <Trans>Browse</Trans>}
         </ButtonSelected>
       </Flex>
+      {op.haveBladebit2NoT1Direct && (
+        <FormControl variant="filled" fullWidth>
+          <FormControlLabel
+            control={<Checkbox name="bladebit2NoT1Direct" />}
+            label={
+              <>
+                <Trans>The folder is on a RAM Disk</Trans>{' '}
+                <TooltipIcon>
+                  <Trans>
+                    Disable direct I/O on the temp 1 directory in order to extract maximum performance with RAM disk
+                  </Trans>
+                </TooltipIcon>
+              </>
+            }
+          />
+        </FormControl>
+      )}
 
       <AdvancedOptions>
         <Flex flexDirection="column" gap={2}>
@@ -118,19 +121,30 @@ export default function PlotAddSelectTemporaryDirectory(props: Props) {
               selected={hasWorkspaceLocation2}
               nowrap
             >
-              {hasWorkspaceLocation2 ? (
-                <Trans>Selected</Trans>
-              ) : (
-                <Trans>Browse</Trans>
-              )}
+              {hasWorkspaceLocation2 ? <Trans>Selected</Trans> : <Trans>Browse</Trans>}
             </ButtonSelected>
           </Flex>
           <Typography color="textSecondary">
-            <Trans>
-              If none selected, then it will default to the temporary directory.
-            </Trans>
+            <Trans>If none selected, then it will default to the temporary directory.</Trans>
           </Typography>
         </Flex>
+        {op.haveBladebit2NoT2Direct && (
+          <FormControl variant="filled" fullWidth>
+            <FormControlLabel
+              control={<Checkbox name="bladebit2NoT2Direct" />}
+              label={
+                <>
+                  <Trans>The folder is on a RAM Disk</Trans>{' '}
+                  <TooltipIcon>
+                    <Trans>
+                      Disable direct I/O on the temp 2 directory in order to extract maximum performance with RAM disk
+                    </Trans>
+                  </TooltipIcon>
+                </>
+              }
+            />
+          </FormControl>
+        )}
       </AdvancedOptions>
     </CardStep>
   );

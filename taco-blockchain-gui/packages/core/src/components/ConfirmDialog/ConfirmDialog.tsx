@@ -1,37 +1,32 @@
-import React, { ReactNode, useState } from 'react';
 import { Trans } from '@lingui/macro';
-import {
-  ButtonProps,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-} from '@mui/material';
-import DialogActions from '../DialogActions';
+import { ButtonProps, Dialog, DialogTitle, DialogContent, DialogContentText } from '@mui/material';
+import React, { type ReactNode, useState } from 'react';
+
+import useShowError from '../../hooks/useShowError';
 import Button from '../Button';
 import ButtonLoading from '../ButtonLoading';
-import useShowError from '../../hooks/useShowError';
+import DialogActions from '../DialogActions';
 
-type Props = {
+export type ConfirmDialogProps = {
   title?: ReactNode;
   children?: ReactNode;
-  open: boolean;
-  onClose: (value: boolean) => void;
+  open?: boolean;
+  onClose?: (value: boolean) => void;
   confirmTitle: ReactNode;
   cancelTitle: ReactNode;
   confirmColor?: ButtonProps['color'] | 'danger';
   onConfirm?: () => Promise<void>;
 };
 
-export default function ConfirmDialog(props: Props) {
+export default function ConfirmDialog(props: ConfirmDialogProps) {
   const {
-    onClose,
-    open,
+    onClose = () => {},
+    open = false,
     title,
     children,
-    cancelTitle,
-    confirmTitle,
-    confirmColor,
+    cancelTitle = <Trans>Cancel</Trans>,
+    confirmTitle = <Trans>OK</Trans>,
+    confirmColor = 'default',
     onConfirm,
     ...rest
   } = props;
@@ -69,40 +64,18 @@ export default function ConfirmDialog(props: Props) {
       {title && <DialogTitle id="alert-dialog-title">{title}</DialogTitle>}
       {children && (
         <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            {children}
-          </DialogContentText>
+          <DialogContentText id="alert-dialog-description">{children}</DialogContentText>
         </DialogContent>
       )}
 
       <DialogActions>
-        <Button
-          onClick={handleCancel}
-          color="secondary"
-          variant="outlined"
-          autoFocus
-        >
+        <Button onClick={handleCancel} color="secondary" variant="outlined" autoFocus>
           {cancelTitle}
         </Button>
-        <ButtonLoading
-          onClick={handleConfirm}
-          color={confirmColor}
-          variant="contained"
-          loading={loading}
-        >
+        <ButtonLoading onClick={handleConfirm} color={confirmColor} variant="contained" loading={loading}>
           {confirmTitle}
         </ButtonLoading>
       </DialogActions>
     </Dialog>
   );
 }
-
-ConfirmDialog.defaultProps = {
-  open: false,
-  onClose: () => {},
-  title: undefined,
-  children: undefined,
-  cancelTitle: <Trans>Cancel</Trans>,
-  confirmTitle: <Trans>OK</Trans>,
-  confirmColor: 'default',
-};

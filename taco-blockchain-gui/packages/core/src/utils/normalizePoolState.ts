@@ -1,4 +1,5 @@
 import type { PoolState } from '@taco/api';
+
 import removeOldPoints from './removeOldPoints';
 
 export default function normalizePoolState(poolState: PoolState): PoolState {

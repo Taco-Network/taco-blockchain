@@ -2,6 +2,7 @@ import { Flex, useDarkMode } from '@taco/core';
 import { Trans } from '@lingui/macro';
 import { Typography } from '@mui/material';
 import React from 'react';
+
 import HeroImage from './NFTGalleryHero.svg';
 import HeroImageDark from './NFTGalleryHeroDark.svg';
 

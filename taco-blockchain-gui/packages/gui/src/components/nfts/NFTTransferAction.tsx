@@ -1,49 +1,25 @@
-import React, { useState } from 'react';
-import { Plural, Trans } from '@lingui/macro';
-import styled from 'styled-components';
 import type { NFTInfo } from '@taco/api';
+import { useTransferNFTMutation } from '@taco/api-react';
 import {
   Button,
   ButtonLoading,
-  ConfirmDialog,
-  Fee,
+  EstimatedFee,
   Form,
-  FormatLargeNumber,
   Flex,
   TextField,
-  TooltipIcon,
   tacoToMojo,
   useCurrencyCode,
   useOpenDialog,
   validAddress,
   useShowError,
 } from '@taco/core';
-import {
-  Box,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Divider,
-  Typography,
-} from '@mui/material';
+import { Trans } from '@lingui/macro';
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Typography } from '@mui/material';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useTransferNFTMutation } from '@taco/api-react';
+
 import NFTSummary from './NFTSummary';
-
-/* ========================================================================== */
-/*                                   Styles                                   */
-/* ========================================================================== */
-
-const StyledTitle = styled(Box)`
-  font-size: 0.625rem;
-  color: rgba(255, 255, 255, 0.7);
-`;
-
-const StyledValue = styled(Box)`
-  word-break: break-all;
-`;
+import NFTTransferConfirmationDialog from './NFTTransferConfirmationDialog';
 
 /* ========================================================================== */
 /*                              NFTTransferResult                             */
@@ -62,91 +38,6 @@ export type NFTTransferResult = {
 /* ========================================================================== */
 /*                      NFT Transfer Confirmation Dialog                      */
 /* ========================================================================== */
-
-type NFTTransferConfirmationDialogProps = NFTTransferFormData & {
-  open: boolean; // For use in openDialog()
-};
-
-function NFTTransferConfirmationDialog(
-  props: NFTTransferConfirmationDialogProps,
-) {
-  const { destination, fee, ...rest } = props;
-  const feeInMojos = tacoToMojo(fee || 0);
-  const currencyCode = useCurrencyCode();
-
-  return (
-    <ConfirmDialog
-      title={<Trans>Confirm NFT Transfer</Trans>}
-      confirmTitle={<Trans>Transfer</Trans>}
-      confirmColor="secondary"
-      cancelTitle={<Trans>Cancel</Trans>}
-      {...rest}
-    >
-      <Flex flexDirection="column" gap={3}>
-        <Typography variant="body1">
-          <Trans>
-            Once you initiate this transfer, you will not be able to cancel the
-            transaction. Are you sure you want to transfer the NFT?
-          </Trans>
-        </Typography>
-        <Divider />
-        <Flex flexDirection="column" gap={1}>
-          <Flex flexDirection="row" gap={1}>
-            <Flex flexShrink={0}>
-              <Typography variant="body1">
-                <Trans>Destination:</Trans>
-              </Typography>
-            </Flex>
-            <Flex
-              flexDirection="row"
-              alignItems="center"
-              gap={1}
-              sx={{ overflow: 'hidden' }}
-            >
-              <Typography noWrap variant="body1">
-                {destination}
-              </Typography>
-              <TooltipIcon interactive>
-                <Flex flexDirection="column" gap={1}>
-                  <StyledTitle>
-                    <Trans>Destination</Trans>
-                  </StyledTitle>
-                  <StyledValue>
-                    <Typography variant="caption">{destination}</Typography>
-                  </StyledValue>
-                </Flex>
-              </TooltipIcon>
-            </Flex>
-          </Flex>
-          <Flex flexDirection="row" gap={1}>
-            <Typography variant="body1">Fee:</Typography>
-            <Typography variant="body1">
-              {fee || '0'} {currencyCode}
-            </Typography>
-            {feeInMojos > 0 && (
-              <>
-                (
-                <FormatLargeNumber value={feeInMojos} />
-                <Box>
-                  <Plural
-                    value={feeInMojos.toNumber()}
-                    one="mojo"
-                    other="mojos"
-                  />
-                </Box>
-                )
-              </>
-            )}
-          </Flex>
-        </Flex>
-      </Flex>
-    </ConfirmDialog>
-  );
-}
-
-NFTTransferConfirmationDialog.defaultProps = {
-  open: false,
-};
 
 /* ========================================================================== */
 /*                         NFT Transfer Action (Form)                         */
@@ -198,9 +89,7 @@ export default function NFTTransferAction(props: NFTTransferActionProps) {
       return;
     }
 
-    const confirmation = await openDialog(
-      <NFTTransferConfirmationDialog destination={destination} fee={fee} />,
-    );
+    const confirmation = await openDialog(<NFTTransferConfirmationDialog destination={destination} fee={fee} />);
 
     if (confirmation) {
       setIsLoading(true);
@@ -246,31 +135,22 @@ export default function NFTTransferAction(props: NFTTransferActionProps) {
           disabled={isLoading}
           required
         />
-        <Fee
+        <EstimatedFee
           id="filled-secondary"
           variant="filled"
           name="fee"
           color="secondary"
           label={<Trans>Fee</Trans>}
           disabled={isLoading}
+          txType="transferNFT"
+          fullWidth
         />
         <DialogActions>
           <Flex flexDirection="row" gap={3}>
-            <Button
-              onClick={handleClose}
-              color="secondary"
-              variant="outlined"
-              autoFocus
-            >
+            <Button onClick={handleClose} color="secondary" variant="outlined" autoFocus>
               <Trans>Close</Trans>
             </Button>
-            <ButtonLoading
-              type="submit"
-              autoFocus
-              color="primary"
-              variant="contained"
-              loading={isLoading}
-            >
+            <ButtonLoading type="submit" autoFocus color="primary" variant="contained" loading={isLoading}>
               <Trans>Transfer</Trans>
             </ButtonLoading>
           </Flex>
@@ -326,15 +206,9 @@ export function NFTTransferDialog(props: NFTTransferDialogProps) {
       <DialogContent>
         <Flex flexDirection="column" gap={3}>
           <DialogContentText id="nft-transfer-dialog-description">
-            <Trans>
-              Would you like to transfer the specified NFT to a new owner?
-            </Trans>
+            <Trans>Would you like to transfer the specified NFT to a new owner?</Trans>
           </DialogContentText>
-          <NFTTransferAction
-            nft={nft}
-            destination={destination}
-            onComplete={handleCompletion}
-          />
+          <NFTTransferAction nft={nft} destination={destination} onComplete={handleCompletion} />
         </Flex>
       </DialogContent>
     </Dialog>

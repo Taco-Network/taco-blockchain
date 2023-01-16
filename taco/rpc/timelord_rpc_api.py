@@ -1,5 +1,8 @@
-from typing import Any, Callable, Dict, List, Optional
+from __future__ import annotations
 
+from typing import Any, Dict, List, Optional
+
+from taco.rpc.rpc_server import Endpoint
 from taco.timelord.timelord import Timelord
 from taco.util.ws_message import WsRpcMessage, create_payload_dict
 
@@ -9,7 +12,7 @@ class TimelordRpcApi:
         self.service = timelord
         self.service_name = "taco_timelord"
 
-    def get_routes(self) -> Dict[str, Callable]:
+    def get_routes(self) -> Dict[str, Endpoint]:
         return {}
 
     async def _state_changed(self, change: str, change_data: Optional[Dict[str, Any]] = None) -> List[WsRpcMessage]:

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import Optional
 
 import click
@@ -10,7 +12,7 @@ import click
     help=(
         "Set the port where the Full Node is hosting the RPC interface. "
         "See the rpc_port under full_node in config.yaml. "
-        "[default: 8555]"
+        "[default: 18735]"
     ),
     type=int,
     default=None,
@@ -39,6 +41,7 @@ def netspace_cmd(rpc_port: Optional[int], delta_block_height: str, start: str) -
     Calculates the estimated space on the network given two block header hashes.
     """
     import asyncio
+
     from .netspace_funcs import netstorge_async
 
     asyncio.run(netstorge_async(rpc_port, delta_block_height, start))

@@ -1,8 +1,8 @@
 # @taco/api
 
-![Alt text](https://www.taco.net/img/taco_logo.svg)
+![Alt text](https://www.taconetwork.net/img/taco_logo.svg)
 
-This library provides support for TypeScript/JavaScript [Taco](https://www.taco.net) apps to access the [Taco Blockchain RPC](https://github.com/Taco-Network/taco-blockchain/wiki/RPC-Interfaces), by making it easier to perform the following actions:
+This library provides support for TypeScript/JavaScript [Taco](https://www.taconetwork.net) apps to access the [Taco Blockchain RPC](https://github.com/Taco-Network/taco-blockchain/wiki/RPC-Interfaces), by making it easier to perform the following actions:
 
 - Making requests to the Taco Blockchain RPC.
 - Catch responses and errors with standard try/catch and async/await syntax.

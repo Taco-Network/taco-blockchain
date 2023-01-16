@@ -1,8 +1,9 @@
-import React from 'react';
-import { Trans } from '@lingui/macro';
 import { useGetPrivateKeyQuery } from '@taco/api-react';
+import { Trans } from '@lingui/macro';
 import { Grid, Typography } from '@mui/material';
+import React from 'react';
 import styled from 'styled-components';
+
 import AlertDialog from '../../components/AlertDialog';
 import Loading from '../../components/Loading';
 
@@ -17,30 +18,20 @@ type Props = {
 export default function SelectKeyDetailDialog(props: Props) {
   const { fingerprint, ...rest } = props;
 
-  const { data: privateKey, isLoading, ...rest2 } = useGetPrivateKeyQuery({
+  const { data: privateKey, isLoading } = useGetPrivateKeyQuery({
     fingerprint,
   });
 
   if (isLoading) {
     return (
-      <AlertDialog
-        title={
-          <Trans>Private key {fingerprint}</Trans>
-        }
-        {...rest}
-      >
+      <AlertDialog title={<Trans>Private key {fingerprint}</Trans>} {...rest}>
         <Loading center />
       </AlertDialog>
     );
   }
 
   return (
-    <AlertDialog
-      title={
-        <Trans>Private key {fingerprint}</Trans>
-      }
-      {...rest}
-    >
+    <AlertDialog title={<Trans>Private key {fingerprint}</Trans>} {...rest}>
       <Grid
         container
         component="dl" // mount a Definition List

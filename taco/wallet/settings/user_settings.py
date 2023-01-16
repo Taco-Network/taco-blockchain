@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import Any, Dict
 
 from taco.wallet.key_val_store import KeyValStore

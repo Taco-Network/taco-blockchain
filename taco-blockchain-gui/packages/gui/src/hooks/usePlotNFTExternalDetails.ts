@@ -1,6 +1,7 @@
-import { useMemo } from 'react';
 import type { Plot, PlotNFTExternal } from '@taco/api';
 import { useIsWalletSynced } from '@taco/wallets';
+import { useMemo } from 'react';
+
 import usePlotNFTName from './usePlotNFTName';
 
 export default function usePlotNFTExternalDetails(nft: PlotNFTExternal): {
@@ -9,7 +10,7 @@ export default function usePlotNFTExternalDetails(nft: PlotNFTExternal): {
   plots?: Plot[];
   isSelfPooling: boolean;
 } {
-  const isWalletSynced = useIsWalletSynced()
+  const isWalletSynced = useIsWalletSynced();
 
   const humanName = usePlotNFTName(nft);
   const details = useMemo(() => {

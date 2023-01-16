@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import asyncio
 import logging
 import sys
@@ -35,7 +37,7 @@ def plots_cmd(ctx: click.Context):
     root_path: Path = ctx.obj["root_path"]
     if not root_path.is_dir():
         raise RuntimeError("Please initialize (or migrate) your config directory with 'taco init'")
-    initialize_logging("", {"log_stdout": True}, root_path)
+    initialize_logging("", {"log_level": "INFO", "log_stdout": True}, root_path)
 
 
 @plots_cmd.command("create", short_help="Create plots")
@@ -152,7 +154,10 @@ def create_cmd(
 
     asyncio.run(create_plots(Params(), plot_keys))
     if not exclude_final_dir:
-        add_plot_directory(root_path, final_dir)
+        try:
+            add_plot_directory(root_path, final_dir)
+        except ValueError as e:
+            print(e)
 
 
 @plots_cmd.command("check", short_help="Checks plots")
@@ -189,7 +194,11 @@ def check_cmd(
 def add_cmd(ctx: click.Context, final_dir: str):
     from taco.plotting.util import add_plot_directory
 
-    add_plot_directory(ctx.obj["root_path"], final_dir)
+    try:
+        add_plot_directory(ctx.obj["root_path"], final_dir)
+        print(f"Successfully added: {final_dir}")
+    except ValueError as e:
+        print(e)
 
 
 @plots_cmd.command("remove", short_help="Removes a directory of plots from config.yaml")

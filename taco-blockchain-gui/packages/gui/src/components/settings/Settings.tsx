@@ -1,253 +1,43 @@
-import React, { useState } from 'react';
+import { Flex, LayoutDashboardSub } from '@taco/core';
 import { Trans } from '@lingui/macro';
-import { makeStyles } from '@mui/styles';
-import { Routes, Route, useNavigate, useMatch } from 'react-router-dom';
-import {
-  AlertDialog,
-  Button,
-  Card,
-  Flex,
-  Suspender,
-  useOpenDialog,
-  useSkipMigration,
-  LayoutDashboardSub,
-} from '@taco/core';
-import { useGetKeyringStatusQuery } from '@taco/api-react';
-import { Grid, Typography, Box, Tooltip, Tab, Tabs } from '@mui/material';
-import {
-  Help as HelpIcon,
-  Lock as LockIcon,
-  NoEncryption as NoEncryptionIcon,
-} from '@mui/icons-material';
-import ChangePassphrasePrompt from './ChangePassphrasePrompt';
-import RemovePassphrasePrompt from './RemovePassphrasePrompt';
-import SetPassphrasePrompt from './SetPassphrasePrompt';
+import { Typography, Tab, Tabs } from '@mui/material';
+import React from 'react';
+import { Routes, Route, matchPath, useLocation, useNavigate } from 'react-router-dom';
+
+import SettingsDataLayer from './SettingsDataLayer';
 import SettingsGeneral from './SettingsGeneral';
+import SettingsNFT from './SettingsNFT';
 import SettingsProfiles from './SettingsProfiles';
 
-const useStyles = makeStyles((theme) => ({
-  passToggleBox: {
-    alignItems: 'center',
-  },
-  passChangeBox: {
-    paddingTop: 20,
-  },
-  oldPass: {
-    paddingRight: 20,
-  },
-  togglePassButton: {
-    marginLeft: theme.spacing(4),
-  },
-  updatePassButton: {
-    marginLeft: theme.spacing(6),
-    marginRight: theme.spacing(2),
-    height: 56,
-    width: 150,
-  },
-}));
+enum SettingsTab {
+  GENERAL = 'general',
+  PROFILES = 'profiles',
+  NFT = 'nft',
+  DATALAYER = 'datalayer',
+}
 
-const SecurityCard = () => {
-  const classes = useStyles();
-  const openDialog = useOpenDialog();
-  const [_skipMigration, setSkipMigration] = useSkipMigration();
-  const { data: keyringStatus, isLoading } = useGetKeyringStatusQuery();
-  const [changePassphraseOpen, setChangePassphraseOpen] = React.useState(false);
-  const [removePassphraseOpen, setRemovePassphraseOpen] = React.useState(false);
-  const [addPassphraseOpen, setAddPassphraseOpen] = React.useState(false);
-
-  if (isLoading) {
-    return <Suspender />;
-  }
-
-  const { userPassphraseIsSet, needsMigration } = keyringStatus;
-
-  async function changePassphraseSucceeded() {
-    closeChangePassphrase();
-    await openDialog(
-      <AlertDialog>
-        <Trans>Your passphrase has been updated</Trans>
-      </AlertDialog>,
-    );
-  }
-
-  async function setPassphraseSucceeded() {
-    closeSetPassphrase();
-    await openDialog(
-      <AlertDialog>
-        <Trans>Your passphrase has been set</Trans>
-      </AlertDialog>,
-    );
-  }
-
-  async function removePassphraseSucceeded() {
-    closeRemovePassphrase();
-    await openDialog(
-      <AlertDialog>
-        <Trans>Passphrase protection has been disabled</Trans>
-      </AlertDialog>,
-    );
-  }
-
-  function closeChangePassphrase() {
-    setChangePassphraseOpen(false);
-  }
-
-  function closeSetPassphrase() {
-    setAddPassphraseOpen(false);
-  }
-
-  function closeRemovePassphrase() {
-    setRemovePassphraseOpen(false);
-  }
-
-  function PassphraseFeatureStatus(): JSX.Element {
-    let icon: JSX.Element | null = null;
-    let statusMessage: JSX.Element | null = null;
-    let tooltipTitle: React.ReactElement;
-    const tooltipIconStyle: React.CSSProperties = {
-      color: '#c8c8c8',
-      fontSize: 12,
-    };
-
-    if (needsMigration) {
-      icon = <NoEncryptionIcon style={{ color: 'red', marginRight: 6 }} />;
-      statusMessage = (
-        <Trans>Migration required to support passphrase protection</Trans>
-      );
-      tooltipTitle = (
-        <Trans>
-          Passphrase support requires migrating your keys to a new keyring
-        </Trans>
-      );
-    } else {
-      tooltipTitle = (
-        <Trans>Secure your keychain using a strong passphrase</Trans>
-      );
-
-      if (userPassphraseIsSet) {
-        icon = <LockIcon style={{ color: '#3AAC59', marginRight: 6 }} />;
-        statusMessage = <Trans>Passphrase protection is enabled</Trans>;
-      } else {
-        icon = <NoEncryptionIcon style={{ color: 'red', marginRight: 6 }} />;
-        statusMessage = <Trans>Passphrase protection is disabled</Trans>;
-      }
-    }
-
-    return (
-      <Box display="flex" className={classes.passToggleBox}>
-        {icon}
-        <Typography variant="subtitle1" style={{ marginRight: 5 }}>
-          {statusMessage}
-        </Typography>
-        <Tooltip title={tooltipTitle}>
-          <HelpIcon style={tooltipIconStyle} />
-        </Tooltip>
-      </Box>
-    );
-  }
-
-  function DisplayChangePassphrase() {
-    if (needsMigration === false && userPassphraseIsSet) {
-      return (
-        <Box display="flex" className={classes.passChangeBox}>
-          <Button
-            onClick={() => setChangePassphraseOpen(true)}
-            className={classes.togglePassButton}
-            variant="contained"
-            disableElevation
-          >
-            <Trans>Change Passphrase</Trans>
-          </Button>
-          {changePassphraseOpen && (
-            <ChangePassphrasePrompt
-              onSuccess={changePassphraseSucceeded}
-              onCancel={closeChangePassphrase}
-            />
-          )}
-        </Box>
-      );
-    }
-    return null;
-  }
-
-  function ActionButtons() {
-    if (needsMigration) {
-      return (
-        <Button
-          onClick={() => setSkipMigration(false)}
-          className={classes.togglePassButton}
-          variant="contained"
-          disableElevation
-        >
-          <Trans>Migrate Keyring</Trans>
-        </Button>
-      );
-    } else {
-      if (userPassphraseIsSet) {
-        return (
-          <Button
-            onClick={() => setRemovePassphraseOpen(true)}
-            className={classes.togglePassButton}
-            variant="contained"
-            disableElevation
-          >
-            <Trans>Remove Passphrase</Trans>
-          </Button>
-        );
-      } else {
-        return (
-          <Button
-            onClick={() => setAddPassphraseOpen(true)}
-            className={classes.togglePassButton}
-            variant="contained"
-            disableElevation
-          >
-            <Trans>Set Passphrase</Trans>
-          </Button>
-        );
-      }
-    }
-  }
-
-  return (
-    <Card title={<Trans>Passphrase Settings</Trans>}>
-      <Grid spacing={4} container>
-        <Grid item xs={12}>
-          <PassphraseFeatureStatus />
-          <DisplayChangePassphrase />
-          <Box display="flex" className={classes.passChangeBox}>
-            <ActionButtons />
-            {removePassphraseOpen && (
-              <RemovePassphrasePrompt
-                onSuccess={removePassphraseSucceeded}
-                onCancel={closeRemovePassphrase}
-              />
-            )}
-            {addPassphraseOpen && (
-              <SetPassphrasePrompt
-                onSuccess={setPassphraseSucceeded}
-                onCancel={closeSetPassphrase}
-              />
-            )}
-          </Box>
-        </Grid>
-      </Grid>
-    </Card>
-  );
+const SettingsTabsPathMapping = {
+  [SettingsTab.GENERAL]: '/dashboard/settings/general',
+  [SettingsTab.PROFILES]: '/dashboard/settings/profiles',
+  [SettingsTab.NFT]: '/dashboard/settings/nft',
+  [SettingsTab.DATALAYER]: '/dashboard/settings/datalayer',
 };
 
 export default function Settings() {
   const navigate = useNavigate();
-  const isGeneral = !!useMatch({ path: '/dashboard/settings', end: true });
+  const { pathname } = useLocation();
 
-  const activeTab = isGeneral ? 'GENERAL' : 'PROFILES';
+  const mapping = {
+    ...SettingsTabsPathMapping,
+    [SettingsTab.PROFILES]: '/dashboard/settings/profiles/*',
+  };
 
-  function handleChangeTab(newTab: string) {
-    if (newTab === 'PROFILES') {
-      navigate('/dashboard/settings/profiles');
-    } else {
-      navigate('/dashboard/settings');
-    }
+  const activeTab =
+    Object.entries(mapping).find(([, pattern]) => !!matchPath(pattern, pathname))?.[0] ?? SettingsTab.GENERAL;
+
+  function handleChangeTab(newTab: SettingsTab) {
+    const path = SettingsTabsPathMapping[newTab] ?? SettingsTabsPathMapping[SettingsTab.GENERAL];
+    navigate(path);
   }
 
   return (
@@ -264,20 +54,38 @@ export default function Settings() {
             indicatorColor="primary"
           >
             <Tab
-              value="GENERAL"
+              value={SettingsTab.GENERAL}
               label={<Trans>General</Trans>}
               style={{ width: '175px' }}
+              data-testid="Settings-tab-general"
             />
             <Tab
-              value="PROFILES"
+              value={SettingsTab.PROFILES}
               label={<Trans>Profiles</Trans>}
               style={{ width: '175px' }}
+              data-testid="Settings-tab-profiles"
+            />
+
+            <Tab
+              value={SettingsTab.NFT}
+              label={<Trans>NFT</Trans>}
+              style={{ width: '175px' }}
+              data-testid="Settings-tab-nft"
+            />
+
+            <Tab
+              value={SettingsTab.DATALAYER}
+              label={<Trans>DataLayer</Trans>}
+              style={{ width: '175px' }}
+              data-testid="Settings-tab-datalayer"
             />
           </Tabs>
 
           <Routes>
             <Route path="profiles/*" element={<SettingsProfiles />} />
-            <Route index element={<SettingsGeneral />} />
+            <Route path="nft" element={<SettingsNFT />} />
+            <Route path="datalayer" element={<SettingsDataLayer />} />
+            <Route path="general" element={<SettingsGeneral />} />
           </Routes>
         </Flex>
       </Flex>

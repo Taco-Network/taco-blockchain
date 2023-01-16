@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import asyncio
 import concurrent
 import dataclasses
@@ -6,7 +8,6 @@ from concurrent.futures.thread import ThreadPoolExecutor
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
-import taco.server.ws_connection as ws  # lgtm [py/import-and-import-from]
 from taco.consensus.constants import ConsensusConstants
 from taco.plot_sync.sender import Sender
 from taco.plotting.manager import PlotManager
@@ -19,7 +20,10 @@ from taco.plotting.util import (
     remove_plot,
     remove_plot_directory,
 )
-from taco.util.streamable import dataclass_from_dict
+from taco.rpc.rpc_server import default_get_connections
+from taco.server.outbound_message import NodeType
+from taco.server.server import TacoServer
+from taco.server.ws_connection import WSTacoConnection
 
 log = logging.getLogger(__name__)
 
@@ -28,13 +32,23 @@ class Harvester:
     plot_manager: PlotManager
     plot_sync_sender: Sender
     root_path: Path
-    _is_shutdown: bool
+    _shut_down: bool
     executor: ThreadPoolExecutor
     state_changed_callback: Optional[Callable]
     cached_challenges: List
     constants: ConsensusConstants
     _refresh_lock: asyncio.Lock
     event_loop: asyncio.events.AbstractEventLoop
+    _server: Optional[TacoServer]
+
+    @property
+    def server(self) -> TacoServer:
+        # This is a stop gap until the class usage is refactored such the values of
+        # integral attributes are known at creation of the instance.
+        if self._server is None:
+            raise RuntimeError("server not assigned")
+
+        return self._server
 
     def __init__(self, root_path: Path, config: Dict, constants: ConsensusConstants):
         self.log = log
@@ -50,15 +64,17 @@ class Harvester:
                 refresh_parameter, interval_seconds=config["plot_loading_frequency_seconds"]
             )
         if "plots_refresh_parameter" in config:
-            refresh_parameter = dataclass_from_dict(PlotsRefreshParameter, config["plots_refresh_parameter"])
+            refresh_parameter = PlotsRefreshParameter.from_json_dict(config["plots_refresh_parameter"])
+
+        self.log.info(f"Using plots_refresh_parameter: {refresh_parameter}")
 
         self.plot_manager = PlotManager(
             root_path, refresh_parameter=refresh_parameter, refresh_callback=self._plot_refresh_callback
         )
         self.plot_sync_sender = Sender(self.plot_manager)
-        self._is_shutdown = False
+        self._shut_down = False
         self.executor = concurrent.futures.ThreadPoolExecutor(max_workers=config["num_threads"])
-        self.server = None
+        self._server = None
         self.constants = constants
         self.cached_challenges = []
         self.state_changed_callback: Optional[Callable] = None
@@ -69,7 +85,7 @@ class Harvester:
         self.event_loop = asyncio.get_running_loop()
 
     def _close(self):
-        self._is_shutdown = True
+        self._shut_down = True
         self.executor.shutdown(wait=True)
         self.plot_manager.stop_refreshing()
         self.plot_manager.reset()
@@ -77,6 +93,12 @@ class Harvester:
 
     async def _await_closed(self):
         await self.plot_sync_sender.await_closed()
+
+    def get_connections(self, request_node_type: Optional[NodeType]) -> List[Dict[str, Any]]:
+        return default_get_connections(server=self.server, request_node_type=request_node_type)
+
+    async def on_connect(self, connection: WSTacoConnection):
+        pass
 
     def _set_state_changed_callback(self, callback: Callable):
         self.state_changed_callback = callback
@@ -86,7 +108,7 @@ class Harvester:
             self.state_changed_callback(change, change_data)
 
     def _plot_refresh_callback(self, event: PlotRefreshEvents, update_result: PlotRefreshResult):
-        log_function = self.log.debug if event != PlotRefreshEvents.done else self.log.info
+        log_function = self.log.debug if event == PlotRefreshEvents.batch_processed else self.log.info
         log_function(
             f"_plot_refresh_callback: event {event.name}, loaded {len(update_result.loaded)}, "
             f"removed {len(update_result.removed)}, processed {update_result.processed}, "
@@ -101,7 +123,7 @@ class Harvester:
         if event == PlotRefreshEvents.done:
             self.plot_sync_sender.sync_done(update_result.removed, update_result.duration)
 
-    def on_disconnect(self, connection: ws.WSTacoConnection):
+    def on_disconnect(self, connection: WSTacoConnection):
         self.log.info(f"peer disconnected {connection.get_peer_logging()}")
         self.state_changed("close_connection")
         self.plot_sync_sender.stop()
@@ -156,5 +178,5 @@ class Harvester:
         self.plot_manager.trigger_refresh()
         return True
 
-    def set_server(self, server):
-        self.server = server
+    def set_server(self, server: TacoServer) -> None:
+        self._server = server

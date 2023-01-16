@@ -8,8 +8,6 @@ from taco.wallet.lineage_proof import LineageProof
 from taco.types.blockchain_format.program import Program
 from taco.types.blockchain_format.coin import Coin
 
-DID_HRP = "did:taco:"
-
 
 @streamable
 @dataclass(frozen=True)

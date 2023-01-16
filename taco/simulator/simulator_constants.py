@@ -1,7 +1,7 @@
 if __name__ == "__main__":
-    from tests.block_tools import create_block_tools, test_constants
-    from tests.util.keyring import TempKeyring
     from taco.util.default_root import DEFAULT_ROOT_PATH
+    from taco.simulator.block_tools import create_block_tools, test_constants
+    from taco.simulator.keyring import TempKeyring
 
     with TempKeyring() as keychain:
         # TODO: mariano: fix this with new consensus

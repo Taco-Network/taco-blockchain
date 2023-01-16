@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import cProfile
 import random
 import sqlite3
@@ -10,13 +12,12 @@ from typing import Iterator, List, Optional
 import click
 import zstd
 
+from taco.simulator.block_tools import create_block_tools
+from taco.simulator.keyring import TempKeyring
 from taco.types.blockchain_format.coin import Coin
 from taco.types.spend_bundle import SpendBundle
 from taco.util.taco_logging import initialize_logging
 from taco.util.ints import uint32, uint64
-from taco.util.path import mkdir
-from tests.block_tools import create_block_tools
-from tests.util.keyring import TempKeyring
 from tools.test_constants import test_constants
 
 
@@ -76,7 +77,7 @@ def main(length: int, fill_rate: int, profile: bool, block_refs: bool, output: O
         output = f"stress-test-blockchain-{length}-{fill_rate}{'-refs' if block_refs else ''}.sqlite"
 
     root_path = Path("./test-chain").resolve()
-    mkdir(root_path)
+    root_path.mkdir(parents=True, exist_ok=True)
     with TempKeyring() as keychain:
 
         bt = create_block_tools(constants=test_constants, root_path=root_path, keychain=keychain)

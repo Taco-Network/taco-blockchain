@@ -1,15 +1,16 @@
-import React from 'react';
-import { useRouteMatch, useNavigate } from 'react-router-dom';
-import { Trans, t } from '@lingui/macro';
-import { Grid } from '@mui/material';
-import { Add as AddIcon } from '@mui/icons-material';
-import { Back, Flex, Loading, useShowError } from '@taco/core';
-import { useGetWalletsQuery, useAddCATTokenMutation, useGetCatListQuery } from '@taco/api-react';
-import WalletCreateCard from '../create/WalletCreateCard';
-import isCATWalletPresent from '../../utils/isCATWalletPresent';
 import type { CATToken } from '@taco/api';
-import useWalletState from '../../hooks/useWalletState';
 import { SyncingStatus } from '@taco/api';
+import { useGetWalletsQuery, useAddCATTokenMutation, useGetCatListQuery } from '@taco/api-react';
+import { Back, Flex, Loading, useShowError } from '@taco/core';
+import { Trans, t } from '@lingui/macro';
+import { Add as AddIcon } from '@mui/icons-material';
+import { Grid } from '@mui/material';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+
+import useWalletState from '../../hooks/useWalletState';
+import isCATWalletPresent from '../../utils/isCATWalletPresent';
+import WalletCreateCard from '../create/WalletCreateCard';
 
 export default function WalletCATCreateSimple() {
   const navigate = useNavigate();
@@ -20,7 +21,7 @@ export default function WalletCATCreateSimple() {
   const { state } = useWalletState();
 
   const isLoading = isWalletsLoading || isCatListLoading;
-  
+
   function handleCreateExisting() {
     navigate(`/dashboard/wallets/create/cat/existing`);
   }
@@ -32,15 +33,15 @@ export default function WalletCATCreateSimple() {
       if (isAddCATTokenLoading) {
         return;
       }
-  
+
       if (state !== SyncingStatus.SYNCED) {
         throw new Error(t`Please wait for wallet synchronization`);
       }
-      
+
       if (!name) {
         throw new Error(t`Token has empty name`);
       }
-    
+
       if (!assetId) {
         throw new Error(t`Token has empty asset id`);
       }
@@ -52,15 +53,13 @@ export default function WalletCATCreateSimple() {
       }).unwrap();
 
       navigate(`/dashboard/wallets/${walletId}`);
-    } catch(error: any) {
+    } catch (error: any) {
       showError(error);
     }
   }
 
   if (isLoading) {
-    return (
-      <Loading center />
-    );
+    return <Loading center />;
   }
 
   return (

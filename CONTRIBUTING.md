@@ -5,9 +5,9 @@ We are happy that you are taking a look at the code for Taco, a proof of space a
 
 A lot of fascinating new cryptography and blockchain concepts are used and implemented here.
 This repo includes the code for the Taco full node, farmer, and timelord (in taco folder), which are all written in python.
-It also includes a verifiable delay function implementation that it imports from the [chiavdf repo](https://github.com/Chia-Network/chiavdf) (in c/c++), and a proof of space implementation that it imports from the [chiapos repo](https://github.com/Chia-Network/chiapos). BLS signatures are imported from the [bls-signatures repo](https://github.com/Chia-Network/bls-signatures) as blspy. There is an additional dependency on the [chiabip158 repo](https://github.com/Chia-Network/chiabip158). For major platforms, binary and source wheels are shipped to PyPI from each dependent repo. Then taco-blockchain can pip install those from PyPI or they can be prepackaged as is done for the Windows installer. On unsupported platforms, pip will fall back to the source distributions, to be compiled locally.
+It also includes a verifiable delay function implementation that it imports from the [chiavdf repo](https://github.com/Taco-Network/chiavdf) (in c/c++), and a proof of space implementation that it imports from the [chiapos repo](https://github.com/Taco-Network/chiapos). BLS signatures are imported from the [bls-signatures repo](https://github.com/Taco-Network/bls-signatures) as blspy. There is an additional dependency on the [chiabip158 repo](https://github.com/Taco-Network/chiabip158). For major platforms, binary and source wheels are shipped to PyPI from each dependent repo. Then taco-blockchain can pip install those from PyPI or they can be prepackaged as is done for the Windows installer. On unsupported platforms, pip will fall back to the source distributions, to be compiled locally.
 
-If you want to learn more about this project, read the [wiki](https://github.com/TacoNetwork/taco-blockchain/wiki), or check out the [green paper](https://www.taco.network/).
+If you want to learn more about this project, read the [wiki](https://github.com/Taco-Network/taco-blockchain/wiki), or check out the [green paper](https://www.taconetwork.net/assets/TacoGreenPaper.pdf).
 
 ## Contributions
 
@@ -25,7 +25,7 @@ We ask that external contributors create a fork of the `main` branch for any fea
 
 Members of the Taco organization may create feature branches from the `main` branch.
 
-In the event an emergency fix is required for the release version of Taco, members of the Taco organization will create a feature branch from the current release branch `1.0.0`.
+In the event an emergency fix is required for the release version of Taco, members of the Taco organization will create a feature branch from the current release branch `latest`.
 
 ## Branching Strategy
 
@@ -37,33 +37,37 @@ In the event an emergency fix is required for the release version of Taco, membe
 4. Taco Network's nodes on the public testnet are running the latest version `x.y.z`.
 5. The `main` branch will have a long running `beta testnet` to allow previewing of changes.
 6. Pull Request events may require a `beta testnet` review environment. At the moment this is at the discretion of the reviewer.
-7. Hotfixes land in the release branch they fix, and all later versions. (This will be achieved by regularly merging from `1.0.x` to main).
+7. Hotfixes land in the release branch they fix, and all later versions. (This will be achieved by regularly merging from `1.3.x` to main).
 8. Hotfixes that are emergency fixes for a specific version will be merged into (???), and removed from down-stream branches. This allows future merges without issues.
 9. Whoever develops a hotfix is also responsible for merging it into all later branches.
-10. A release branch (e.g. `1.1.x`) will be cut prior to a release, in order to separate work that should go into the release from work going into the next major release (main branch). (This pre-release branch will also have a `beta testnet` spun up for preview).
+10. A release branch (e.g. `1.3.x`) will be cut prior to a release, in order to separate work that should go into the release from work going into the next major release (main branch). (This pre-release branch will also have a `beta testnet` spun up for preview).
 11. All Merge events will be squash merged.
 
 ## Run tests and linting
 
 The first time the tests are run, BlockTools will create and persist many plots. These are used for creating
-proofs of space during testing. The next time tests are run, this will not be necessary.
+proofs of space during testing. The next time tests are run, this will not be necessary. Look at the pytest.ini file
+to configure how the tests are run. For example, for more logging: change the log level from WARNING to INFO, change
+`-n auto` to `-n 0` and set `log_cli = True`.
 
 ```bash
+sh install.sh -d
 . ./activate
-pip install ".[dev]"
-black taco tests && mypy taco tests && flake8 taco tests
+black . && isort benchmarks build_scripts taco tests tools *.py && mypy && flake8 benchmarks build_scripts taco tests tools *.py && pylint benchmarks build_scripts taco tests tools *.py
 py.test tests -v --durations 0
 ```
 
 The [black library](https://black.readthedocs.io/en/stable/) is used as an automatic style formatter to make things easier.
 The [flake8 library](https://readthedocs.org/projects/flake8/) helps ensure consistent style.
 The [Mypy library](https://mypy.readthedocs.io/en/stable/) is very useful for ensuring objects are of the correct type, so try to always add the type of the return value, and the type of local variables.
+The [isort library](https://isort.readthedocs.io) is used to sort, group and validate imports in all python files.
+The [pylint library](https://pylint.pycqa.org/en/stable/) is used to further lint all python files.
 
 If you want verbose logging for tests, edit the `tests/pytest.ini` file.
 
 ## Pre-Commit
 
-We provide a [pre-commit configuration](https://github.com/TacoNetwork/taco-blockchain/blob/main/.pre-commit-config.yaml) which triggers several useful
+We provide a [pre-commit configuration](https://github.com/Taco-Network/taco-blockchain/blob/main/.pre-commit-config.yaml) which triggers several useful
 hooks (including linters/formatter) before each commit you make if you installed and set up [pre-commit](https://pre-commit.com/). This will help
 to reduce the time you spend on failed CI jobs.
 
@@ -85,20 +89,18 @@ provided configuration with `pre-commit install`.
 
 Pycharm is an amazing and beautiful python IDE that some of us use to work on this project.
 If you combine it with python black and formatting on save, you will get a very efficient
-workflow.
+workflow. It's also especially efficient for git branching, cherry-picking, committing and pushing.
 
-1. pip install black
-2. Run blackd in a terminal
-3. Install BlackConnect plugin
-4. Set to run python black on save
-5. Set line length to 120
-6. Install these linters https://github.com/TacoNetwork/taco-blockchain/tree/main/.github/linters
+1. Run blackd in a terminal
+2. Install BlackConnect plugin
+3. Set to run python black on save
+4. Set line length to 120
+5. Install the linters in the root directory
 
 ## Testnets and review environments
 
-With the launch of `1.0.0` we will begin running an official `testnet`.
-Prior to the release of `1.1.0` there will be two running test nets. `testnet` and `transaction-beta-testnet`. The `transaction-beta-testnet` testnet will be a beta of the pending 1.1 release, which will enable transactions on the taco blockchain.
-Following the release of `1.1.0`, the official `testnet` will include all changes that have been accepted to the current release branch.
+The current official testnet is testnet10. Look at `taco/util/initial_config.yaml` to see the configuration parameters
+for each testnet. Information on how to use the testnet can be found in the wiki.
 
 Prior to proposing changes to `main`, proposers should consider if running a `beta testnet` review environment will make the reviewer more effective when evaluating a change.
 Changes that impact the blockchain could require a review environment before acceptance into `main`. This is at the discretion of the reviewer.

@@ -1,15 +1,16 @@
-import React, { useState } from 'react';
-import { Trans } from '@lingui/macro';
-import { useNavigate } from 'react-router-dom';
 import { WalletType } from '@taco/api';
-import { Flex } from '@taco/core';
+import { Flex, MenuItem } from '@taco/core';
 import { Offers as OffersIcon } from '@taco/icons';
-import { Box, Typography, ListItemIcon, MenuItem } from '@mui/material';
+import { Trans } from '@lingui/macro';
+import { Box, Typography, ListItemIcon } from '@mui/material';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+import WalletHeader from '../WalletHeader';
 import WalletHistory from '../WalletHistory';
-import WalletStandardCards from './WalletStandardCards';
 import WalletReceiveAddress from '../WalletReceiveAddress';
 import WalletSend from '../WalletSend';
-import WalletHeader from '../WalletHeader';
+import WalletStandardCards from './WalletStandardCards';
 
 type StandardWalletProps = {
   walletId: number;
@@ -19,14 +20,11 @@ export default function StandardWallet(props: StandardWalletProps) {
   const { walletId } = props;
   // const showDebugInformation = useShowDebugInformation();
   const navigate = useNavigate();
-  const [selectedTab, setSelectedTab] = useState<
-    'summary' | 'send' | 'receive'
-  >('summary');
+  const [selectedTab, setSelectedTab] = useState<'summary' | 'send' | 'receive'>('summary');
 
   function handleCreateOffer() {
-    navigate('/dashboard/offers/create', {
+    navigate('/dashboard/offers/builder', {
       state: {
-        walletId,
         walletType: WalletType.STANDARD_WALLET,
         referrerPath: location.hash.split('#').slice(-1)[0],
       },
@@ -39,23 +37,16 @@ export default function StandardWallet(props: StandardWalletProps) {
         walletId={walletId}
         tab={selectedTab}
         onTabChange={setSelectedTab}
-        actions={({ onClose }) => (
-          <>
-            <MenuItem
-              onClick={() => {
-                onClose();
-                handleCreateOffer();
-              }}
-            >
-              <ListItemIcon>
-                <OffersIcon />
-              </ListItemIcon>
-              <Typography variant="inherit" noWrap>
-                <Trans>Create Offer</Trans>
-              </Typography>
-            </MenuItem>
-          </>
-        )}
+        actions={
+          <MenuItem onClick={handleCreateOffer} close>
+            <ListItemIcon>
+              <OffersIcon />
+            </ListItemIcon>
+            <Typography variant="inherit" noWrap>
+              <Trans>Create Offer</Trans>
+            </Typography>
+          </MenuItem>
+        }
       />
 
       <Box display={selectedTab === 'summary' ? 'block' : 'none'}>

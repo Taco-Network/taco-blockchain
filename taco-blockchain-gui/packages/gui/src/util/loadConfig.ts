@@ -1,25 +1,23 @@
-import yaml from 'js-yaml';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
+
+import yaml from 'js-yaml';
 import { get } from 'lodash';
+
 import sleep from './sleep';
 import untildify from './untildify';
 
-function getConfigRootDir(net = 'mainnet'): string {
+export function getConfigRootDir(net = 'mainnet'): string {
   const homedir = os.homedir();
 
-  return 'TACO_ROOT' in process.env 
-    ? untildify(process.env.TACO_ROOT)
-    : path.join(homedir, '.taco', net);
+  return 'TACO_ROOT' in process.env ? untildify(process.env.TACO_ROOT) : path.join(homedir, '.taco', net);
 }
 
 export function readConfigFile(net?: string): string {
   const configRootDir = getConfigRootDir(net);
 
-  return yaml.load(
-    fs.readFileSync(path.resolve(configRootDir, 'config/config.yaml'), 'utf8'),
-  );
+  return yaml.load(fs.readFileSync(path.resolve(configRootDir, 'config/config.yaml'), 'utf8'));
 }
 
 export default async function loadConfig(net?: string): Promise<{
@@ -31,7 +29,7 @@ export default async function loadConfig(net?: string): Promise<{
     const config = readConfigFile(net);
 
     const selfHostname = get(config, 'ui.daemon_host', 'localhost');
-    const daemonPort = get(config, 'ui.daemon_port', 55400);
+    const daemonPort = get(config, 'ui.daemon_port', 44476);
 
     // store these in the global object so they can be used by both main and renderer processes
     const url = `wss://${selfHostname}:${daemonPort}`;
@@ -39,19 +37,11 @@ export default async function loadConfig(net?: string): Promise<{
 
     const certPath = path.resolve(
       configRootDir,
-      get(
-        config,
-        'ui.daemon_ssl.private_crt',
-        'config/ssl/daemon/private_daemon.crt',
-      ),
+      get(config, 'ui.daemon_ssl.private_crt', 'config/ssl/daemon/private_daemon.crt')
     );
     const keyPath = path.resolve(
       configRootDir,
-      get(
-        config,
-        'ui.daemon_ssl.private_key',
-        'config/ssl/daemon/private_daemon.key',
-      ),
+      get(config, 'ui.daemon_ssl.private_key', 'config/ssl/daemon/private_daemon.key')
     );
 
     return {
@@ -64,8 +54,7 @@ export default async function loadConfig(net?: string): Promise<{
       console.log('Waiting for configuration file');
       await sleep(1000);
       return loadConfig(net);
-    } else {
-      throw error;
     }
+    throw error;
   }
 }

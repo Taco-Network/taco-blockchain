@@ -1,8 +1,10 @@
 import EventEmitter from 'events';
+
 import { isUndefined, omitBy } from 'lodash';
+
 import type Client from '../Client';
-import ServiceName from '../constants/ServiceName';
 import Message from '../Message';
+import ServiceName from '../constants/ServiceName';
 import sleep from '../utils/sleep';
 
 export type Options = {
@@ -12,16 +14,14 @@ export type Options = {
 
 export default class Service extends EventEmitter {
   private _client: Client;
+
   private _name: ServiceName;
+
   private _origin: ServiceName;
+
   private _readyPromise: Promise<null> | undefined;
 
-  constructor(
-    name: ServiceName, 
-    client: Client, 
-    options: Options = {}, 
-    onInit: () => Promise<void>,
-  ) {
+  constructor(name: ServiceName, client: Client, options: Options = {}, onInit?: () => Promise<void>) {
     super();
 
     const { origin, skipAddService } = options;
@@ -33,7 +33,7 @@ export default class Service extends EventEmitter {
     if (!skipAddService) {
       client.addService(this);
     }
-    
+
     client.on('message', this.handleMessage);
 
     this._readyPromise = new Promise(async (resolve, reject) => {
@@ -80,15 +80,21 @@ export default class Service extends EventEmitter {
     }
 
     this.processMessage(message);
-  }
+  };
 
   processMessage(message: Message) {
     if (message.command) {
       this.emit(message.command, message.data, message);
-    }    
+    }
   }
 
-  async command(command: string, data: Object = {}, ack = false, timeout?: number, disableFormat?: boolean): Promise<any> {
+  async command(
+    command: string,
+    data: Object = {},
+    ack = false,
+    timeout?: number,
+    disableFormat?: boolean
+  ): Promise<any> {
     const { client, origin, name } = this;
 
     if (!command) {
@@ -98,13 +104,17 @@ export default class Service extends EventEmitter {
     // remove undefined values from root data
     const updatedData = omitBy(data, isUndefined);
 
-    const response = await client.send(new Message({
-      origin,
-      destination: name,
-      command,
-      data: updatedData,
-      ack,
-    }), timeout, disableFormat);
+    const response = await client.send(
+      new Message({
+        origin,
+        destination: name,
+        command,
+        data: updatedData,
+        ack,
+      }),
+      timeout,
+      disableFormat
+    );
 
     return response?.data;
   }
@@ -116,14 +126,12 @@ export default class Service extends EventEmitter {
   }
 
   onCommand(
-    command: string, 
+    command: string,
     callback: (data: any, message: Message) => void,
-    processData?: (data: any) => any,
+    processData?: (data: any) => any
   ): () => void {
     function handleCommand(data: any, message: Message) {
-      const updatedData = processData
-        ? processData(data, message)
-        : data;
+      const updatedData = processData ? processData(data, message) : data;
       callback(updatedData, message);
     }
 
@@ -134,15 +142,15 @@ export default class Service extends EventEmitter {
     };
   }
 
-  onStateChanged(
-    state: string,
-    callback: (data: any, message: Message) => void,
-    processData?: (data: any) => any,
-  ) {
-    return this.onCommand('state_changed', (data, message) => {
-      if (data.state === state) {
-        callback(data, message);
-      }
-    }, processData);
+  onStateChanged(state: string, callback: (data: any, message: Message) => void, processData?: (data: any) => any) {
+    return this.onCommand(
+      'state_changed',
+      (data, message) => {
+        if (data.state === state) {
+          callback(data, message);
+        }
+      },
+      processData
+    );
   }
 }

@@ -1,5 +1,5 @@
-import { BaseQueryFn } from '@reduxjs/toolkit/query/react';
 import Client, { Service } from '@taco/api';
+import { BaseQueryFn } from '@reduxjs/toolkit/query/react';
 
 type Options = {
   client: Client;
@@ -8,8 +8,8 @@ type Options = {
 
 export default function tacoBaseQuery(options: Options): BaseQueryFn<
   {
-    command: string; 
-    args?: any[],
+    command: string;
+    args?: any[];
   },
   unknown,
   unknown,
@@ -20,27 +20,24 @@ export default function tacoBaseQuery(options: Options): BaseQueryFn<
     args?: any[];
   }
 > {
-  const { 
-    client, 
-    service: Service,
-  } = options;
+  const { client, service: Service } = options;
 
   const service = new Service(client);
 
   return async ({ command, args = [] }) => {
-    const meta = { 
+    const meta = {
       timestamp: Date.now(),
       command,
       args,
     };
 
     try {
-      return { 
-        data: await service[command](...args),
+      return {
+        data: (await service[command](...args)) ?? null,
         meta,
       };
-    } catch(error) {
-      return { 
+    } catch (error) {
+      return {
         error,
         meta,
       };

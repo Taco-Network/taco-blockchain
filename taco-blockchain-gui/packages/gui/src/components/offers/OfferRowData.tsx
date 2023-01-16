@@ -1,5 +1,5 @@
-import type BigNumber from 'bignumber.js';
 import { type WalletType } from '@taco/api';
+import type BigNumber from 'bignumber.js';
 
 type OfferRowData = {
   amount: string;

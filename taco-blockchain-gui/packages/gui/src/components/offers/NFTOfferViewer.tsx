@@ -1,15 +1,6 @@
-import React, { useMemo, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
-import BigNumber from 'bignumber.js';
-import { Plural, Trans } from '@lingui/macro';
-import {
-  useCheckOfferValidityMutation,
-  useGetNFTInfoQuery,
-  useGetNFTWallets,
-} from '@taco/api-react';
 import type { Wallet } from '@taco/api';
 import { OfferSummaryRecord, OfferTradeRecord } from '@taco/api';
+import { useCheckOfferValidityMutation, useGetNFTInfoQuery, useGetNFTWallets } from '@taco/api-react';
 import {
   Back,
   Button,
@@ -21,34 +12,40 @@ import {
   StateColor,
   Tooltip,
   TooltipIcon,
+  catToMojo,
   tacoToMojo,
   mojoToTaco,
   useColorModeValue,
-  useCurrencyCode,
   useShowError,
 } from '@taco/core';
-import { Box, Divider, Grid, Typography } from '@mui/material';
+import { Plural, Trans, t } from '@lingui/macro';
 import { Warning as WarningIcon } from '@mui/icons-material';
+import { Box, Divider, Grid, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import BigNumber from 'bignumber.js';
+import React, { useMemo, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
+
 import useAcceptOfferHook from '../../hooks/useAcceptOfferHook';
 import useAssetIdName from '../../hooks/useAssetIdName';
 import useFetchNFTs from '../../hooks/useFetchNFTs';
-import { stripHexPrefix } from '../../util/utils';
 import { convertRoyaltyToPercentage, launcherIdToNFTId } from '../../util/nfts';
+import { stripHexPrefix } from '../../util/utils';
+import NFTOfferExchangeType from './NFTOfferExchangeType';
+import NFTOfferPreview from './NFTOfferPreview';
+import OfferAsset from './OfferAsset';
+import OfferHeader from './OfferHeader';
+import OfferState from './OfferState';
+import { OfferSummaryNFTRow, OfferSummaryTokenRow } from './OfferSummaryRow';
+import OfferViewerTitle from './OfferViewerTitle';
 import {
   calculateNFTRoyalties,
   determineNFTOfferExchangeType,
   getNFTPriceWithoutRoyalties,
   offerAssetTypeForAssetId,
 } from './utils';
-import OfferAsset from './OfferAsset';
-import OfferHeader from './OfferHeader';
-import OfferState from './OfferState';
-import { OfferSummaryNFTRow, OfferSummaryTokenRow } from './OfferSummaryRow';
-import OfferViewerTitle from './OfferViewerTitle';
-import NFTOfferExchangeType from './NFTOfferExchangeType';
-import NFTOfferPreview from './NFTOfferPreview';
-import styled from 'styled-components';
 
 /* ========================================================================== */
 
@@ -86,9 +83,9 @@ function NFTOfferSummaryRow(props: NFTOfferSummaryRowProps) {
   const horizontalPadding = `${theme.spacing(rowIndentation)}`; // logic borrowed from Flex's gap computation
   const summaryData: { [key: string]: number } = summary[summaryKey];
   const summaryInfo = summary.infos;
-  const assetIdsToTypes: { [key: string]: OfferAsset | undefined }[] =
-    useMemo(() => {
-      return Object.keys(summaryData).map((key) => {
+  const assetIdsToTypes: { [key: string]: OfferAsset | undefined }[] = useMemo(
+    () =>
+      Object.keys(summaryData).map((key) => {
         const infoDict = summaryInfo[key];
         let assetType: OfferAsset | undefined;
 
@@ -111,12 +108,12 @@ function NFTOfferSummaryRow(props: NFTOfferSummaryRowProps) {
         }
 
         return { [key]: assetType };
-      });
-    }, [summaryData, summaryInfo]);
+      }),
+    [summaryData, summaryInfo]
+  );
 
   const rows: (React.ReactElement | null)[] = assetIdsToTypes.map((entry) => {
-    const [assetId, assetType]: [string, OfferAsset | undefined] =
-      Object.entries(entry)[0];
+    const [assetId, assetType]: [string, OfferAsset | undefined] = Object.entries(entry)[0];
 
     switch (assetType) {
       case undefined:
@@ -132,11 +129,7 @@ function NFTOfferSummaryRow(props: NFTOfferSummaryRowProps) {
         );
       case OfferAsset.NFT:
         return (
-          <OfferSummaryNFTRow
-            launcherId={assetId}
-            amount={summaryData[assetId]}
-            showNFTPreview={showNFTPreview}
-          />
+          <OfferSummaryNFTRow launcherId={assetId} amount={summaryData[assetId]} showNFTPreview={showNFTPreview} />
         );
       default:
         console.log(`Unhandled OfferAsset type: ${assetType}`);
@@ -173,10 +166,7 @@ function NFTOfferSummaryRow(props: NFTOfferSummaryRowProps) {
       {unknownAssets !== undefined && unknownAssets.length > 0 && (
         <Flex flexDirection="row" gap={1}>
           <StyledWarningText variant="caption">
-            <Trans>
-              Offer cannot be accepted because you don&apos;t possess the
-              requested assets
-            </Trans>
+            <Trans>Offer cannot be accepted because you don&apos;t possess the requested assets</Trans>
           </StyledWarningText>
         </Flex>
       )}
@@ -202,11 +192,7 @@ function NFTOfferMakerFee(props: NFTOfferMakerFeeProps) {
 
   return (
     <Flex flexDirection="row" alignItems="center" gap={1}>
-      <Typography
-        variant="body1"
-        color="secondary"
-        style={{ fontWeight: 'bold' }}
-      >
+      <Typography variant="body1" color="secondary" style={{ fontWeight: 'bold' }}>
         <Trans>Fees included in offer:</Trans>
       </Typography>
       <Typography color="primary">
@@ -218,15 +204,11 @@ function NFTOfferMakerFee(props: NFTOfferMakerFeeProps) {
       <TooltipIcon>
         {imported ? (
           <Trans>
-            This offer has a fee included to help expedite the transaction when
-            the offer is accepted. You may specify an additional fee if you feel
-            that the included fee is too small.
+            This offer has a fee included to help expedite the transaction when the offer is accepted. You may specify
+            an additional fee if you feel that the included fee is too small.
           </Trans>
         ) : (
-          <Trans>
-            This offer has a fee included to help expedite the transaction when
-            the offer is accepted.
-          </Trans>
+          <Trans>This offer has a fee included to help expedite the transaction when the offer is accepted.</Trans>
         )}
       </TooltipIcon>
     </Flex>
@@ -267,51 +249,38 @@ export function NFTOfferSummary(props: NFTOfferSummaryProps) {
   } = props;
   const { lookupByAssetId } = useAssetIdName();
   const { wallets: nftWallets } = useGetNFTWallets();
-  const { nfts, isLoading: isLoadingNFTs } = useFetchNFTs(
-    nftWallets.map((wallet: Wallet) => wallet.id),
-  );
+  const { nfts, isLoading: isLoadingNFTs } = useFetchNFTs(nftWallets.map((wallet: Wallet) => wallet.id));
   const makerEntries: [string, number][] = Object.entries(summary.offered);
   const takerEntries: [string, number][] = Object.entries(summary.requested);
   const [takerUnknownAssets, makerUnknownAssets] = useMemo(() => {
     if (isMyOffer || isLoadingNFTs) {
       return [];
     }
-    const takerUnknownAssets = makerEntries.filter(
-      ([assetId, _]) =>
-        offerAssetTypeForAssetId(assetId, summary) !== OfferAsset.NFT &&
-        lookupByAssetId(assetId) === undefined,
-    );
+    const takerUnknownAssets = makerEntries
+      .filter(
+        ([assetId]) =>
+          offerAssetTypeForAssetId(assetId, summary) !== OfferAsset.NFT && lookupByAssetId(assetId) === undefined
+      )
+      .map(([assetId]) => assetId);
 
     const makerUnknownAssets = takerEntries
-      .filter(([assetId, _]) => {
+      .filter(([assetId]) => {
         const assetType = offerAssetTypeForAssetId(assetId, summary);
         if (assetType === OfferAsset.NFT) {
           return (
-            nfts.find(
-              (nft) =>
-                stripHexPrefix(nft.launcherId.toLowerCase()) ===
-                assetId.toLowerCase(),
-            ) === undefined
+            nfts.find((nft) => stripHexPrefix(nft.launcherId.toLowerCase()) === assetId.toLowerCase()) === undefined
           );
         }
         return lookupByAssetId(assetId) === undefined;
       })
-      .map(([assetId, _]) => assetId);
+      .map(([assetId]) => assetId);
 
     return [takerUnknownAssets, makerUnknownAssets];
-  }, [
-    isMyOffer,
-    isLoadingNFTs,
-    makerEntries,
-    takerEntries,
-    summary,
-    lookupByAssetId,
-    nfts,
-  ]);
+  }, [isMyOffer, isLoadingNFTs, makerEntries, takerEntries, summary, lookupByAssetId, nfts]);
   const makerSummary: React.ReactElement = (
     <NFTOfferSummaryRow
       title={makerTitle}
-      summaryKey="offered"
+      summaryKey={isMyOffer ? 'requested' : 'offered'}
       summary={summary}
       unknownAssets={isMyOffer ? undefined : takerUnknownAssets}
       rowIndentation={rowIndentation}
@@ -322,7 +291,7 @@ export function NFTOfferSummary(props: NFTOfferSummaryProps) {
   const takerSummary: React.ReactElement = (
     <NFTOfferSummaryRow
       title={takerTitle}
-      summaryKey="requested"
+      summaryKey={isMyOffer ? 'offered' : 'requested'}
       summary={summary}
       unknownAssets={isMyOffer ? undefined : makerUnknownAssets}
       rowIndentation={rowIndentation}
@@ -334,9 +303,7 @@ export function NFTOfferSummary(props: NFTOfferSummaryProps) {
   const summaries: React.ReactElement[] = [makerSummary, takerSummary];
 
   if (setIsMissingRequestedAsset) {
-    const isMissingRequestedAsset = isMyOffer
-      ? false
-      : makerUnknownAssets?.length !== 0 ?? false;
+    const isMissingRequestedAsset = isMyOffer ? false : makerUnknownAssets?.length !== 0 ?? false;
 
     setIsMissingRequestedAsset(isMissingRequestedAsset);
   }
@@ -384,32 +351,26 @@ function NFTOfferDetails(props: NFTOfferDetailsProps) {
   const showError = useShowError();
   const methods = useForm({ defaultValues: { fee: '' } });
   const navigate = useNavigate();
-  const currencyCode = useCurrencyCode();
   const theme = useTheme();
   const [acceptOffer] = useAcceptOfferHook();
   const [isAccepting, setIsAccepting] = useState<boolean>(false);
   const [isValidating, setIsValidating] = useState<boolean>(false);
   const [isValid, setIsValid] = useState<boolean>(tradeRecord !== undefined);
-  const [isMissingRequestedAsset, setIsMissingRequestedAsset] =
-    useState<boolean>(false);
+  const [isMissingRequestedAsset, setIsMissingRequestedAsset] = useState<boolean>(false);
   const [checkOfferValidity] = useCheckOfferValidityMutation();
   const driverDict: { [key: string]: any } = summary?.infos ?? {};
   const launcherId: string | undefined = Object.keys(driverDict).find(
-    (id: string) => driverDict[id].launcherId?.length > 0,
+    (id: string) => driverDict[id].launcherId?.length > 0
   );
-  const nftId: string | undefined = launcherId
-    ? launcherIdToNFTId(launcherId)
-    : undefined;
+  const nftId: string | undefined = launcherId ? launcherIdToNFTId(launcherId) : undefined;
   const { data: nft } = useGetNFTInfoQuery({ coinId: launcherId });
-  const amount = getNFTPriceWithoutRoyalties(summary);
+  const { amount, assetId, assetType } = getNFTPriceWithoutRoyalties(summary) ?? {};
+  const { lookupByAssetId } = useAssetIdName();
+  const assetIdInfo = assetId ? lookupByAssetId(assetId) : undefined;
+  const displayName = assetIdInfo?.displayName ?? t`Unknown CAT`;
 
   const nftSaleInfo = useMemo(() => {
-    if (
-      !exchangeType ||
-      amount === undefined ||
-      !nft ||
-      nft.royaltyPercentage === undefined
-    ) {
+    if (!exchangeType || amount === undefined || !nft || nft.royaltyPercentage === undefined) {
       return undefined;
     }
 
@@ -421,18 +382,18 @@ function NFTOfferDetails(props: NFTOfferDetailsProps) {
         amount,
         parseFloat(xtxMakerFee),
         convertRoyaltyToPercentage(nft.royaltyPercentage),
-        exchangeType,
+        exchangeType
       ),
       royaltyPercentage,
     };
   }, [nft]);
   const showRoyaltyWarning = (nftSaleInfo?.royaltyPercentage ?? 0) >= 20;
-  const royaltyPercentageColor = showRoyaltyWarning
-    ? StateColor.WARNING
-    : 'textSecondary';
+  const royaltyPercentageColor = showRoyaltyWarning ? StateColor.WARNING : 'textSecondary';
   const overrideNFTSellerAmount =
-    exchangeType === NFTOfferExchangeType.XTXForNFT
-      ? tacoToMojo(nftSaleInfo?.nftSellerNetAmount ?? 0)
+    exchangeType === NFTOfferExchangeType.TokenForNFT
+      ? assetType === OfferAsset.TACO
+        ? tacoToMojo(nftSaleInfo?.nftSellerNetAmount ?? 0)
+        : catToMojo(nftSaleInfo?.nftSellerNetAmount ?? 0)
       : undefined;
 
   useMemo(async () => {
@@ -450,12 +411,7 @@ function NFTOfferDetails(props: NFTOfferDetailsProps) {
       if (response.data?.success === true) {
         valid = response.data?.valid === true;
       } else {
-        showError(
-          response.data?.error ??
-            new Error(
-              'Encountered an unknown error while checking offer validity',
-            ),
-        );
+        showError(response.data?.error ?? new Error('Encountered an unknown error while checking offer validity'));
       }
     } catch (e) {
       showError(e);
@@ -478,7 +434,7 @@ function NFTOfferDetails(props: NFTOfferDetailsProps) {
       summary,
       fee,
       (accepting: boolean) => setIsAccepting(accepting),
-      () => navigate('/dashboard/offers'),
+      () => navigate('/dashboard/offers')
     );
   }
 
@@ -505,12 +461,7 @@ function NFTOfferDetails(props: NFTOfferDetailsProps) {
           }}
         >
           <Flex direction="row">
-            <Flex
-              flexDirection="column"
-              flexGrow={1}
-              gap={3}
-              style={{ padding: '1em' }}
-            >
+            <Flex flexDirection="column" flexGrow={1} gap={3} style={{ padding: '1em' }}>
               <NFTOfferSummary
                 isMyOffer={isMyOffer}
                 imported={!!imported}
@@ -530,9 +481,7 @@ function NFTOfferDetails(props: NFTOfferDetailsProps) {
                     <Trans>In exchange for</Trans>
                   </Typography>
                 }
-                setIsMissingRequestedAsset={(isMissing: boolean) =>
-                  setIsMissingRequestedAsset(isMissing)
-                }
+                setIsMissingRequestedAsset={(isMissing: boolean) => setIsMissingRequestedAsset(isMissing)}
                 rowIndentation={0}
                 showNFTPreview={false}
                 showMakerFee={false}
@@ -551,46 +500,29 @@ function NFTOfferDetails(props: NFTOfferDetailsProps) {
                           <FormatLargeNumber
                             value={
                               new BigNumber(
-                                exchangeType === NFTOfferExchangeType.NFTForXTX
+                                exchangeType === NFTOfferExchangeType.NFTForToken
                                   ? nftSaleInfo?.nftSellerNetAmount ?? 0
-                                  : amount ?? 0,
+                                  : amount ?? 0
                               )
                             }
                           />{' '}
-                          {currencyCode}
+                          {displayName}
                         </>
                       </Typography>
                     </Flex>
                     <Flex flexDirection="column" gap={1}>
                       <Flex flexDirection="row" alignItems="center" gap={1}>
-                        <Typography
-                          variant="body1"
-                          color={royaltyPercentageColor}
-                        >
-                          <Trans>
-                            Creator Fee ({`${nftSaleInfo?.royaltyPercentage}%)`}
-                          </Trans>
+                        <Typography variant="body1" color={royaltyPercentageColor}>
+                          <Trans>Creator Fee ({`${nftSaleInfo?.royaltyPercentage}%)`}</Trans>
                         </Typography>
                         {showRoyaltyWarning && (
-                          <Tooltip
-                            title={
-                              <Trans>
-                                Creator royalty percentage seems high
-                              </Trans>
-                            }
-                            interactive
-                          >
+                          <Tooltip title={<Trans>Creator royalty percentage seems high</Trans>}>
                             <StyledWarningIcon fontSize="small" />
                           </Tooltip>
                         )}
                       </Flex>
                       <Typography variant="subtitle1">
-                        <FormatLargeNumber
-                          value={
-                            new BigNumber(nftSaleInfo?.royaltyAmountString ?? 0)
-                          }
-                        />{' '}
-                        {currencyCode}
+                        <FormatLargeNumber value={new BigNumber(nftSaleInfo?.royaltyAmountString ?? 0)} /> {displayName}
                       </Typography>
                     </Flex>
                   </>
@@ -602,7 +534,7 @@ function NFTOfferDetails(props: NFTOfferDetailsProps) {
                   <Divider />
                   <Flex flexDirection="column" gap={0.5}>
                     <Flex flexDirection="row" alignItems="center" gap={1}>
-                      {exchangeType === NFTOfferExchangeType.NFTForXTX ? (
+                      {exchangeType === NFTOfferExchangeType.NFTForToken ? (
                         <Typography variant="h6" color="textSecondary">
                           <Trans>Total Amount Requested</Trans>
                         </Typography>
@@ -613,27 +545,23 @@ function NFTOfferDetails(props: NFTOfferDetailsProps) {
                       )}
                       <Flex justifyContent="center">
                         <TooltipIcon>
-                          {exchangeType === NFTOfferExchangeType.NFTForXTX ? (
+                          {exchangeType === NFTOfferExchangeType.NFTForToken ? (
                             <Trans>
-                              The total amount requested includes the asking
-                              price, plus the associated creator fees (if the
-                              NFT has royalty payments enabled).
+                              The total amount requested includes the asking price, plus the associated creator fees (if
+                              the NFT has royalty payments enabled).
                               {imported ? (
                                 <>
                                   <p />
-                                  The optional network fee is not included in
-                                  this total.
+                                  The optional network fee is not included in this total.
                                 </>
                               ) : null}
                             </Trans>
                           ) : (
                             <Trans>
-                              The total amount offered includes the offered
-                              purchase price, plus the optional offer creation
-                              fee.
+                              The total amount offered includes the offered purchase price, plus the optional offer
+                              creation fee.
                               <p />
-                              If the NFT has royalty payments enabled, those
-                              creator fees will be paid from the offered
+                              If the NFT has royalty payments enabled, those creator fees will be paid from the offered
                               purchase price.
                             </Trans>
                           )}
@@ -641,26 +569,13 @@ function NFTOfferDetails(props: NFTOfferDetailsProps) {
                       </Flex>
                     </Flex>
                     <Typography
-                      variant={
-                        exchangeType === NFTOfferExchangeType.NFTForXTX
-                          ? 'h5'
-                          : 'h6'
-                      }
-                      fontWeight={
-                        exchangeType === NFTOfferExchangeType.NFTForXTX
-                          ? 'bold'
-                          : 'regular'
-                      }
+                      variant={exchangeType === NFTOfferExchangeType.NFTForToken ? 'h5' : 'h6'}
+                      fontWeight={exchangeType === NFTOfferExchangeType.NFTForToken ? 'bold' : 'regular'}
                     >
-                      <FormatLargeNumber
-                        value={
-                          new BigNumber(nftSaleInfo?.totalAmountString ?? 0)
-                        }
-                      />{' '}
-                      {currencyCode}
+                      <FormatLargeNumber value={new BigNumber(nftSaleInfo?.totalAmountString ?? 0)} /> {displayName}
                     </Typography>
                   </Flex>
-                  {exchangeType === NFTOfferExchangeType.XTXForNFT && (
+                  {exchangeType === NFTOfferExchangeType.TokenForNFT && (
                     <Flex flexDirection="column" gap={0.5}>
                       <Flex flexDirection="row" alignItems="center" gap={1}>
                         <Typography variant="h6" color="textSecondary">
@@ -669,20 +584,14 @@ function NFTOfferDetails(props: NFTOfferDetailsProps) {
                         <Flex justifyContent="center">
                           <TooltipIcon>
                             <Trans>
-                              The net proceeds include the asking price, minus
-                              any associated creator fees (if the NFT has
-                              royalty payments enabled).
+                              The net proceeds include the asking price, minus any associated creator fees (if the NFT
+                              has royalty payments enabled).
                             </Trans>
                           </TooltipIcon>
                         </Flex>
                       </Flex>
                       <Typography variant="h5" fontWeight="bold">
-                        <FormatLargeNumber
-                          value={
-                            new BigNumber(nftSaleInfo?.nftSellerNetAmount ?? 0)
-                          }
-                        />{' '}
-                        {currencyCode}
+                        <FormatLargeNumber value={new BigNumber(nftSaleInfo?.nftSellerNetAmount ?? 0)} /> {displayName}
                       </Typography>
                     </Flex>
                   )}
@@ -695,14 +604,7 @@ function NFTOfferDetails(props: NFTOfferDetailsProps) {
                     <Typography variant="body1" color="textSecondary">
                       <Trans>Network Fee (Optional)</Trans>
                     </Typography>
-                    <Grid
-                      direction="column"
-                      xs={5}
-                      sm={5}
-                      md={5}
-                      lg={5}
-                      container
-                    >
+                    <Grid direction="column" xs={5} sm={5} md={5} lg={5} container>
                       <Fee
                         id="filled-secondary"
                         variant="filled"
@@ -725,11 +627,7 @@ function NFTOfferDetails(props: NFTOfferDetailsProps) {
                   style={{ paddingBottom: '1em' }}
                 >
                   <Flex justifyContent="flex-end" gap={2}>
-                    <Button
-                      variant="outlined"
-                      onClick={() => navigate(-1)}
-                      disabled={isAccepting}
-                    >
+                    <Button variant="outlined" onClick={() => navigate(-1)} disabled={isAccepting}>
                       <Trans>Back</Trans>
                     </Button>
                     <ButtonLoading
@@ -766,24 +664,14 @@ type NFTOfferViewerProps = {
 };
 
 export default function NFTOfferViewer(props: NFTOfferViewerProps) {
-  const {
-    tradeRecord,
-    offerData,
-    offerSummary,
-    offerFilePath,
-    imported,
-    ...rest
-  } = props;
+  const { tradeRecord, offerData, offerSummary, offerFilePath, imported, ...rest } = props;
 
   return (
     <Grid container>
       <Flex flexDirection="column" flexGrow={1} gap={3}>
         <Flex>
           <Back variant="h5">
-            <OfferViewerTitle
-              offerFilePath={offerFilePath}
-              tradeRecord={tradeRecord}
-            />
+            <OfferViewerTitle offerFilePath={offerFilePath} tradeRecord={tradeRecord} />
           </Back>
         </Flex>
         <NFTOfferDetails

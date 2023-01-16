@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from enum import Enum
 
 
@@ -105,3 +107,8 @@ class ProtocolMessageTypes(Enum):
     respond_children = 75
     request_ses_hashes = 76
     respond_ses_hashes = 77
+    request_block_headers = 86
+    reject_block_headers = 87
+    respond_block_headers = 88
+    request_fee_estimates = 89
+    respond_fee_estimates = 90

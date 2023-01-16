@@ -13,17 +13,17 @@ from taco.types.blockchain_format.program import Program, SerializedProgram
 
 from taco.types.blockchain_format.sized_bytes import bytes32
 from taco.types.coin_spend import CoinSpend
-from taco.wallet.puzzles.load_clvm import load_clvm
+from taco.wallet.puzzles.load_clvm import load_clvm_maybe_recompile
 from taco.wallet.puzzles.singleton_top_layer import puzzle_for_singleton
 
 from taco.util.ints import uint32, uint64
 
 log = logging.getLogger(__name__)
 # "Full" is the outer singleton, with the inner puzzle filled in
-SINGLETON_MOD = load_clvm("singleton_top_layer.clvm")
-POOL_WAITING_ROOM_MOD = load_clvm("pool_waitingroom_innerpuz.clvm")
-POOL_MEMBER_MOD = load_clvm("pool_member_innerpuz.clvm")
-P2_SINGLETON_MOD = load_clvm("p2_singleton_or_delayed_puzhash.clvm")
+SINGLETON_MOD = load_clvm_maybe_recompile("singleton_top_layer.clvm")
+POOL_WAITING_ROOM_MOD = load_clvm_maybe_recompile("pool_waitingroom_innerpuz.clvm")
+POOL_MEMBER_MOD = load_clvm_maybe_recompile("pool_member_innerpuz.clvm")
+P2_SINGLETON_MOD = load_clvm_maybe_recompile("p2_singleton_or_delayed_puzhash.clvm")
 POOL_OUTER_MOD = SINGLETON_MOD
 
 POOL_MEMBER_HASH = POOL_MEMBER_MOD.get_tree_hash()

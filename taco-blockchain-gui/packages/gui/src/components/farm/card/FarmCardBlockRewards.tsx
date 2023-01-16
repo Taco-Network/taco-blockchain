@@ -1,8 +1,8 @@
-import React, { useMemo } from 'react';
+import { useGetFarmedAmountQuery } from '@taco/api-react';
+import { useCurrencyCode, mojoToTacoLocaleString, CardSimple, useLocale } from '@taco/core';
 import { Trans } from '@lingui/macro';
 import BigNumber from 'bignumber.js';
-import { useCurrencyCode, mojoToTacoLocaleString, CardSimple, useLocale } from '@taco/core';
-import { useGetFarmedAmountQuery } from '@taco/api-react';
+import React, { useMemo } from 'react';
 
 export default function FarmCardBlockRewards() {
   const currencyCode = useCurrencyCode();

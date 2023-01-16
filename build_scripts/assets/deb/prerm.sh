@@ -4,4 +4,3 @@
 set -e
 
 unlink /usr/bin/taco || true
-unlink /opt/taco || true

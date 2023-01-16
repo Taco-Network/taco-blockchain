@@ -1,7 +1,15 @@
-from typing import KeysView, Generator
+from __future__ import annotations
+
+from typing import Generator, KeysView
 
 SERVICES_FOR_GROUP = {
-    "all": "taco_harvester taco_timelord_launcher taco_timelord taco_farmer taco_full_node taco_wallet".split(),
+    "all": (
+        "taco_harvester taco_timelord_launcher taco_timelord taco_farmer "
+        "taco_full_node taco_wallet taco_data_layer taco_data_layer_http"
+    ).split(),
+    # TODO: should this be `data_layer`?
+    "data": "taco_wallet taco_data_layer".split(),
+    "data_layer_http": "taco_data_layer_http".split(),
     "node": "taco_full_node".split(),
     "harvester": "taco_harvester".split(),
     "farmer": "taco_harvester taco_farmer taco_full_node taco_wallet".split(),

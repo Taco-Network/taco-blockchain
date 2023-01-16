@@ -1,6 +1,7 @@
-import { BaseQueryFn } from '@reduxjs/toolkit/query/react';
 import Client, { Service } from '@taco/api';
 import { BaseQueryApi } from '@reduxjs/toolkit/dist/query/baseQueryTypes';
+import { BaseQueryFn } from '@reduxjs/toolkit/query/react';
+
 import { selectApiConfig } from './slices/api';
 
 let clientInstance: Client;
@@ -34,17 +35,18 @@ type Options = {
 };
 
 export default function tacoLazyBaseQuery(options: Options = {}): BaseQueryFn<
-  {
-    command: string;
-    service: Service;
-    args?: any[];
-    mockResponse?: any;
-  } | {
-    command: string;
-    client: boolean;
-    args?: any[];
-    mockResponse?: any;
-  },
+  | {
+      command: string;
+      service: Service;
+      args?: any[];
+      mockResponse?: any;
+    }
+  | {
+      command: string;
+      client: boolean;
+      args?: any[];
+      mockResponse?: any;
+    },
   unknown,
   unknown,
   {},
@@ -55,9 +57,7 @@ export default function tacoLazyBaseQuery(options: Options = {}): BaseQueryFn<
     args?: any[];
   }
 > {
-  const {
-    service: DefaultService,
-  } = options;
+  const { service: DefaultService } = options;
 
   return async ({ command, service: ServiceClass, client = false, args = [], mockResponse }, api) => {
     const instance = client
@@ -73,10 +73,10 @@ export default function tacoLazyBaseQuery(options: Options = {}): BaseQueryFn<
 
     try {
       return {
-        data: mockResponse ?? await instance[command](...args),
+        data: mockResponse ?? (await instance[command](...args)) ?? null,
         meta,
       };
-    } catch(error) {
+    } catch (error) {
       return {
         error,
         meta,

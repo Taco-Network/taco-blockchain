@@ -1,26 +1,11 @@
-import React from 'react';
-import { Trans } from '@lingui/macro';
-import { Delete as DeleteIcon } from '@mui/icons-material';
-import styled from 'styled-components';
-import {
-  Button,
-  Card,
-  FormatBytes,
-  FormatLargeNumber,
-  Table,
-  IconButton,
-  useOpenDialog,
-} from '@taco/core';
+import { Connection } from '@taco/api';
 import { useGetFullNodeConnectionsQuery } from '@taco/api-react';
+import { Card, FormatBytes, FormatLargeNumber, Loading, Table } from '@taco/core';
+import { Trans } from '@lingui/macro';
 import { Tooltip } from '@mui/material';
-import { service_connection_types } from '../../util/service_names';
-import Connection from '../../types/Connection';
-import FullNodeCloseConnection from './FullNodeCloseConnection';
-import FullNodeAddConnection from './FullNodeAddConnection';
+import React from 'react';
 
-const StyledIconButton = styled(IconButton)`
-  padding: 0.2rem;
-`;
+import { service_connection_types } from '../../util/service_names';
 
 const cols = [
   {
@@ -48,19 +33,9 @@ const cols = [
     field(row: Connection) {
       return (
         <>
-          <FormatBytes
-            value={row.bytesWritten}
-            unit="MiB"
-            removeUnit
-            fixedDecimals
-          />
+          <FormatBytes value={row.bytesWritten} unit="MiB" removeUnit fixedDecimals />
           /
-          <FormatBytes
-            value={row.bytesRead}
-            unit="MiB"
-            removeUnit
-            fixedDecimals
-          />
+          <FormatBytes value={row.bytesRead} unit="MiB" removeUnit fixedDecimals />
         </>
       );
     },
@@ -77,42 +52,20 @@ const cols = [
     field: (row: Connection) => <FormatLargeNumber value={row.peakHeight} />,
     title: <Trans>Height</Trans>,
   },
-  {
-    title: <Trans>Actions</Trans>,
-    field(row: Connection) {
-      return (
-        <FullNodeCloseConnection nodeId={row.nodeId}>
-          {({ onClose }) => (
-            <StyledIconButton onClick={onClose}>
-              <DeleteIcon />
-            </StyledIconButton>
-          )}
-        </FullNodeCloseConnection>
-      );
-    },
-  },
 ];
 
 export default function Connections() {
-  const openDialog = useOpenDialog();
   const { data: connections, isLoading } = useGetFullNodeConnectionsQuery();
 
-  function handleAddPeer() {
-    openDialog(<FullNodeAddConnection />);
-  }
-
   return (
-    <Card
-      title={<Trans>Connections</Trans>}
-      titleVariant="h6"
-      action={
-        <Button onClick={handleAddPeer} variant="outlined">
-          <Trans>Connect to other peers</Trans>
-        </Button>
-      }
-      transparent
-    >
-      <Table cols={cols} rows={connections} isLoading={isLoading} />
+    <Card title={<Trans>Full Node Connections</Trans>}>
+      {isLoading ? (
+        <Loading center />
+      ) : !connections?.length ? (
+        <Trans>List of connections is empty</Trans>
+      ) : (
+        <Table cols={cols} rows={connections} />
+      )}
     </Card>
   );
 }

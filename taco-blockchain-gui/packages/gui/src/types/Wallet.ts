@@ -1,4 +1,5 @@
 import { WalletType } from '@taco/api';
+
 import type Transaction from './Transaction';
 import WalletBalance from './WalletBalance';
 

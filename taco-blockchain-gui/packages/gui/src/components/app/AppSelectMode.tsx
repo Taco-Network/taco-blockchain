@@ -1,20 +1,19 @@
-import React from 'react';
-import { Trans } from '@lingui/macro';
-import styled from 'styled-components';
 import { Button, Flex, Logo, Card, useMode, Mode } from '@taco/core';
+import { Farming as FarmingIcon } from '@taco/icons';
+import { Trans } from '@lingui/macro';
 import {
   AccountBalanceWallet as AccountBalanceWalletIcon,
-  EnergySavingsLeaf as EcoIcon,
   Settings as SettingsIcon,
   Check as CheckIcon,
 } from '@mui/icons-material';
-import { Farming as FarmingIcon } from '@taco/icons';
 import { Box, Typography, Container, Grid } from '@mui/material';
+import React from 'react';
+import styled from 'styled-components';
 
 const StyledCheckIcon = styled(CheckIcon)`
   border-radius: 9999px;
   padding: ${({ theme }) => theme.spacing(0.5)};
-  background-color: rgba(97,188,122,0.2);
+  background-color: rgba(97, 188, 122, 0.2);
 `;
 
 const StyledSettingsIcon = styled(SettingsIcon)`
@@ -33,17 +32,8 @@ const StyledContainer = styled(Container)`
   padding-bottom: 1rem;
 `;
 
-const StyledEcoIcon = styled(EcoIcon)`
-  font-size: 3.4rem;
-  color: ${({ theme }) => theme.palette.mode === 'dark'
-    ? 'white'
-    : 'rgba(0, 0, 0, 0.54)'};
-`;
-
 const StyledAccountBalanceWalletIconBase = styled(AccountBalanceWalletIcon)`
-  color: ${({ theme }) => theme.palette.mode === 'dark'
-    ? 'white'
-    : 'rgba(0, 0, 0, 0.54)'};
+  color: ${({ theme }) => (theme.palette.mode === 'dark' ? 'white' : 'rgba(0, 0, 0, 0.54)')};
 `;
 
 const StyledAccountBalanceWalletIcon = styled(StyledAccountBalanceWalletIconBase)`
@@ -51,7 +41,7 @@ const StyledAccountBalanceWalletIcon = styled(StyledAccountBalanceWalletIconBase
 `;
 
 export default function AppSelectMode() {
-  const [_mode, setMode] = useMode();
+  const [, setMode] = useMode();
 
   const handleModeChange = (newMode: Mode) => {
     setMode(newMode);
@@ -68,11 +58,7 @@ export default function AppSelectMode() {
 
         <Grid container spacing={5} alignItems="stretch">
           <Grid xs={12} sm={6} item>
-            <Card
-              onSelect={() => handleModeChange(Mode.WALLET)}
-              highlight={false}
-              fullHeight
-            >
+            <Card onSelect={() => handleModeChange(Mode.WALLET)} highlight={false} fullHeight>
               <StyledCardContent>
                 <Flex flexDirection="column" gap={4} flexGrow={1} alignItems="center">
                   <Flex flexDirection="column" gap={1} alignItems="center">
@@ -114,11 +100,7 @@ export default function AppSelectMode() {
             </Card>
           </Grid>
           <Grid xs={12} sm={6} item>
-            <Card
-              onSelect={() => handleModeChange(Mode.FARMING)}
-              highlight={<Trans>Recommended</Trans>}
-              fullHeight
-            >
+            <Card onSelect={() => handleModeChange(Mode.FARMING)} highlight={<Trans>Recommended</Trans>} fullHeight>
               <StyledCardContent>
                 <Flex flexDirection="column" gap={4} alignItems="center">
                   <Flex flexDirection="column" gap={1} alignItems="center">
